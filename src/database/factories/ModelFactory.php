@@ -40,6 +40,20 @@ $factory->define(App\Models\Aircraft::class, function (Faker $faker) {
     ];
 });
 
+$factory->define(App\Models\Route::class, function (Faker $faker) {
+    return [
+        'distance' => $faker->numberBetween(10, 999),
+        'route' => 'Bod 1, Bod 2'   // TODO: Add actual generation of a (JSON ???) route
+    ];
+});
+
+$factory->define(App\Models\Order::class, function (Faker $faker) {
+    return [
+        'price' => $faker->numberBetween(100, 9999),
+        'code' => str_random(32)
+    ];
+});
+
 // TODO: Prepared for adding additional arguments to the model later on
 $factory->define(App\Models\AircraftAirport::class, function (Faker $faker) {
     return [];
