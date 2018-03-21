@@ -2,11 +2,6 @@
 
 use Faker\Generator as Faker;
 
-/**
- * @Factory
- */
-$factory;
-
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -24,5 +19,23 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(App\Models\Airport::class, function (Faker $faker) {
+    return [
+        'name' => 'Airport ' . $faker->name,
+        'code' => 'ICAO: ' . $faker->countryCode,
+        'lon' => $faker->longitude,
+        'lat' => $faker->latitude
+    ];
+});
+
+$factory->define(App\Models\Aircraft::class, function (Faker $faker) {
+    return [
+        'name' => 'Aircraft ' . $faker->name,
+        'range' => $faker->numberBetween(100, 9999),
+        'speed' => $faker->numberBetween(250, 999),
+        'cost' => $faker->numberBetween(100, 9999)
     ];
 });

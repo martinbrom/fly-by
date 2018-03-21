@@ -16,8 +16,8 @@ class CreateAirportsTable extends Migration
         Schema::create('airports', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 50);
-            $table->float('lon', 10, 6);
             $table->float('lat', 10, 6);
+            $table->float('lon', 10, 6);
             $table->string('code', 20)->nullable();
             $table->timestamps();
 
