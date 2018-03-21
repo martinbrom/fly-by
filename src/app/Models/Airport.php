@@ -12,7 +12,6 @@ namespace App\Models;
  * @property string|null $code
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AircraftAirport[] $aircraftAirports
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Airport whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Airport whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Airport whereId($value)
@@ -21,6 +20,7 @@ namespace App\Models;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Airport whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Airport whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Aircraft[] $aircrafts
  */
 class Airport extends BaseModel
 {
@@ -48,7 +48,7 @@ class Airport extends BaseModel
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function aircraftAirports() {
-        return $this->belongsToMany('App\Models\AircraftAirport');
+    public function aircrafts() {
+        return $this->belongsToMany('App\Models\Aircraft', 'aircraft_airport_xref');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\AircraftAirport;
 use App\Models\Airport;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -99,12 +100,16 @@ class AirportTest extends TestCase
         $this->assertTrue($airport->save());
     }
 
-    // TODO: Test aircraft relation
     /**
-     * Test relation between airport mode and aircraft
-     * model using M:N aircraft-airport model in between
+     * Test relation between airport and aircraft models
      */
     public function testAirportAircraftRelation() {
-        $this->assertTrue(true);
+        $airport = $this->getValidAirport();
+        $aircraft = $this->getValidAircraft();
+        $this->assertEquals(0, $airport->aircrafts()->count());
+
+        $airport->aircrafts()->attach($aircraft);
+        $this->assertEquals(1, $airport->aircrafts()->count());
+        $this->assertTrue($airport->aircrafts()->first()->is($aircraft));
     }
 }

@@ -12,20 +12,7 @@ class AircraftAirport extends BaseModel
      * @var array
      */
     protected $rules = [
-        // TODO: Add validation rules for AircraftAirport model
+        'aircraft_id' => 'required|exists:aircrafts',
+        'airport_id' => 'required|exists:airports'
     ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function aircraft() {
-        return $this->belongsTo('App\Models\Aircraft');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function airport() {
-        return $this->belongsTo('App\Models\Airport');
-    }
 }

@@ -39,3 +39,8 @@ $factory->define(App\Models\Aircraft::class, function (Faker $faker) {
         'cost' => $faker->numberBetween(100, 9999)
     ];
 });
+
+// TODO: Prepared for adding additional arguments to the model later on
+$factory->define(App\Models\AircraftAirport::class, function (Faker $faker) {
+    return [];
+});
