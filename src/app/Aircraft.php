@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
 /**
  * App\Models\Aircraft
@@ -12,15 +12,15 @@ namespace App\Models;
  * @property int $cost
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Aircraft whereCost($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Aircraft whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Aircraft whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Aircraft whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Aircraft whereRange($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Aircraft whereSpeed($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Aircraft whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereCost($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereRange($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereSpeed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Airport[] $airports
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Airport[] $airports
  */
 class Aircraft extends BaseModel
 {

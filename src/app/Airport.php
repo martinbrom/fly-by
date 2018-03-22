@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
 /**
  * App\Models\Airport
@@ -12,15 +12,15 @@ namespace App\Models;
  * @property string|null $code
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Airport whereCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Airport whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Airport whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Airport whereLat($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Airport whereLon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Airport whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Airport whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport whereLat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport whereLon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Aircraft[] $aircrafts
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Aircraft[] $aircrafts
  */
 class Airport extends BaseModel
 {

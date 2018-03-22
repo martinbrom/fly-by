@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
 /**
  * App\Models\Order
@@ -12,15 +12,15 @@ namespace App\Models;
  * @property int $aircraft_airport_id
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Models\AircraftAirport $aircraftAirport
- * @property-read \App\Models\Route $route
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereAircraftAirportId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereRouteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereUpdatedAt($value)
+ * @property-read \App\AircraftAirport $aircraftAirport
+ * @property-read \App\Route $route
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereAircraftAirportId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereRouteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Order extends BaseModel
@@ -50,14 +50,14 @@ class Order extends BaseModel
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function route() {
-        return $this->belongsTo(\App\Models\Route::class);
+        return $this->belongsTo(\App\Route::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function aircraftAirport() {
-        return $this->belongsTo(\App\Models\AircraftAirport::class);
+        return $this->belongsTo(\App\AircraftAirport::class);
     }
 
     // TODO: Don't forget to dd extra $$$ for moving airplane to/from the flight starting/ending point

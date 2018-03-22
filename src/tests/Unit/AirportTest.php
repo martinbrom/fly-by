@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Models\Airport;
+use App\Airport;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -17,7 +17,7 @@ class AirportTest extends TestCase
         $airport = new Airport();
         $this->assertFalse($airport->save());
 
-        $airport = factory(\App\Models\Airport::class)->create();
+        $airport = factory(\App\Airport::class)->create();
         $this->assertTrue($airport->save());
     }
 
@@ -25,7 +25,7 @@ class AirportTest extends TestCase
      * Test validation of name attribute
      */
     public function testNameValidation() {
-        $airport = factory(\App\Models\Airport::class)->create();
+        $airport = factory(\App\Airport::class)->create();
         $airport->name = '';
         $this->assertFalse($airport->save());
 
@@ -40,7 +40,7 @@ class AirportTest extends TestCase
      * Test validation of code attribute
      */
     public function testCodeValidation() {
-        $airport = factory(\App\Models\Airport::class)->create();
+        $airport = factory(\App\Airport::class)->create();
         $airport->code = '';
         $this->assertFalse($airport->save());
 
@@ -55,7 +55,7 @@ class AirportTest extends TestCase
      * Test validation of latitude attribute
      */
     public function testLatitudeValidation() {
-        $airport = factory(\App\Models\Airport::class)->create();
+        $airport = factory(\App\Airport::class)->create();
         $airport->lat = null;
         $this->assertFalse($airport->save());
 
@@ -79,7 +79,7 @@ class AirportTest extends TestCase
      * Test validation of longitude attribute
      */
     public function testLongitudeValidation() {
-        $airport = factory(\App\Models\Airport::class)->create();
+        $airport = factory(\App\Airport::class)->create();
         $airport->lon = null;
         $this->assertFalse($airport->save());
 
@@ -103,8 +103,8 @@ class AirportTest extends TestCase
      * Test relation between airport and aircraft models
      */
     public function testAirportAircraftRelation() {
-        $airport = factory(\App\Models\Airport::class)->create();
-        $aircraft = factory(\App\Models\Aircraft::class)->create();
+        $airport = factory(\App\Airport::class)->create();
+        $aircraft = factory(\App\Aircraft::class)->create();
         $this->assertEquals(0, $airport->aircrafts()->count());
 
         $airport->aircrafts()->attach($aircraft);

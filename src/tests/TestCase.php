@@ -24,13 +24,13 @@ abstract class TestCase extends BaseTestCase
     /**
      * Creates a valid aircraft-airport model
      *
-     * @return \App\Models\AircraftAirport
+     * @return \App\AircraftAirport
      */
     public function getValidAircraftAirport()
     {
-        $aircraftAirport = factory(\App\Models\AircraftAirport::class)->create();
-        $aircraft = factory(\App\Models\Aircraft::class)->create();
-        $airport = factory(\App\Models\Airport::class)->create();
+        $aircraftAirport = factory(\App\AircraftAirport::class)->create();
+        $aircraft = factory(\App\Aircraft::class)->create();
+        $airport = factory(\App\Airport::class)->create();
 
         $aircraftAirport->aircraft()->associate($aircraft);
         $aircraftAirport->airport()->associate($airport);
@@ -42,12 +42,12 @@ abstract class TestCase extends BaseTestCase
     /**
      * Creates a valid order model
      *
-     * @return \App\Models\Order
+     * @return \App\Order
      */
     public function getValidOrder() {
         $aircraftAirport = $this->getValidAircraftAirport();
-        $route = factory(\App\Models\Route::class)->create();
-        $order = factory(\App\Models\Order::class)->make();
+        $route = factory(\App\Route::class)->create();
+        $order = factory(\App\Order::class)->make();
 
         $order->aircraftAirport()->associate($aircraftAirport);
         $order->route()->associate($route);

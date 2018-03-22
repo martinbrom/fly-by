@@ -13,7 +13,7 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\Models\User::class, function (Faker $faker) {
+$factory->define(App\User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
@@ -22,7 +22,7 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(App\Models\Airport::class, function (Faker $faker) {
+$factory->define(App\Airport::class, function (Faker $faker) {
     return [
         'name' => 'Airport ' . $faker->name,
         'code' => 'ICAO: ' . $faker->countryCode,
@@ -31,7 +31,7 @@ $factory->define(App\Models\Airport::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(App\Models\Aircraft::class, function (Faker $faker) {
+$factory->define(App\Aircraft::class, function (Faker $faker) {
     return [
         'name' => 'Aircraft ' . $faker->name,
         'range' => $faker->numberBetween(100, 9999),
@@ -40,14 +40,14 @@ $factory->define(App\Models\Aircraft::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(App\Models\Route::class, function (Faker $faker) {
+$factory->define(App\Route::class, function (Faker $faker) {
     return [
         'distance' => $faker->numberBetween(10, 999),
         'route' => 'Bod 1, Bod 2'   // TODO: Add actual generation of a (JSON ???) route
     ];
 });
 
-$factory->define(App\Models\Order::class, function (Faker $faker) {
+$factory->define(App\Order::class, function (Faker $faker) {
     return [
         'price' => $faker->numberBetween(100, 9999),
         'code' => str_random(32)
@@ -55,6 +55,6 @@ $factory->define(App\Models\Order::class, function (Faker $faker) {
 });
 
 // TODO: Prepared for adding additional arguments to the model later on
-$factory->define(App\Models\AircraftAirport::class, function (Faker $faker) {
+$factory->define(App\AircraftAirport::class, function (Faker $faker) {
     return [];
 });

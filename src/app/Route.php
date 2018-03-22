@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
 /**
  * App\Models\Route
@@ -10,12 +10,12 @@ namespace App\Models;
  * @property string $route
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Route whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Route whereDistance($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Route whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Route whereRoute($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Route whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Order[] $orders
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereDistance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereRoute($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Route extends BaseModel
@@ -43,6 +43,6 @@ class Route extends BaseModel
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function orders() {
-        return $this->hasMany(\App\Models\Order::class);
+        return $this->hasMany(\App\Order::class);
     }
 }
