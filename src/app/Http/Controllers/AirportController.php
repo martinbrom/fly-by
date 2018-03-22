@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class AircraftController extends Controller
+class AirportController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -12,7 +12,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return response()->view('aircraft.index');
+        return response()->view('airport.index');
     }
 
     /**
@@ -21,7 +21,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return response()->view('aircraft.create');
+        return response()->view('airport.create');
     }
 
     /**
@@ -31,7 +31,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        return response()->redirectToRoute('aircraft.index');
+        return response()->redirectToRoute('airport.index');
     }
 
     /**
@@ -41,7 +41,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-        return response()->view('aircraft.show');
+        return response()->view('airport.show');
     }
 
     /**
@@ -51,7 +51,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
-        return response()->view('aircraft.edit');
+        return response()->view('airport.edit');
     }
 
     /**
@@ -62,7 +62,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        return response()->redirectToRoute('aircraft.index');
+        return response()->redirectToRoute('airport.index');
     }
 
     /**
@@ -72,6 +72,6 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        return response()->redirectToRoute('aircraft.index');
+        return response()->redirectToRoute('airport.index');
     }
 }

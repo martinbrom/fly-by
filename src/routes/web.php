@@ -22,3 +22,4 @@ Route::get('/dashboard', function () {
 });
 
 Route::resource('aircrafts', 'AircraftController');
+Route::resource('airports', 'AirportController');
