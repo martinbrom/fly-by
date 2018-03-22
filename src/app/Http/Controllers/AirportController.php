@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Airport;
 use Illuminate\Http\Request;
 
 class AirportController extends Controller
@@ -12,7 +13,8 @@ class AirportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return response()->view('airport.index');
+        $airports = Airport::all();
+        return response()->view('airport.index', compact('airports'));
     }
 
     /**
@@ -41,7 +43,8 @@ class AirportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-        return response()->view('airport.show');
+        $airport = Airport::findOrFail($id);
+        return response()->view('airport.show', compact('airport'));
     }
 
     /**
@@ -51,7 +54,8 @@ class AirportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
-        return response()->view('airport.edit');
+        $airport = Airport::findOrFail($id);
+        return response()->view('airport.edit', compact('airport'));
     }
 
     /**
@@ -62,7 +66,7 @@ class AirportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        return response()->redirectToRoute('airport.index');
+        return response()->redirectToRoute('airport.show', $id);
     }
 
     /**

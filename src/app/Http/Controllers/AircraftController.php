@@ -62,7 +62,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        return response()->redirectToRoute('aircraft.index');
+        return response()->redirectToRoute('aircraft.show', $id);
     }
 
     /**
