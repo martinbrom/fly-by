@@ -59,6 +59,9 @@ class AirportTest extends TestCase
         $airport->lat = null;
         $this->assertFalse($airport->save());
 
+        $airport->lat = 'a';
+        $this->assertFalse($airport->save());
+
         $airport->lat = 90.000001;
         $this->assertFalse($airport->save());
 
@@ -81,6 +84,9 @@ class AirportTest extends TestCase
     public function testLongitudeValidation() {
         $airport = factory(\App\Airport::class)->create();
         $airport->lon = null;
+        $this->assertFalse($airport->save());
+
+        $airport->lon = 'a';
         $this->assertFalse($airport->save());
 
         $airport->lon = 180.000001;

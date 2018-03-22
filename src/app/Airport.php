@@ -49,6 +49,6 @@ class Airport extends BaseModel
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function aircrafts() {
-        return $this->belongsToMany('App\Models\Aircraft', 'aircraft_airport_xref');
+        return $this->belongsToMany(\App\Aircraft::class, 'aircraft_airport_xref');
     }
 }
