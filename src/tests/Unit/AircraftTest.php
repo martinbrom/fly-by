@@ -102,7 +102,7 @@ class AircraftTest extends TestCase
     /**
      * Test relation between aircraft and airport models
      */
-    public function testAirportAircraftRelation() {
+    public function testAircraftAirportRelation() {
         $aircraft = factory(\App\Aircraft::class)->create();
         $airport = factory(\App\Airport::class)->create();
         $this->assertEquals(0, $aircraft->airports()->count());
