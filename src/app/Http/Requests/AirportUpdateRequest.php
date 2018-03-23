@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AirportStoreRequest extends FormRequest
+class AirportUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

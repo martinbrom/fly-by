@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Airport;
+use App\Http\Requests\AirportStoreRequest;
+use App\Http\Requests\AirportUpdateRequest;
 use Illuminate\Http\Request;
 
 class AirportController extends Controller
@@ -29,11 +31,13 @@ class AirportController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param AirportStoreRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        return response()->redirectToRoute('airports.index');
+    public function store(AirportStoreRequest $request) {
+        $airport = new Airport($request->all());
+        $airport->save();
+        return redirect()->route('airports.index');
     }
 
     /**
@@ -61,12 +65,17 @@ class AirportController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param AirportUpdateRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-        return response()->redirectToRoute('airports.show', $id);
+    public function update(AirportUpdateRequest $request, $id) {
+        $airport = Airport::findOrFail($id);
+        $airport->fill($request->all());
+        $airport->save();
+
+        // TODO: Decide where to redirect after updating airport
+        return redirect()->route('airports.show', $id);
     }
 
     /**
@@ -76,6 +85,8 @@ class AirportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        return response()->redirectToRoute('airports.index');
+        $airport = Airport::findOrFail($id);
+        $airport->delete();
+        return redirect()->route('airports.index');
     }
 }

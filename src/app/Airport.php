@@ -30,7 +30,7 @@ class Airport extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'code', 'name',
+        'code', 'name', 'lat', 'lon'
     ];
 
     /**
@@ -41,6 +41,7 @@ class Airport extends BaseModel
     protected $rules = [
         'name' => 'required|max:50',
         'code' => 'required|max:20',
+        // TODO: Both don't work for integers, but probably should
         'lat' => ['required', 'regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
         'lon' => ['required', 'regex:/^[-]?((((1[0-7][0-9])|([0]?[0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/']
     ];
