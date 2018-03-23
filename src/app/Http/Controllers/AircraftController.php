@@ -12,7 +12,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return response()->view('aircraft.index');
+        return response()->view('aircrafts.index');
     }
 
     /**
@@ -21,7 +21,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return response()->view('aircraft.create');
+        return response()->view('aircrafts.create');
     }
 
     /**
@@ -31,7 +31,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        return response()->redirectToRoute('aircraft.index');
+        return response()->redirectToRoute('aircrafts.index');
     }
 
     /**
@@ -41,7 +41,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-        return response()->view('aircraft.show');
+        return response()->view('aircrafts.show');
     }
 
     /**
@@ -51,7 +51,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
-        return response()->view('aircraft.edit');
+        return response()->view('aircrafts.edit');
     }
 
     /**
@@ -62,7 +62,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        return response()->redirectToRoute('aircraft.show', $id);
+        return response()->redirectToRoute('aircrafts.show', $id);
     }
 
     /**
@@ -72,6 +72,6 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        return response()->redirectToRoute('aircraft.index');
+        return response()->redirectToRoute('aircrafts.index');
     }
 }

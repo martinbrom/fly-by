@@ -14,7 +14,7 @@ class AirportController extends Controller
      */
     public function index() {
         $airports = Airport::all();
-        return response()->view('airport.index', compact('airports'));
+        return response()->view('airports.index', compact('airports'));
     }
 
     /**
@@ -23,7 +23,7 @@ class AirportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return response()->view('airport.create');
+        return response()->view('airports.create');
     }
 
     /**
@@ -33,7 +33,7 @@ class AirportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        return response()->redirectToRoute('airport.index');
+        return response()->redirectToRoute('airports.index');
     }
 
     /**
@@ -44,7 +44,7 @@ class AirportController extends Controller
      */
     public function show($id) {
         $airport = Airport::findOrFail($id);
-        return response()->view('airport.show', compact('airport'));
+        return response()->view('airports.show', compact('airport'));
     }
 
     /**
@@ -55,7 +55,7 @@ class AirportController extends Controller
      */
     public function edit($id) {
         $airport = Airport::findOrFail($id);
-        return response()->view('airport.edit', compact('airport'));
+        return response()->view('airports.edit', compact('airport'));
     }
 
     /**
@@ -66,7 +66,7 @@ class AirportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        return response()->redirectToRoute('airport.show', $id);
+        return response()->redirectToRoute('airports.show', $id);
     }
 
     /**
@@ -76,6 +76,6 @@ class AirportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        return response()->redirectToRoute('airport.index');
+        return response()->redirectToRoute('airports.index');
     }
 }
