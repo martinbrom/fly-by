@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Airport;
 use App\Http\Requests\AirportStoreRequest;
 use App\Http\Requests\AirportUpdateRequest;
-use Illuminate\Http\Request;
 
 class AirportController extends Controller
 {
@@ -15,6 +14,7 @@ class AirportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
+        // TODO: Pagination
         $airports = Airport::all();
         return response()->view('airports.index', compact('airports'));
     }
@@ -65,7 +65,7 @@ class AirportController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param AirportUpdateRequest|Request $request
+     * @param AirportUpdateRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */

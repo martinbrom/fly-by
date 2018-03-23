@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Aircraft;
+use App\Http\Requests\AircraftStoreRequest;
+use App\Http\Requests\AircraftUpdateRequest;
 
 class AircraftController extends Controller
 {
@@ -12,7 +14,9 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return response()->view('aircrafts.index');
+        // TODO: Pagination
+        $aircrafts = Aircraft::all();
+        return response()->view('aircrafts.index', compact('aircrafts'));
     }
 
     /**
@@ -27,11 +31,13 @@ class AircraftController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param AircraftStoreRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        return response()->redirectToRoute('aircrafts.index');
+    public function store(AircraftStoreRequest $request) {
+        $aircraft = new Aircraft($request->all());
+        $aircraft->save();
+        return redirect()->route('aircrafts.index');
     }
 
     /**
@@ -41,7 +47,8 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-        return response()->view('aircrafts.show');
+        $aircraft = Aircraft::findOrFail($id);
+        return response()->view('aircrafts.show', compact('aircraft'));
     }
 
     /**
@@ -51,18 +58,24 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
-        return response()->view('aircrafts.edit');
+        $aircraft = Aircraft::findOrFail($id);
+        return response()->view('aircrafts.edit', compact('aircraft'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  AircraftUpdateRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-        return response()->redirectToRoute('aircrafts.show', $id);
+    public function update(AircraftUpdateRequest $request, $id) {
+        $aircraft = Aircraft::findOrFail($id);
+        $aircraft->fill($request->all());
+        $aircraft->save();
+
+        // TODO: Decide where to redirect after updating aircraft
+        return redirect()->route('aircrafts.show', $id);
     }
 
     /**
@@ -72,6 +85,8 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        return response()->redirectToRoute('aircrafts.index');
+        $aircraft = Aircraft::findOrFail($id);
+        $aircraft->delete();
+        return redirect()->route('aircrafts.index');
     }
 }

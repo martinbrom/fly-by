@@ -30,7 +30,7 @@ class Aircraft extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'cost', 'name',
+        'cost', 'name', 'range', 'speed'
     ];
 
     /**
