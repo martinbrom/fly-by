@@ -14,7 +14,7 @@ class CreateAircraftImagesTable extends Migration
 	public function up() {
 		Schema::create('aircraft_images', function (Blueprint $table) {
 			$table->increments('id');
-			$table->string('path', 50);
+			$table->string('path', 255);
 			$table->string('description', 50)->nullable();
 			$table->timestamps();
 

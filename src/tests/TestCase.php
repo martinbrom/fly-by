@@ -55,4 +55,13 @@ abstract class TestCase extends BaseTestCase
 
         return $order;
     }
+
+	/**
+	 * Creates a fake valid aircraft-image model
+	 *
+	 * @return \App\AircraftImage
+	 */
+    public function getFakeAircraftImage() {
+    	return factory(\App\AircraftImage::class, 'fake')->create();
+    }
 }

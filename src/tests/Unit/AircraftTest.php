@@ -117,7 +117,7 @@ class AircraftTest extends TestCase
 	 */
     public function testAircraftAircraftImageRelation() {
         $aircraft = factory(\App\Aircraft::class)->create();
-        $aircraftImage = factory(\App\AircraftImage::class)->create();
+        $aircraftImage = $this->getFakeAircraftImage();
         $this->assertEquals(0, $aircraft->image()->count());
 
         $aircraft->image()->associate($aircraftImage);

@@ -36,7 +36,7 @@ class AircraftImage extends BaseModel
 	 * @var array
 	 */
 	protected $rules = [
-		'path'        => 'required|unique:aircraft_images|max:50',
+		'path'        => 'required|unique:aircraft_images|max:255',
 		'description' => 'max:50'
 	];
 

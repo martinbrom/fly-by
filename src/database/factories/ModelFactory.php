@@ -60,7 +60,15 @@ $factory->define(App\AircraftAirport::class, function (Faker $faker) {
 });
 
 $factory->define(App\AircraftImage::class, function (Faker $faker) {
+	$upload_dir = storage_path() . '/uploads/';
 	return [
-		'path' => $faker->image(storage_path() . '/uploads', $width = 780, $height = 480)
+		'path' => $faker->image($upload_dir, $width = 780, $height = 480)
+	];
+});
+
+$factory->defineAs(App\AircraftImage::class, 'fake', function (Faker $faker) {
+	$upload_dir = storage_path() . '/uploads/';
+	return [
+		'path' => $upload_dir . $faker->bothify('************************') . '.jpg'
 	];
 });
