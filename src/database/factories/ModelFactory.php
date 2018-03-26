@@ -58,3 +58,9 @@ $factory->define(App\Order::class, function (Faker $faker) {
 $factory->define(App\AircraftAirport::class, function (Faker $faker) {
     return [];
 });
+
+$factory->define(App\AircraftImage::class, function (Faker $faker) {
+	return [
+		'path' => $faker->image(storage_path() . '/uploads', $width = 780, $height = 480)
+	];
+});

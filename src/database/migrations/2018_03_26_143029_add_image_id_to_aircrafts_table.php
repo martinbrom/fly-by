@@ -13,7 +13,7 @@ class AddImageIdToAircraftsTable extends Migration
 	 */
 	public function up() {
 		Schema::table('aircrafts', function (Blueprint $table) {
-			$table->integer('image_id')->unsigned()->after('id');
+			$table->integer('image_id')->unsigned()->nullable()->after('id');
 		});
 
 		Schema::table('aircrafts', function (Blueprint $table) {

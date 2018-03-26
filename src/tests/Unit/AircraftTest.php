@@ -111,4 +111,16 @@ class AircraftTest extends TestCase
         $this->assertEquals(1, $aircraft->airports()->count());
         $this->assertTrue($aircraft->airports()->first()->is($airport));
     }
+
+	/**
+	 * Test relation between aircraft and aircraft-image models
+	 */
+    public function testAircraftAircraftImageRelation() {
+        $aircraft = factory(\App\Aircraft::class)->create();
+        $aircraftImage = factory(\App\AircraftImage::class)->create();
+        $this->assertEquals(0, $aircraft->image()->count());
+
+        $aircraft->image()->associate($aircraftImage);
+        $this->assertTrue($aircraft->image() != null);
+    }
 }
