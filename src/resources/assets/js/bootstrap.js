@@ -58,3 +58,4 @@ require('jquery');
 require('popper.js');
 require('bootstrap');
 require('leaflet');
+require('scrollmagic');
