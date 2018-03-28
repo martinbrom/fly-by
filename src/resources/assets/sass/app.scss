@@ -5,4 +5,12 @@
 // Bootstrap
 @import "~bootstrap/scss/bootstrap.scss";
 @import "~leaflet/dist/leaflet.css";
+@import "~leaflet.awesome-markers/dist/leaflet.awesome-markers.css";
 
+#map {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}

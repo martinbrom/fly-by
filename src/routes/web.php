@@ -23,3 +23,7 @@ Route::get('/dashboard', function () {
 
 Route::resource('aircrafts', 'AircraftController');
 Route::resource('airports', 'AirportController');
+
+Route::get('map', function () {
+    return view('map.index');
+});
