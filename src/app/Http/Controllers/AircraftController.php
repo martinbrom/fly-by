@@ -6,7 +6,7 @@ use App\Aircraft;
 use App\Http\Requests\AircraftStoreRequest;
 use App\Http\Requests\AircraftUpdateRequest;
 
-class AircraftController extends Controller
+class AircraftController extends LoggedOnlyController
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class AircraftController extends Controller
     public function index() {
         // TODO: Pagination
         $aircrafts = Aircraft::all();
-        return response()->view('aircrafts.index', compact('aircrafts'));
+        return view('aircrafts.index', compact('aircrafts'));
     }
 
     /**
@@ -25,7 +25,7 @@ class AircraftController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return response()->view('aircrafts.create');
+        return view('aircrafts.create');
     }
 
     /**
@@ -48,7 +48,7 @@ class AircraftController extends Controller
      */
     public function show($id) {
         $aircraft = Aircraft::findOrFail($id);
-        return response()->view('aircrafts.show', compact('aircraft'));
+        return view('aircrafts.show', compact('aircraft'));
     }
 
     /**
@@ -59,7 +59,7 @@ class AircraftController extends Controller
      */
     public function edit($id) {
         $aircraft = Aircraft::findOrFail($id);
-        return response()->view('aircrafts.edit', compact('aircraft'));
+        return view('aircrafts.edit', compact('aircraft'));
     }
 
     /**

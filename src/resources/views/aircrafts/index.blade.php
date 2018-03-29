@@ -4,8 +4,22 @@
 
     <h1>List of aircrafts</h1>
 
+    <a href="{{ route('aircrafts.create') }}">Add a new aircraft</a>
+
     @foreach($aircrafts as $aircraft)
-        <a href="{{ route('aircrafts.show', $aircraft->id) }}">{{ $aircraft->name }}</a>
+        <div class="aircraft">
+            <h3 class="aircraft-name">{{ $aircraft->name }}</h3>
+            <a href="{{ route('aircrafts.show', $aircraft->id) }}">Display aircraft</a>
+            <a href="{{ route('aircrafts.edit', $aircraft->id) }}">Edit aircraft</a><br>
+            <p class="aircraft-range">Range: {{ $aircraft->range }} km</p>
+            <p class="aircraft-speed">Speed: {{ $aircraft->speed }} km/h</p>
+            <p class="aircraft-cost">Cost: {{ $aircraft->cost }} CZK/h</p>
+
+            <!-- TODO: Confirm dialog -->
+            {{ Form::open(['route' => ['aircrafts.destroy', $aircraft->id], 'method' => 'delete']) }}
+                <button type="submit" >Delete aircraft</button>
+            {{ Form::close() }}
+        </div>
     @endforeach
 
 @endsection

@@ -9,7 +9,7 @@ use Watson\Validating\ValidatingTrait;
  * Class BaseModel
  * Parent of each App Model
  *
- * @package App\Models
+ * @package App
  */
 abstract class BaseModel extends Model
 {

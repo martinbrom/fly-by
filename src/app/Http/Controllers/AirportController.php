@@ -6,7 +6,7 @@ use App\Airport;
 use App\Http\Requests\AirportStoreRequest;
 use App\Http\Requests\AirportUpdateRequest;
 
-class AirportController extends Controller
+class AirportController extends LoggedOnlyController
 {
     /**
      * Display a listing of the resource.

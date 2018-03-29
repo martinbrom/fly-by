@@ -105,10 +105,23 @@ class AircraftTest extends TestCase
     public function testAircraftAirportRelation() {
         $aircraft = factory(\App\Aircraft::class)->create();
         $airport = factory(\App\Airport::class)->create();
+        $airport2 = factory(\App\Airport::class)->create();
         $this->assertEquals(0, $aircraft->airports()->count());
 
         $aircraft->airports()->attach($airport);
         $this->assertEquals(1, $aircraft->airports()->count());
+        $aircraft->airports()->attach($airport2);
+        $this->assertEquals(2, $aircraft->airports()->count());
         $this->assertTrue($aircraft->airports()->first()->is($airport));
+    }
+
+	// TODO: Testing functionality - remove later
+    public function testCompositeUniqueValidation() {
+	    $aircraft = factory(\App\Aircraft::class)->create();
+	    $airport = factory(\App\Airport::class)->create();
+	    $aircraft->airports()->attach($airport);
+	    echo $aircraft->save();
+	    $aircraft->airports()->attach($airport);
+	    echo $aircraft->save();
     }
 }
