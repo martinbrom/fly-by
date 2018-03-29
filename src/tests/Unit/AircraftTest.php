@@ -115,13 +115,25 @@ class AircraftTest extends TestCase
         $this->assertTrue($aircraft->airports()->first()->is($airport));
     }
 
-	// TODO: Testing functionality - remove later
-    public function testCompositeUniqueValidation() {
-	    $aircraft = factory(\App\Aircraft::class)->create();
-	    $airport = factory(\App\Airport::class)->create();
-	    $aircraft->airports()->attach($airport);
-	    echo $aircraft->save();
-	    $aircraft->airports()->attach($airport);
-	    echo $aircraft->save();
+	/**
+	 * Test relation between aircraft and aircraft-image models
+	 */
+    public function testAircraftAircraftImageRelation() {
+        $aircraft = factory(\App\Aircraft::class)->create();
+        $aircraftImage = $this->getFakeAircraftImage();
+        $this->assertEquals(0, $aircraft->image()->count());
+
+        $aircraft->image()->associate($aircraftImage);
+        $this->assertTrue($aircraft->image() != null);
     }
+
+	// TODO: Testing functionality - remove later
+	public function testCompositeUniqueValidation() {
+		$aircraft = factory(\App\Aircraft::class)->create();
+		$airport = factory(\App\Airport::class)->create();
+		$aircraft->airports()->attach($airport);
+		echo $aircraft->save();
+		$aircraft->airports()->attach($airport);
+		echo $aircraft->save();
+	}
 }
