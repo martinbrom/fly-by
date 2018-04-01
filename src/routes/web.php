@@ -26,6 +26,6 @@ Route::get('admin', 'AdminController@index')->name('admin.index');
 Route::resource('aircrafts', 'AircraftController');
 Route::resource('airports', 'AirportController');
 
-Route::get('manage-aircrafts', 'AircraftAirportController@index')->name('aircraft-airports.index');
-Route::post('add-aircraft-to-airport', 'AircraftAirportController@add')->name('aircraft-airports.add');
-Route::post('remove-aircraft-from-airport', 'AircraftAirportController@remove')->name('aircraft-airports.remove');
+Route::resource('aircraft-airports', 'AircraftAirportController', [
+	'only' => ['store', 'update', 'destroy']
+]);

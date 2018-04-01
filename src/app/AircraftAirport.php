@@ -24,6 +24,15 @@ class AircraftAirport extends BaseModel
 {
     protected $table = 'aircraft_airport_xref';
 
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
+		'aircraft_id', 'airport_id'
+	];
+
     /**
      * Model validation rules
      *

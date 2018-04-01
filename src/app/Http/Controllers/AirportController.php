@@ -48,7 +48,8 @@ class AirportController extends LoggedOnlyController
      */
     public function show($id) {
         $airport = Airport::findOrFail($id);
-        return response()->view('airports.show', compact('airport'));
+        $aircrafts = $airport->aircrafts()->get();
+        return response()->view('airports.show', compact('airport', 'aircrafts'));
     }
 
     /**

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AirportStoreRequest extends FormRequest
+class AircraftAirportStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,7 @@ class AirportStoreRequest extends FormRequest
      */
     public function rules()
     {
-        $airport = new \App\Airport();
-        return $airport->getRules();
+        $aircraft = new \App\AircraftAirport();
+        return $aircraft->getRules();
     }
 }
