@@ -57,6 +57,43 @@ class OrderTest extends TestCase
         $this->assertTrue($order->save());
     }
 
+	/**
+	 * Test validation of email attribute
+	 */
+    public function testEmailValidation() {
+    	$order = $this->getValidOrder();
+    	$order->email = '';
+	    $this->assertFalse($order->save());
+
+	    $order->email = 'abcd';
+	    $this->assertFalse($order->save());
+
+	    $order->email = 'test@test.cz';
+	    $this->assertTrue($order->save());
+    }
+
+	/**
+	 * Test validation of confirmed_at attribute
+	 */
+    public function testConfirmedAtValidation() {
+    	$order = $this->getValidOrder();
+    	$order->confirmed_at = null;
+    	$this->assertTrue($order->save());
+
+    	$order->confirmed_at = \Carbon\Carbon::now();
+    	$this->assertTrue($order->save());
+    }
+
+	/**
+	 * Test for thrown exception when trying to fill
+	 * confirmed_at with invalid date
+	 */
+    public function testConfirmedAtInvalidArgumentException() {
+		$this->expectException(\InvalidArgumentException::class);
+	    $order = $this->getValidOrder();
+	    $order->confirmed_at = 'abcd';
+    }
+
     /**
      * Test relation between order and route models
      */
@@ -91,5 +128,15 @@ class OrderTest extends TestCase
         $order->aircraftAirport()->associate($aircraftAirport);
         $this->assertEquals(1, $order->aircraftAirport()->count());
         $this->assertTrue($order->aircraftAirport()->first()->is($aircraftAirport));
+    }
+
+	/**
+	 * Test confirmation of a single order
+	 */
+    public function testConfirmOne() {
+    	$order = $this->getValidOrder();
+    	$this->assertEquals(null, $order->confirmed_at);
+    	$order->confirm();
+    	$this->assertTrue($order->confirmed_at <= \Carbon\Carbon::now());
     }
 }

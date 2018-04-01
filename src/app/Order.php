@@ -3,20 +3,25 @@
 namespace App;
 
 /**
- * App\Models\Order
+ * App\Order
  *
  * @property int $id
  * @property int $price
  * @property string $code
+ * @property string $email
  * @property int $route_id
  * @property int $aircraft_airport_id
+ * @property string|null $confirmed_at
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \App\AircraftAirport $aircraftAirport
  * @property-read \App\Route $route
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order unconfirmed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereAircraftAirportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereConfirmedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereRouteId($value)
@@ -31,7 +36,18 @@ class Order extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'price'
+        'email'
+    ];
+
+	/**
+	 *
+	 *
+	 * @var array
+	 */
+    protected $dates = [
+    	'created_at',
+	    'updated_at',
+    	'confirmed_at'
     ];
 
     /**
@@ -42,9 +58,28 @@ class Order extends BaseModel
     protected $rules = [
         'price' => 'required|integer|min:0',
         'code' => 'required|max:32',
+	    'email' => 'required|email',
+	    'confirmed_at' => 'nullable|date',
         'route_id' => 'required|exists:routes,id',
         'aircraft_airport_id' => 'required|exists:aircraft_airport_xref,id'
     ];
+
+	/**
+	 * Scope a query to only include popular users.
+	 *
+	 * @param \Illuminate\Database\Eloquent\Builder $query
+	 * @return \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeUnconfirmed($query) {
+		return $query->where('confirmed_at', '=', null);
+	}
+
+	/**
+	 *
+	 */
+    public function confirm() {
+    	$this->setAttribute('confirmed_at', \Carbon\Carbon::now());
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
