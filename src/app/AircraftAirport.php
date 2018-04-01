@@ -39,7 +39,6 @@ class AircraftAirport extends BaseModel
      * @var array
      */
     protected $rules = [
-    	// TODO: Unique combination
         'aircraft_id' => 'required|exists:aircrafts,id',
         'airport_id' => 'required|exists:airports,id'
     ];

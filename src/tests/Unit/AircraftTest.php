@@ -126,14 +126,4 @@ class AircraftTest extends TestCase
         $aircraft->image()->associate($aircraftImage);
         $this->assertTrue($aircraft->image() != null);
     }
-
-	// TODO: Testing functionality - remove later
-	public function testCompositeUniqueValidation() {
-		$aircraft = factory(\App\Aircraft::class)->create();
-		$airport = factory(\App\Airport::class)->create();
-		$aircraft->airports()->attach($airport);
-		echo $aircraft->save();
-		$aircraft->airports()->attach($airport);
-		echo $aircraft->save();
-	}
 }
