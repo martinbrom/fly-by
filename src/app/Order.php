@@ -65,7 +65,7 @@ class Order extends BaseModel
     ];
 
 	/**
-	 * Scope a query to only include popular users.
+	 * Scope a query to only include unconfirmed orders
 	 *
 	 * @param \Illuminate\Database\Eloquent\Builder $query
 	 * @return \Illuminate\Database\Eloquent\Builder
