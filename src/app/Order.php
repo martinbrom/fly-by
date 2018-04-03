@@ -61,7 +61,7 @@ class Order extends BaseModel
 	    'email' => 'required|email',
 	    'confirmed_at' => 'nullable|date',
         'route_id' => 'required|exists:routes,id',
-        'aircraft_airport_id' => 'required|exists:aircraft_airport_xref,id'
+        'aircraft_airport_id' => 'nullable|exists:aircraft_airport_xref,id'
     ];
 
 	/**

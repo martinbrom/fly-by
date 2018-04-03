@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->integer('price')->unsigned();
             $table->string('code', 32);
             $table->integer('route_id')->unsigned();
-            $table->integer('aircraft_airport_id')->unsigned();
+            $table->integer('aircraft_airport_id')->unsigned()->nullable();
             $table->timestamps();
 
             $table->unique('id');
