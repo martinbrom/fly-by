@@ -31,8 +31,6 @@ class AircraftAirportController extends LoggedOnlyController
 		$aircraftAirport = AircraftAirport::findOrFail($id);
 		$aircraftAirport->fill($request->all());
 		$aircraftAirport->save();
-
-		// TODO: Decide where to redirect after updating
 		return response()->json(true);
 	}
 

@@ -3,7 +3,7 @@
 @section('content')
 
     <h1>Create a new aircraft</h1>
-    {!! Form::open(['route' => 'aircrafts.store', 'method' => 'post']) !!}
+    {!! Form::open(['route' => 'admin.aircrafts.store', 'method' => 'post']) !!}
         {!! Form::token() !!}
 
         {!! Form::label('name', 'Name') !!}

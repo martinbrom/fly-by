@@ -5,7 +5,7 @@
     <h1>Display a specific airport</h1>
     <h2>Information about a specific airport</h2>
     <p class="airport-name">{{ $airport->name }}</p>
-    <a href="{{ route('airports.edit', $airport->id) }}">Edit</a>
+    <a href="{{ route('admin.airports.edit', $airport->id) }}">Edit</a>
 
     <h2>Aircrafts</h2>
     @foreach($aircrafts as $aircraft)

@@ -3,7 +3,7 @@
 @section('content')
 
     <h1>Edit a specific airport</h1>
-    {!! Form::model($airport, ['route' => ['airports.update', $airport->id], 'method' => 'put']) !!}
+    {!! Form::model($airport, ['route' => ['admin.airports.update', $airport->id], 'method' => 'put']) !!}
         {!! Form::token() !!}
 
         {!! Form::label('name', 'Name') !!}

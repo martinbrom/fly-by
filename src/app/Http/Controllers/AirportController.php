@@ -16,7 +16,7 @@ class AirportController extends LoggedOnlyController
     public function index() {
         // TODO: Pagination
         $airports = Airport::all();
-        return response()->view('airports.index', compact('airports'));
+        return response()->view('admin.airports.index', compact('airports'));
     }
 
     /**
@@ -25,7 +25,7 @@ class AirportController extends LoggedOnlyController
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return response()->view('airports.create');
+        return response()->view('admin.airports.create');
     }
 
     /**
@@ -37,7 +37,7 @@ class AirportController extends LoggedOnlyController
     public function store(AirportStoreRequest $request) {
         $airport = new Airport($request->all());
         $airport->save();
-        return redirect()->route('airports.index');
+        return redirect()->route('admin.airports.index');
     }
 
     /**
@@ -49,7 +49,7 @@ class AirportController extends LoggedOnlyController
     public function show($id) {
         $airport = Airport::findOrFail($id);
         $aircrafts = $airport->aircrafts()->get();
-        return response()->view('airports.show', compact('airport', 'aircrafts'));
+        return response()->view('admin.airports.show', compact('airport', 'aircrafts'));
     }
 
     /**
@@ -60,7 +60,7 @@ class AirportController extends LoggedOnlyController
      */
     public function edit($id) {
         $airport = Airport::findOrFail($id);
-        return response()->view('airports.edit', compact('airport'));
+        return response()->view('admin.airports.edit', compact('airport'));
     }
 
     /**
@@ -76,7 +76,7 @@ class AirportController extends LoggedOnlyController
         $airport->save();
 
         // TODO: Decide where to redirect after updating airport
-        return redirect()->route('airports.show', $id);
+        return redirect()->route('admin.airports.show', $id);
     }
 
     /**
@@ -88,6 +88,6 @@ class AirportController extends LoggedOnlyController
     public function destroy($id) {
         $airport = Airport::findOrFail($id);
         $airport->delete();
-        return redirect()->route('airports.index');
+        return redirect()->route('admin.airports.index');
     }
 }

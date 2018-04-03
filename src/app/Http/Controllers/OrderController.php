@@ -14,7 +14,7 @@ class OrderController extends LoggedOnlyController
 	public function index() {
 		// TODO: Pagination
 		$orders = Order::all();
-		return view('orders.index', compact('orders'));
+		return view('admin.orders.index', compact('orders'));
 	}
 
 	/**
@@ -25,7 +25,7 @@ class OrderController extends LoggedOnlyController
 	 */
 	public function show($id) {
 		$order = Order::findOrFail($id);
-		return view('orders.show', compact('order'));
+		return view('admin.orders.show', compact('order'));
 	}
 
 	/**
@@ -37,7 +37,7 @@ class OrderController extends LoggedOnlyController
 	public function destroy($id) {
 		$order = Order::findOrFail($id);
 		$order->delete();
-		return redirect()->route('orders.index');
+		return redirect()->route('admin.orders.index');
 	}
 
 	/**
@@ -74,6 +74,6 @@ class OrderController extends LoggedOnlyController
 			// TODO: Send email to user
 		}
 
-		return redirect()->route('orders.index');
+		return redirect()->route('admin.orders.index');
 	}
 }

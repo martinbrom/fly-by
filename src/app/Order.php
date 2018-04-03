@@ -40,7 +40,7 @@ class Order extends BaseModel
     ];
 
 	/**
-	 *
+	 * Carbon instances to be converted to dates
 	 *
 	 * @var array
 	 */

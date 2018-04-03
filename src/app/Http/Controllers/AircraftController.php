@@ -16,7 +16,7 @@ class AircraftController extends LoggedOnlyController
     public function index() {
         // TODO: Pagination
         $aircrafts = Aircraft::all();
-        return view('aircrafts.index', compact('aircrafts'));
+        return view('admin.aircrafts.index', compact('aircrafts'));
     }
 
     /**
@@ -25,7 +25,7 @@ class AircraftController extends LoggedOnlyController
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return view('aircrafts.create');
+        return view('admin.aircrafts.create');
     }
 
     /**
@@ -37,7 +37,7 @@ class AircraftController extends LoggedOnlyController
     public function store(AircraftStoreRequest $request) {
         $aircraft = new Aircraft($request->all());
         $aircraft->save();
-        return redirect()->route('aircrafts.index');
+        return redirect()->route('admin.aircrafts.index');
     }
 
     /**
@@ -48,7 +48,7 @@ class AircraftController extends LoggedOnlyController
      */
     public function show($id) {
         $aircraft = Aircraft::findOrFail($id);
-        return view('aircrafts.show', compact('aircraft'));
+        return view('admin.aircrafts.show', compact('aircraft'));
     }
 
     /**
@@ -59,7 +59,7 @@ class AircraftController extends LoggedOnlyController
      */
     public function edit($id) {
         $aircraft = Aircraft::findOrFail($id);
-        return view('aircrafts.edit', compact('aircraft'));
+        return view('admin.aircrafts.edit', compact('aircraft'));
     }
 
     /**
@@ -75,7 +75,7 @@ class AircraftController extends LoggedOnlyController
         $aircraft->save();
 
         // TODO: Decide where to redirect after updating aircraft
-        return redirect()->route('aircrafts.show', $id);
+        return redirect()->route('admin.aircrafts.show', $id);
     }
 
     /**
@@ -87,6 +87,6 @@ class AircraftController extends LoggedOnlyController
     public function destroy($id) {
         $aircraft = Aircraft::findOrFail($id);
         $aircraft->delete();
-        return redirect()->route('aircrafts.index');
+        return redirect()->route('admin.aircrafts.index');
     }
 }

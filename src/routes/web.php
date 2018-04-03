@@ -22,19 +22,20 @@ Route::get('/dashboard', function () {
 });
 
 Route::prefix('admin')->group(function () {
-	Route::get('/', 'AdminController@index')->name('admin.index');
+	Route::name('admin.')->group(function () {
+		Route::get('/', 'AdminController@index')->name('index');
+		Route::resource('aircrafts', 'AircraftController');
 
-	Route::resource('aircrafts', 'AircraftController');
+		Route::resource('airports', 'AirportController');
 
-	Route::resource('airports', 'AirportController');
+		Route::resource('aircraft-airports', 'AircraftAirportController', [
+			'only' => ['store', 'update', 'destroy']
+		]);
 
-	Route::resource('aircraft-airports', 'AircraftAirportController', [
-		'only' => ['store', 'update', 'destroy']
-	]);
-
-	Route::post('orders/{id}/confirm', 'OrderController@confirmOne')->name('order.confirm-one');
-	Route::post('orders/confirm-all', 'OrderController@confirmAll')->name('order.confirm-all');
-	Route::resource('orders', 'OrderController', [
-		'only' => ['index', 'show', 'destroy']
-	]);
+		Route::post('orders/{id}/confirm', 'OrderController@confirmOne')->name('orders.confirm-one');
+		Route::post('orders/confirm-all', 'OrderController@confirmAll')->name('orders.confirm-all');
+		Route::resource('orders', 'OrderController', [
+			'only' => ['index', 'show', 'destroy']
+		]);
+	});
 });

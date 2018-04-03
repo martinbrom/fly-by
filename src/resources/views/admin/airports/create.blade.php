@@ -3,7 +3,7 @@
 @section('content')
 
     <h1>Create a new airport</h1>
-    {!! Form::open(['route' => 'airports.store', 'method' => 'post']) !!}
+    {!! Form::open(['route' => 'admin.airports.store', 'method' => 'post']) !!}
         {!! Form::token() !!}
 
         <div class="form-group">

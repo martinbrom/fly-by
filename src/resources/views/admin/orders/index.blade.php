@@ -6,7 +6,9 @@
     <div class="order">
         <p class="order-code">{{ $order->code }}</p>
         <p class="order-email">{{ $order->email }}</p>
-        <p class="order-confirmed-state">{{ $order->confirmed_at }}</p>
+        <a href="{{ route('admin.orders.show', $order->id) }}">Display order information</a><br>
+
+        <!-- TODO: Ajax confirm probably -->
         <button class="order-confirm">Confirm order</button>
     </div>
 @endforeach
