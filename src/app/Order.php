@@ -10,11 +10,11 @@ namespace App;
  * @property string $code
  * @property string $email
  * @property int $route_id
- * @property int $aircraft_airport_id
- * @property string|null $confirmed_at
+ * @property int|null $aircraft_airport_id
+ * @property \Carbon\Carbon|null $confirmed_at
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\AircraftAirport $aircraftAirport
+ * @property-read \App\AircraftAirport|null $aircraftAirport
  * @property-read \App\Route $route
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order unconfirmed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereAircraftAirportId($value)
