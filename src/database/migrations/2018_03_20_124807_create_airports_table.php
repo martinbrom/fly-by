@@ -20,6 +20,7 @@ class CreateAirportsTable extends Migration
             $table->float('lon', 10, 6);
             $table->string('code', 20)->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique('id');
         });

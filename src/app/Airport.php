@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 /**
  * App\Models\Airport
  *
@@ -24,6 +26,8 @@ namespace App;
  */
 class Airport extends BaseModel
 {
+	use SoftDeletes;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -32,6 +36,17 @@ class Airport extends BaseModel
     protected $fillable = [
         'code', 'name', 'lat', 'lon'
     ];
+
+	/**
+	 * Carbon instances to be converted to dates
+	 *
+	 * @var array
+	 */
+	protected $dates = [
+		'created_at',
+		'updated_at',
+		'deleted_at'
+	];
 
     /**
      * Model validation rules

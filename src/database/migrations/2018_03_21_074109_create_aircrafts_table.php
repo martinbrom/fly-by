@@ -20,6 +20,7 @@ class CreateAircraftsTable extends Migration
             $table->integer('speed')->unsigned();
             $table->integer('cost')->unsigned();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique('id');
         });

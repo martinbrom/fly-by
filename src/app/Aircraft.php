@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 /**
  * App\Aircraft
  *
@@ -27,6 +29,8 @@ namespace App;
  */
 class Aircraft extends BaseModel
 {
+	use SoftDeletes;
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
@@ -37,6 +41,17 @@ class Aircraft extends BaseModel
 		'name',
 		'range',
 		'speed'
+	];
+
+	/**
+	 * Carbon instances to be converted to dates
+	 *
+	 * @var array
+	 */
+	protected $dates = [
+		'created_at',
+		'updated_at',
+		'deleted_at'
 	];
 
 	/**

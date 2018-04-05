@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 /**
  * App\Models\AircraftAirport
  *
@@ -22,6 +24,8 @@ namespace App;
  */
 class AircraftAirport extends BaseModel
 {
+	use SoftDeletes;
+
     protected $table = 'aircraft_airport_xref';
 
 	/**
@@ -31,6 +35,17 @@ class AircraftAirport extends BaseModel
 	 */
 	protected $fillable = [
 		'aircraft_id', 'airport_id'
+	];
+
+	/**
+	 * Carbon instances to be converted to dates
+	 *
+	 * @var array
+	 */
+	protected $dates = [
+		'created_at',
+		'updated_at',
+		'deleted_at'
 	];
 
     /**
