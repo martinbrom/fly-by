@@ -10,11 +10,7 @@
 </head>
 <body>
 <div id="app">
-    @include('components.nav')
-
-    <div class="container">
-        @yield('content')
-    </div>
+    @yield('body')
 </div>
 <script src="{{ asset('js/app.js') }}"></script>
 </body>

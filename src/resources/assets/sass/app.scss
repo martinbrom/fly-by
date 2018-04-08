@@ -1,8 +1,13 @@
 // Fonts
 //@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+
 // Variables
 //@import "variables";
+
 // Bootstrap
 @import "~bootstrap/scss/bootstrap.scss";
 @import "~leaflet/dist/leaflet.css";
+
+// Administration CSS
+@import "admin";
 

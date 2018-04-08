@@ -23,6 +23,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Aircraft[] $aircrafts
+ * @property \Carbon\Carbon|null $deleted_at
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\App\Airport onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Airport withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Airport withoutTrashed()
  */
 class Airport extends BaseModel
 {

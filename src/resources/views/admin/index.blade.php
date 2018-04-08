@@ -1,7 +1,5 @@
-<!-- TODO: Extend admin layout, which extends base layout -->
+@extends('layouts/admin')
 
-<h1>Administration</h1>
-<a href="{{ route('admin.aircrafts.index') }}">Aircrafts</a><br>
-<a href="{{ route('admin.airports.index') }}">Airports</a><br>
-<a href="{{ route('admin.orders.index') }}">Orders</a>
-
+@section('content')
+    <h1>Administration Landing Page</h1>
+@endsection

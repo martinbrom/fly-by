@@ -15,16 +15,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $cost
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Airport[] $airports
  * @property-read \App\AircraftImage|null $image
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\App\Aircraft onlyTrashed()
+ * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereCost($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereImageId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereRange($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereSpeed($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Aircraft withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Aircraft withoutTrashed()
  * @mixin \Eloquent
  */
 class Aircraft extends BaseModel

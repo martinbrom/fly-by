@@ -1,3 +1,7 @@
+@extends('layouts/admin')
+
+@section('content')
+
 <h1>Display a specific order</h1>
 
 <p class="order-code">{{ $order->code }}</p>
@@ -6,3 +10,5 @@
 
 <!-- TODO: Form with POST -->
 <button class="order-confirm">Confirm order</button>
+
+@endsection

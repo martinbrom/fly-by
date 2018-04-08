@@ -5,21 +5,28 @@ namespace App;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * App\Models\AircraftAirport
+ * App\AircraftAirport
  *
  * @property int $id
  * @property int $aircraft_id
  * @property int $airport_id
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $deleted_at
  * @property-read \App\Aircraft $aircraft
  * @property-read \App\Airport $airport
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Order[] $orders
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\App\AircraftAirport onlyTrashed()
+ * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\AircraftAirport whereAircraftId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\AircraftAirport whereAirportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\AircraftAirport whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\AircraftAirport whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\AircraftAirport whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\AircraftAirport whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\AircraftAirport withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\AircraftAirport withoutTrashed()
  * @mixin \Eloquent
  */
 class AircraftAirport extends BaseModel

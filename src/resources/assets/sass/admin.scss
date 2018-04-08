@@ -1,0 +1,37 @@
+@import "variables";
+
+$nav-width: 20%;
+$body-width: 100% - $nav-width;
+
+.admin-nav {
+  background: $darkgray;
+
+  @include media-breakpoint-up(md) {
+    float: left;
+    position: fixed;
+    width: $nav-width;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: block !important;
+
+    #navigation ul {
+      flex-direction: column;
+    }
+
+    #navigation li {
+      float: left;
+    }
+  }
+}
+
+.admin-body {
+  padding: 20px;
+  float: left;
+  width: 100%;
+
+  @include media-breakpoint-up(md) {
+    margin-left: $nav-width;
+    width: $body-width;
+  }
+}
