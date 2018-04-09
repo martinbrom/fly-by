@@ -4,17 +4,47 @@
 
     <h1>Orders</h1>
 
-    <button class="order-confirm-all">Confirm all orders</button>
+    <a href="#order-confirm-all-form" onclick="event.preventDefault(); document.getElementById('order-confirm-all-form').submit();">
+        Confirm all orders</a>
+    <form id="order-confirm-all-form"
+          action="{{ route('admin.orders.confirm-all') }}" method="POST"
+          style="display: none;">
+        {{ csrf_field() }}
+    </form>
 
-    @foreach($orders as $order)
-        <div class="order">
-            <p class="order-code">{{ $order->code }}</p>
-            <p class="order-email">{{ $order->email }}</p>
-            <a href="{{ route('admin.orders.show', $order->id) }}">Display order information</a><br>
+    @if(count($orders) > 0)
+        <table class="table table-striped table-responsive-md w-100">
+            <thead class="thead-dark w-100">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Code</th>
+                <th scope="col">Email</th>
+                <th scope="col">Display</th>
+                <th scope="col">Confirm</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($orders as $order)
+                <tr>
+                    <td class="order-id">{{ $order->id }}</td>
+                    <td class="order-code">{{ $order->code }}</td>
+                    <td class="order-email">{{ $order->email }}</td>
+                    <td class="order-show"><a href="{{ route('admin.orders.show', $order->id) }}">Display</a></td>
+                    <td class="order-confirm-one">
+                        <a href="#order-confirm-one-form-{{ $order->id }}"
+                                onclick="event.preventDefault(); document.getElementById('order-confirm-one-form-{{ $order->id }}').submit();">
+                                Confirm</a>
+                        <form id="order-confirm-one-form-{{ $order->id }}"
+                                action="{{ route('admin.orders.confirm-one', $order->id) }}" method="POST"
+                                style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    @endif
 
-            <!-- TODO: Ajax confirm probably -->
-            <button class="order-confirm">Confirm order</button>
-        </div>
-    @endforeach
 
 @endsection

@@ -2,13 +2,24 @@
 
 @section('content')
 
-<h1>Display a specific order</h1>
+    <h1>Display a specific order</h1>
 
-<p class="order-code">{{ $order->code }}</p>
-<p class="order-email">{{ $order->email }}</p>
-<p class="order-confirmed-state">{{ $order->confirmed_at ?: 'not confirmed yet' }}</p>
+    <p class="order-code">{{ $order->code }}</p>
+    <p class="order-email">{{ $order->email }}</p>
+    <p class="order-confirmed-state">{{ $order->confirmed_at ?: 'not confirmed yet' }}</p>
 
-<!-- TODO: Form with POST -->
-<button class="order-confirm">Confirm order</button>
+    <!-- TODO: Display route -->
+    <!-- TODO: Display aircraft-airport -->
+    <!-- TODO: Display whether the aircraft has to be moved, and how much would it cost -->
+
+    <!-- TODO: Form with POST -->
+    <a href="#order-confirm-one-form"
+       onclick="event.preventDefault(); document.getElementById('order-confirm-one-form').submit();">
+        Confirm order</a>
+    <form id="order-confirm-one-form"
+          action="{{ route('admin.orders.confirm-one', $order->id) }}" method="POST"
+          style="display: none;">
+        {{ csrf_field() }}
+    </form>
 
 @endsection

@@ -13,7 +13,7 @@ class OrderController extends LoggedOnlyController
 	 */
 	public function index() {
 		// TODO: Pagination
-		$orders = Order::all();
+		$orders = Order::unconfirmed()->get();
 		return view('admin.orders.index', compact('orders'));
 	}
 
@@ -24,7 +24,7 @@ class OrderController extends LoggedOnlyController
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show($id) {
-		$order = Order::findOrFail($id);
+		$order = Order::unconfirmed()->findOrFail($id);
 		return view('admin.orders.show', compact('order'));
 	}
 

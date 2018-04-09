@@ -79,6 +79,7 @@ class Order extends BaseModel
 	 */
     public function confirm() {
     	$this->setAttribute('confirmed_at', \Carbon\Carbon::now());
+    	$this->save();
     }
 
     /**
