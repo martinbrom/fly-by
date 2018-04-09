@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Http\Requests\AircraftImageStoreRequest;
+
 /**
  * App\AircraftImage
  *
@@ -45,5 +47,15 @@ class AircraftImage extends BaseModel
 	 */
 	public function aircrafts() {
 		return $this->hasMany(\App\Aircraft::class, 'image_id');
+	}
+
+	/**
+	 * @param   AircraftImageStoreRequest $request
+	 * @return  bool
+	 */
+	public function saveFromRequest(AircraftImageStoreRequest $request): bool {
+		$this->description = $request->input('description');
+		$this->path = substr($request->file('image')->store('public/aircraft-images'), 7);
+		return $this->save();
 	}
 }

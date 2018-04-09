@@ -7,7 +7,7 @@
     <a href="{{ route('admin.airports.create') }}">Add a new airport</a>
 
     @if(count($airports) > 0)
-        <table class="table table-striped">
+        <table class="table table-striped table-responsive-md w-100">
             <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>

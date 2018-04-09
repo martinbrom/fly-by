@@ -24,6 +24,10 @@ Route::get('/dashboard', function () {
 Route::prefix('admin')->group(function () {
 	Route::name('admin.')->group(function () {
 		Route::get('/', 'AdminController@index')->name('index');
+
+		Route::get('aircrafts/{id}/edit-image', 'AircraftController@editImage')->name('aircrafts.edit-image');
+		Route::post('aircrafts/{id}/set-image-default', 'AircraftController@defaultImage')->name('aircrafts.default-image');
+		Route::post('aircrafts/{id}/store-image', 'AircraftController@storeImage')->name('aircrafts.store-image');
 		Route::resource('aircrafts', 'AircraftController');
 
 		Route::resource('airports', 'AirportController');

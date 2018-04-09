@@ -7,8 +7,8 @@
     <a href="{{ route('admin.aircrafts.create') }}">Add a new aircraft</a>
 
     @if(count($aircrafts) > 0)
-        <table class="table table-striped">
-            <thead class="thead-dark">
+        <table class="table table-striped table-responsive-md w-100">
+            <thead class="thead-dark w-100">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Name</th>

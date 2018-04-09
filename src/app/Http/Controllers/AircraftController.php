@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Aircraft;
+use App\AircraftImage;
+use App\Http\Requests\AircraftImageStoreRequest;
 use App\Http\Requests\AircraftStoreRequest;
 use App\Http\Requests\AircraftUpdateRequest;
 
@@ -48,7 +50,8 @@ class AircraftController extends LoggedOnlyController
      */
     public function show($id) {
         $aircraft = Aircraft::findOrFail($id);
-        return view('admin.aircrafts.show', compact('aircraft'));
+        $image = $aircraft->image()->first();
+        return view('admin.aircrafts.show', compact('aircraft', 'image'));
     }
 
     /**
@@ -88,5 +91,51 @@ class AircraftController extends LoggedOnlyController
         $aircraft = Aircraft::findOrFail($id);
         $aircraft->delete();
         return redirect()->route('admin.aircrafts.index');
+    }
+
+	/**
+	 * Show the form for editing aircraft image
+	 *
+	 * @param   int $id
+	 * @return  \Illuminate\Http\Response
+	 */
+    public function editImage($id) {
+    	$aircraft = Aircraft::findOrFail($id);
+    	$image = $aircraft->image()->first();
+    	return view('admin.aircrafts.edit-image', compact('aircraft', 'image'));
+    }
+
+	/**
+	 * Store a new aircraft image
+	 *
+	 * @param   AircraftImageStoreRequest $request
+	 * @param   int $id
+	 * @return  \Illuminate\Http\Response
+	 */
+    public function storeImage(AircraftImageStoreRequest $request, $id) {
+    	$aircraft = Aircraft::findOrFail($id);
+	    $image = new AircraftImage();
+
+	    if (!$image->saveFromRequest($request)) {
+	    	// TODO: Creating failed
+		    return redirect()->back();
+	    }
+
+	    $aircraft->image()->associate($image);
+	    $aircraft->save();
+
+    	return redirect()->route('admin.aircrafts.show', $aircraft->id);
+    }
+
+	/**
+	 * Set aircraft image to the default value (NULL)
+	 *
+	 * @param   int $id
+	 * @return  \Illuminate\Http\Response
+	 */
+    public function defaultImage($id) {
+    	$aircraft = Aircraft::findOrFail($id);
+    	$aircraft->image()->dissociate();
+    	return redirect()->route('admin.aircrafts.show', $aircraft->id);
     }
 }
