@@ -123,7 +123,6 @@ class AircraftController extends LoggedOnlyController
 
 	    $aircraft->image()->associate($image);
 	    $aircraft->save();
-
     	return redirect()->route('admin.aircrafts.show', $aircraft->id);
     }
 
@@ -136,6 +135,7 @@ class AircraftController extends LoggedOnlyController
     public function defaultImage($id) {
     	$aircraft = Aircraft::findOrFail($id);
     	$aircraft->image()->dissociate();
+    	$aircraft->save();
     	return redirect()->route('admin.aircrafts.show', $aircraft->id);
     }
 }

@@ -67,7 +67,7 @@ class Aircraft extends BaseModel
 	 * @var array
 	 */
 	protected $rules = [
-		'image_id' => 'exists:aircraft_images,id',
+		'image_id' => 'nullable|exists:aircraft_images,id',
 		'name'     => 'required|max:200',
 		'range'    => 'required|integer|min:0',
 		'speed'    => 'required|integer|min:0',
