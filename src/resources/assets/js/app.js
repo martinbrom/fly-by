@@ -21,5 +21,4 @@ require('./bootstrap');
 //     el: '#app'
 // });
 
-require('./layout.js');
 require('./map.js');

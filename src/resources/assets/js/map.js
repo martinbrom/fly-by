@@ -9,23 +9,21 @@ function mapInit() {
 }
 
 function switchToMap() {
-    $('#map-bottom-control-panel').show();
-    $('#map-top-wrapper').height(100);
+    $('#map-control-panel').hide();
 }
 
 function switchToPanel() {
-    $('#map-bottom-control-panel').hide();
-    $('#map-top-wrapper').height('100%');
+    $('#map-control-panel').show();
 }
 
 $(document).ready(function () {
     mapInit();
 
     $('#map-bottom-buttons').find('button').click(function (event) {
-        switchToMap();
+        switchToPanel();
     });
 
     $('#map').click(function (event) {
-        switchToPanel();
+        switchToMap()
     });
 });
