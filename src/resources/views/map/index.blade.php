@@ -14,6 +14,7 @@
         </div>
         <div id="map-control-panel" class="">
             <h5 class="bg-secondary text-center text-light w-100 p-2">{{ __('Plánování vyhlídkového letu') }}</h5>
+            <button id="btn-add-waypoint" class="btn btn-success">{{ __('Přidat bod na trase') }}</button>
         </div>
     </div>
 @endsection
