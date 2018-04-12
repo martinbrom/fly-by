@@ -14,4 +14,18 @@ use Watson\Validating\ValidatingTrait;
 abstract class BaseModel extends Model
 {
     use ValidatingTrait;
+
+	/**
+	 * The name of the "latitude" column
+	 *
+	 * @var string
+	 */
+    const LATITUDE  = 'lat';
+
+	/**
+	 * The name of the "longitude" column
+	 *
+	 * @var string
+	 */
+    const LONGITUDE = 'lon';
 }

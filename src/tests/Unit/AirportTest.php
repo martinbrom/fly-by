@@ -74,6 +74,15 @@ class AirportTest extends TestCase
         $airport->lat = 89.9999999999999;
         $this->assertTrue($airport->save());
 
+        $airport->lat = 90;
+	    $this->assertTrue($airport->save());
+
+        $airport->lat = -90;
+	    $this->assertTrue($airport->save());
+
+        $airport->lat = 0;
+	    $this->assertTrue($airport->save());
+
         $airport->lat = 0.123;
         $this->assertTrue($airport->save());
     }
@@ -100,6 +109,15 @@ class AirportTest extends TestCase
 
         $airport->lon = 179.9999999999999;
         $this->assertTrue($airport->save());
+
+        $airport->lon = 180;
+	    $this->assertTrue($airport->save());
+
+	    $airport->lon = -180;
+	    $this->assertTrue($airport->save());
+
+	    $airport->lon = 0;
+	    $this->assertTrue($airport->save());
 
         $airport->lon = 0.123;
         $this->assertTrue($airport->save());
