@@ -2,23 +2,19 @@
 
 @section('content')
 
-    <h1>Edit a specific aircraft</h1>
-    {!! Form::model($aircraft, ['route' => ['admin.aircrafts.update', $aircraft->id], 'method' => 'put']) !!}
-        {!! Form::token() !!}
+    <h1 class="text-center">Edit a specific aircraft</h1>
+    <div class="col-md-8 offset-md-2">
+        <form method="post" action="{{ route('admin.aircrafts.update', $aircraft->id) }}">
+            {{ csrf_field() }}
+            {{ method_field('put') }}
 
-        {!! Form::label('name', 'Name') !!}
-        {!! Form::text('name') !!}
+            @include('components.form.input', ['value' => $aircraft->name,  'name' => 'name', 'label' => 'Name'])
+            @include('components.form.input', ['value' => $aircraft->range, 'type' => 'number', 'name' => 'range', 'label' => 'Range'])
+            @include('components.form.input', ['value' => $aircraft->speed, 'type' => 'number', 'name' => 'speed', 'label' => 'Speed'])
+            @include('components.form.input', ['value' => $aircraft->cost,  'type' => 'number', 'name' => 'cost', 'label' => 'Cost'])
 
-        {!! Form::label('range', 'Range') !!}
-        {!! Form::number('range') !!}
-
-        {!! Form::label('speed', 'Speed') !!}
-        {!! Form::number('speed') !!}
-
-        {!! Form::label('cost', 'Cost') !!}
-        {!! Form::number('cost') !!}
-
-        {!! Form::submit('Submit') !!}
-    {!! Form::close() !!}
+            <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
+    </div>
 
 @endsection

@@ -2,43 +2,18 @@
 
 @section('content')
 
-    <h1>Create a new airport</h1>
-    {!! Form::open(['route' => 'admin.airports.store', 'method' => 'post']) !!}
-        {!! Form::token() !!}
+    <h1 class="text-center">Create a new airport</h1>
+    <div class="col-md-8 offset-md-2">
+        <form method="post" action="{{ route('admin.airports.store') }}">
+            {{ csrf_field() }}
 
-        <div class="form-group">
-            @if ($errors->has('name'))
-                <div class="error">{{ $errors->first('name') }}</div>
-            @endif
-            {!! Form::label('name', 'Name') !!}
-            {!! Form::text('name') !!}
-        </div>
+            @include('components.form.input', ['name' => 'name', 'label' => 'Name'])
+            @include('components.form.input', ['name' => 'lat',  'label' => 'Latitude'])
+            @include('components.form.input', ['name' => 'lon',  'label' => 'Longitude'])
+            @include('components.form.input', ['name' => 'code', 'label' => 'Code'])
 
-        <div class="form-group">
-            @if ($errors->has('lat'))
-                <div class="error">{{ $errors->first('lat') }}</div>
-            @endif
-            {!! Form::label('lat', 'Latitude') !!}
-            {!! Form::text('lat') !!}
-        </div>
-
-        <div class="form-group">
-            @if ($errors->has('lon'))
-                <div class="error">{{ $errors->first('lon') }}</div>
-            @endif
-            {!! Form::label('lon', 'Longitude') !!}
-            {!! Form::text('lon') !!}
-        </div>
-
-        <div class="form-group">
-            @if ($errors->has('code'))
-                <div class="error">{{ $errors->first('code') }}</div>
-            @endif
-            {!! Form::label('code', 'Code') !!}
-            {!! Form::text('code') !!}
-        </div>
-
-        {!! Form::submit('Submit') !!}
-    {!! Form::close() !!}
+            <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
+    </div>
 
 @endsection

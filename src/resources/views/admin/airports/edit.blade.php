@@ -2,23 +2,19 @@
 
 @section('content')
 
-    <h1>Edit a specific airport</h1>
-    {!! Form::model($airport, ['route' => ['admin.airports.update', $airport->id], 'method' => 'put']) !!}
-        {!! Form::token() !!}
+    <h1 class="text-center">Edit a specific airport</h1>
+    <div class="col-md-8 offset-md-2">
+        <form method="post" action="{{ route('admin.airports.update', $airport->id) }}">
+            {{ csrf_field() }}
+            {{ method_field('put') }}
 
-        {!! Form::label('name', 'Name') !!}
-        {!! Form::text('name') !!}
+            @include('components.form.input', ['value' => $airport->name, 'name' => 'name', 'label' => 'Name'])
+            @include('components.form.input', ['value' => $airport->lat,  'name' => 'lat',  'label' => 'Latitude'])
+            @include('components.form.input', ['value' => $airport->lon,  'name' => 'lon',  'label' => 'Longitude'])
+            @include('components.form.input', ['value' => $airport->code, 'name' => 'code', 'label' => 'Code'])
 
-        {!! Form::label('lat', 'Latitude') !!}
-        {!! Form::text('lat') !!}
-
-        {!! Form::label('lon', 'Longitude') !!}
-        {!! Form::text('lon') !!}
-
-        {!! Form::label('code', 'Code') !!}
-        {!! Form::text('code') !!}
-
-        {!! Form::submit('Submit') !!}
-    {!! Form::close() !!}
+            <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
+    </div>
 
 @endsection

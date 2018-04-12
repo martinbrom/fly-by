@@ -2,23 +2,18 @@
 
 @section('content')
 
-    <h1>Create a new aircraft</h1>
-    {!! Form::open(['route' => 'admin.aircrafts.store', 'method' => 'post']) !!}
-        {!! Form::token() !!}
+    <h1 class="text-center">Create a new aircraft</h1>
+    <div class="col-md-8 offset-md-2">
+        <form method="post" action="{{ route('admin.aircrafts.store') }}">
+            {{ csrf_field() }}
 
-        {!! Form::label('name', 'Name') !!}
-        {!! Form::text('name') !!}
+            @include('components.form.input', ['name' => 'name', 'label' => 'Name'])
+            @include('components.form.input', ['type' => 'number', 'name' => 'range', 'label' => 'Range'])
+            @include('components.form.input', ['type' => 'number', 'name' => 'speed', 'label' => 'Speed'])
+            @include('components.form.input', ['type' => 'number', 'name' => 'cost', 'label' => 'Cost'])
 
-        {!! Form::label('range', 'Range') !!}
-        {!! Form::number('range') !!}
-
-        {!! Form::label('speed', 'Speed') !!}
-        {!! Form::number('speed') !!}
-
-        {!! Form::label('cost', 'Cost') !!}
-        {!! Form::number('cost') !!}
-
-        {!! Form::submit('Submit') !!}
-    {!! Form::close() !!}
+            <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
+    </div>
 
 @endsection
