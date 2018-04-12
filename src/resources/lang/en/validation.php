@@ -104,6 +104,7 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
+	'route_json'            => 'The route is in an invalid format.',
 
     /*
     |--------------------------------------------------------------------------
@@ -116,6 +117,9 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+    	'lat' => 'Latitude',
+	    'lon' => 'Longitude'
+    ],
 
 ];

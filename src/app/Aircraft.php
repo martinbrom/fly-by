@@ -87,4 +87,6 @@ class Aircraft extends BaseModel
 	public function image() {
 		return $this->belongsTo(\App\AircraftImage::class);
 	}
+
+	// TODO: Can the aircraft fly given distance
 }

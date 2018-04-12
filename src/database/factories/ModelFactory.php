@@ -43,7 +43,10 @@ $factory->define(App\Aircraft::class, function (Faker $faker) {
 $factory->define(App\Route::class, function (Faker $faker) {
     return [
         'distance' => $faker->numberBetween(10, 999),
-        'route' => 'Bod 1, Bod 2'   // TODO: Add actual generation of a (JSON ???) route
+        'route' => json_encode([
+        	[12.2, 13.2], [12.3, 13.3], [12.2, 13.4], [12.5, 13.2], [12.3, 13.4]
+        ])
+        // TODO: Add actual generation of a (JSON ???) route
     ];
 });
 

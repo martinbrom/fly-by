@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Rules\RouteJson;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +14,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        \Validator::extend('route_json', function ($attribute, $value) {
+        	return (new RouteJson())->passes($attribute, $value);
+        });
     }
 
     /**

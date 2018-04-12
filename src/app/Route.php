@@ -29,6 +29,7 @@ class Route extends BaseModel
         'route'
     ];
 
+    // TODO: Probably block direct distance assignment
     /**
      * Model validation rules
      *
@@ -36,7 +37,7 @@ class Route extends BaseModel
      */
     protected $rules = [
         'distance' => 'required|integer|min:0',
-        'route' => 'required'
+        'route' => 'required|route_json'
     ];
 
     /**
@@ -45,4 +46,6 @@ class Route extends BaseModel
     public function orders() {
         return $this->hasMany(\App\Order::class);
     }
+
+    // TODO: Calculate route distance
 }
