@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Order;
 
-class OrderController extends LoggedOnlyController
+class OrderController extends AdminController
 {
 	/**
 	 * Display a listing of the resource.

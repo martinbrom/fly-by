@@ -11,40 +11,43 @@
 |
 */
 
-// Auth Routes
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+Auth::routes();
 
-Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
-Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset');
-
-Route::get('', 'StaticController@index')->name('index');
-Route::get('contacts', 'StaticController@contacts')->name('contacts');
-Route::get('about', 'StaticController@about')->name('about');
+Route::get('', 'Common\StaticController@index')->name('index');
+Route::get('contacts', 'Common\StaticController@contacts')->name('contacts');
+Route::get('about', 'Common\StaticController@about')->name('about');
 // TODO: Other static pages
 
+// ADMIN ROUTES
 Route::prefix('admin')->group(function () {
 	Route::name('admin.')->group(function () {
-		Route::get('/', 'AdminController@index')->name('index');
+		Route::get('/', 'Admin\AdminController@index')->name('index');
 
-		Route::get('aircrafts/{id}/edit-image', 'AircraftController@editImage')->name('aircrafts.edit-image');
-		Route::post('aircrafts/{id}/set-image-default', 'AircraftController@defaultImage')->name('aircrafts.default-image');
-		Route::post('aircrafts/{id}/store-image', 'AircraftController@storeImage')->name('aircrafts.store-image');
-		Route::resource('aircrafts', 'AircraftController');
+		Route::get('aircrafts/{id}/edit-image', 'Admin\AircraftController@editImage')->name('aircrafts.edit-image');
+		Route::post('aircrafts/{id}/set-image-default', 'Admin\AircraftController@defaultImage')->name('aircrafts.default-image');
+		Route::post('aircrafts/{id}/store-image', 'Admin\AircraftController@storeImage')->name('aircrafts.store-image');
+		Route::resource('aircrafts', 'Admin\AircraftController');
 
-		Route::resource('airports', 'AirportController');
+		Route::resource('airports', 'Admin\AirportController');
 
-		Route::resource('aircraft-airports', 'AircraftAirportController', [
+		Route::resource('aircraft-airports', 'Admin\AircraftAirportController', [
 			'only' => ['store', 'update', 'destroy']
 		]);
 
-		Route::post('orders/{id}/confirm', 'OrderController@confirmOne')->name('orders.confirm-one');
-		Route::post('orders/confirm-all', 'OrderController@confirmAll')->name('orders.confirm-all');
-		Route::resource('orders', 'OrderController', [
+		Route::post('orders/{id}/confirm', 'Admin\OrderController@confirmOne')->name('orders.confirm-one');
+		Route::post('orders/confirm-all', 'Admin\OrderController@confirmAll')->name('orders.confirm-all');
+		Route::resource('orders', 'Admin\OrderController', [
 			'only' => ['index', 'show', 'destroy']
 		]);
+	});
+});
+
+// AJAX ROUTES
+Route::prefix('ajax')->group(function () {
+	Route::name('ajax.')->group(function () {
+		Route::get('airports', 'Common\AirportController@index')->name('airports.index');
+		Route::get('aircrafts', 'Common\AirportController@aircrafts')->name('airports.aircrafts');
+
+		Route::get('can-fly', 'Common\AircraftController@canFly')->name('aircrafts.can-fly');
 	});
 });

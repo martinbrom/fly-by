@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Aircraft;
 use App\AircraftImage;
@@ -8,7 +8,7 @@ use App\Http\Requests\AircraftImageStoreRequest;
 use App\Http\Requests\AircraftStoreRequest;
 use App\Http\Requests\AircraftUpdateRequest;
 
-class AircraftController extends LoggedOnlyController
+class AircraftController extends AdminController
 {
     /**
      * Display a listing of the resource.

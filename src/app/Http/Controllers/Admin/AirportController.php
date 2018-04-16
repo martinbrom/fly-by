@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Airport;
 use App\Http\Requests\AirportStoreRequest;
 use App\Http\Requests\AirportUpdateRequest;
 
-class AirportController extends LoggedOnlyController
+class AirportController extends AdminController
 {
     /**
      * Display a listing of the resource.

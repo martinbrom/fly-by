@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-class AdminController extends LoggedOnlyController
+class StaticController extends AdminController
 {
 	/**
 	 * Display the administration homepage

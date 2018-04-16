@@ -39,6 +39,15 @@ class Aircraft extends BaseModel
 	use SoftDeletes;
 
 	/**
+	 * The attributes that should be hidden for arrays.
+	 *
+	 * @var array
+	 */
+	protected $hidden = [
+		'created_at', 'updated_at', 'deleted_at'
+	];
+
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
@@ -88,5 +97,14 @@ class Aircraft extends BaseModel
 		return $this->belongsTo(\App\AircraftImage::class);
 	}
 
-	// TODO: Can the aircraft fly given distance
+	/**
+	 * Checks whether this aircraft is able
+	 * to fly a given distance
+	 *
+	 * @param   mixed $distance
+	 * @return  bool
+	 */
+	public function canFly($distance) {
+		return $this->range >= $distance;
+	}
 }

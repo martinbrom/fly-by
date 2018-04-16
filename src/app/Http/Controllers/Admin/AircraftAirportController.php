@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\AircraftAirport;
 use App\Http\Requests\AircraftAirportStoreRequest;
 use App\Http\Requests\AircraftAirportUpdateRequest;
 
-class AircraftAirportController extends LoggedOnlyController
+class AircraftAirportController extends AdminController
 {
 	/**
 	 * Store a newly created resource in storage.
