@@ -1,6 +1,12 @@
 var map = null;
 var wayPointMarker = null;
 var wayPoints = [];
+var route = null;
+var zones = [];
+
+function initForbiddenZones() {
+
+}
 
 function mapInit() {
     map = L.map('map').setView([51, 0], 13);
@@ -14,15 +20,53 @@ function mapInit() {
         prefix: 'fa',
         markerColor: 'red'
     });
+
+    route = L.polyline([], {color: 'red'}).addTo(map);
+
+    initForbiddenZones();
 }
 
 function addWayPoint() {
-    var wayPoint = L.marker(map.getCenter(), {
+    var latlng = map.getCenter();
+
+    var wayPoint = L.marker(latlng, {
         icon: wayPointMarker,
         draggable: true
     });
+
+    wayPoint.on('drag', function (event) {
+        route.setLatLngs(wayPoints.map(function (point) {
+            return point.getLatLng()
+        }));
+    });
+
+    route.addLatLng(latlng);
+
+    console.log(latlng);
+
     wayPoints.push(wayPoint);
     wayPoint.addTo(map);
+}
+
+function addZone(options) {
+    if (options.type === 'circle') {
+        var circle = L.circle(options.center, {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: options.radius
+        }).addTo(map);
+        zones.push(circle);
+    }
+    else if (options.type === 'polygon') {
+        var polygon = L.polygon(options.latlngs, {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: options.radius
+        }).addTo(map);
+        zones.push(polygon);
+    }
 }
 
 function switchToMap() {
