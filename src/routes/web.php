@@ -21,7 +21,7 @@ Route::get('about', 'Common\StaticController@about')->name('about');
 // ADMIN ROUTES
 Route::prefix('admin')->group(function () {
 	Route::name('admin.')->group(function () {
-		Route::get('/', 'Admin\AdminController@index')->name('index');
+		Route::get('/', 'Admin\StaticController@index')->name('index');
 
 		Route::get('aircrafts/{id}/edit-image', 'Admin\AircraftController@editImage')->name('aircrafts.edit-image');
 		Route::post('aircrafts/{id}/set-image-default', 'Admin\AircraftController@defaultImage')->name('aircrafts.default-image');
@@ -47,7 +47,5 @@ Route::prefix('ajax')->group(function () {
 	Route::name('ajax.')->group(function () {
 		Route::get('airports', 'Common\AirportController@index')->name('airports.index');
 		Route::get('aircrafts', 'Common\AirportController@aircrafts')->name('airports.aircrafts');
-
-		Route::get('can-fly', 'Common\AircraftController@canFly')->name('aircrafts.can-fly');
 	});
 });
