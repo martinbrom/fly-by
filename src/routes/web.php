@@ -49,3 +49,8 @@ Route::prefix('ajax')->group(function () {
 		Route::get('aircrafts', 'Common\AirportController@aircrafts')->name('airports.aircrafts');
 	});
 });
+
+// TODO: Add to controller
+Route::get('map', function () {
+    return view('map.index');
+});

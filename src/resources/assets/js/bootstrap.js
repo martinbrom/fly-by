@@ -54,8 +54,9 @@ if (token) {
 //     encrypted: true
 // });
 
-require('jquery');
+window.$ = window.jQuery = require('jquery');
 require('popper.js');
 require('bootstrap');
 require('leaflet');
 require('scrollmagic');
+require('./../../../node_modules/leaflet.awesome-markers/dist/leaflet.awesome-markers.js');
