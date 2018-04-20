@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Aircraft;
+use App\AircraftAirport;
 use App\Airport;
 use App\Http\Requests\AirportStoreRequest;
 use App\Http\Requests\AirportUpdateRequest;
@@ -48,8 +50,9 @@ class AirportController extends AdminController
      */
     public function show($id) {
         $airport = Airport::findOrFail($id);
-        $aircrafts = $airport->aircrafts()->get();
-        return response()->view('admin.airports.show', compact('airport', 'aircrafts'));
+        $airports = Airport::allOther($id)->get();
+        $aircraft_airports = AircraftAirport::where('airport_id', '=', $id)->with('aircraft')->get();
+        return response()->view('admin.airports.show', compact('airport', 'airports', 'aircraft_airports'));
     }
 
     /**
@@ -89,5 +92,17 @@ class AirportController extends AdminController
         $airport = Airport::findOrFail($id);
         $airport->delete();
         return redirect()->route('admin.airports.index');
+    }
+
+	/**
+	 * Show the form to add an aircraft to a given airport.
+	 *
+	 * @param   int $id
+	 * @return  \Illuminate\Http\Response
+	 */
+    public function addAircraft($id) {
+    	$airport = Airport::findOrFail($id);
+    	$aircrafts = Aircraft::all();
+    	return response()->view('admin.airports.add-aircraft', compact('airport', 'aircrafts'));
     }
 }

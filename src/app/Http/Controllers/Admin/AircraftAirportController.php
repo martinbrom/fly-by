@@ -17,7 +17,7 @@ class AircraftAirportController extends AdminController
 	public function store(AircraftAirportStoreRequest $request) {
 		$aircraftAirport = new AircraftAirport($request->all());
 		$aircraftAirport->save();
-		return response()->json(true);
+		return redirect()->route('admin.airports.show', $request->airport_id);
 	}
 
 	/**
@@ -29,9 +29,10 @@ class AircraftAirportController extends AdminController
 	 */
 	public function update(AircraftAirportUpdateRequest $request, $id) {
 		$aircraftAirport = AircraftAirport::findOrFail($id);
+		$airport_id = $aircraftAirport->airport_id;
 		$aircraftAirport->fill($request->all());
 		$aircraftAirport->save();
-		return response()->json(true);
+		return redirect()->route('admin.airports.show', $airport_id);
 	}
 
 	/**
@@ -42,7 +43,8 @@ class AircraftAirportController extends AdminController
 	 */
 	public function destroy($id) {
 		$aircraftAirport = AircraftAirport::findOrFail($id);
+		$airport_id = $aircraftAirport->airport_id;
 		$aircraftAirport->delete();
-		return response()->json(true);
+		return redirect()->route('admin.airports.show', $airport_id);
 	}
 }

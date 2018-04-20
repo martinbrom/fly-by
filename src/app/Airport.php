@@ -88,6 +88,21 @@ class Airport extends BaseModel
         'lon' => ['required', 'regex:/^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/']
     ];
 
+	/**
+	 * Scope a query to include all airports but one
+	 *
+	 * @param   \Illuminate\Database\Eloquent\Builder $query
+	 * @param   int $id
+	 * @return  \Illuminate\Database\Eloquent\Builder
+	 */
+    public function scopeAllOther($query, $id) {
+    	if (!isset($id)) {
+    		return $query;
+	    }
+
+    	return $query->where('id', '!=', $id);
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */

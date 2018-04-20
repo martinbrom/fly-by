@@ -28,6 +28,7 @@ Route::prefix('admin')->group(function () {
 		Route::post('aircrafts/{id}/store-image', 'Admin\AircraftController@storeImage')->name('aircrafts.store-image');
 		Route::resource('aircrafts', 'Admin\AircraftController');
 
+		Route::get('airports/{id}/add-aircraft', 'Admin\AirportController@addAircraft')->name('airports.add-aircraft');
 		Route::resource('airports', 'Admin\AirportController');
 
 		Route::resource('aircraft-airports', 'Admin\AircraftAirportController', [
