@@ -16,3 +16,4 @@ yarn-error.log
 .env
 .env.testing
 _ide_helper.php
+/storage/debugbar/*

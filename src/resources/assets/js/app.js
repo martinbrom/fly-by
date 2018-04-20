@@ -21,4 +21,3 @@ require('./bootstrap');
 //     el: '#app'
 // });
 
-require('./map.js');

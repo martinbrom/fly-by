@@ -18,3 +18,7 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/map.js') }}"></script>
+@endpush
