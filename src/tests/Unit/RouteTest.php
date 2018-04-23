@@ -74,10 +74,11 @@ class RouteTest extends TestCase
 	 */
 	public function testRouteOrderRelation() {
 		$route = factory(\App\Route::class)->create();
-		$order  = factory(\App\Order::class)->create();
-		$order2 = factory(\App\Order::class)->create();
+		$order  = $this->getValidOrder();
+		$order2 = $this->getValidOrder();
 		$this->assertEquals(0, $route->orders()->count());
 
+		$order->saveOrFail();
 		$route->orders()->save($order);
 		$this->assertEquals(1, $route->orders()->count());
 		$route->orders()->save($order2);

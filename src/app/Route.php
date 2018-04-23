@@ -29,7 +29,6 @@ class Route extends BaseModel
         'route'
     ];
 
-    // TODO: Probably block direct distance assignment
     /**
      * Model validation rules
      *
@@ -37,8 +36,51 @@ class Route extends BaseModel
      */
     protected $rules = [
         'distance' => 'required|integer|min:0',
-        'route' => 'required|route_json'
+        'route' => 'required|route_json',
+	    'is_predefined' => 'required|boolean'
     ];
+
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+    protected $casts = [
+    	'is_predefined' => 'boolean'
+    ];
+
+	/**
+	 * Route constructor.
+	 *
+	 * @param array $attributes
+	 */
+	public function __construct(array $attributes = []) {
+		parent::__construct($attributes);
+
+		if (!isset($this->is_predefined)) {
+			$this->is_predefined = 0;
+		}
+
+		$this->calculateDistance();
+	}
+
+	/**
+	 *
+	 */
+	private function calculateDistance() {
+		// TODO: Actual distance calculation
+		$this->setAttribute('distance', 1000);
+	}
+
+	/**
+	 * Scope a query to only include predefined routes
+	 *
+	 * @param   \Illuminate\Database\Eloquent\Builder $query
+	 * @return  \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopePredefined($query) {
+		return $query->where('is_predefined', '=', 0);
+	}
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -46,6 +88,4 @@ class Route extends BaseModel
     public function orders() {
         return $this->hasMany(\App\Order::class);
     }
-
-    // TODO: Calculate route distance
 }

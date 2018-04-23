@@ -119,7 +119,7 @@ class OrderTest extends TestCase
         $order = $this->getValidOrder();
         $order->aircraftAirport()->dissociate();
         $this->assertEquals(0, $order->aircraftAirport()->count());
-        $this->assertTrue($order->save());
+        $this->assertFalse($order->save());
 
         $order->aircraft_airport_id = 99999999;
         $this->assertFalse($order->save());

@@ -48,8 +48,15 @@ Route::prefix('ajax')->group(function () {
 	Route::name('ajax.')->group(function () {
 		Route::get('airports', 'Common\AirportController@index')->name('airports.index');
 		Route::get('aircrafts', 'Common\AirportController@aircrafts')->name('airports.aircrafts');
+		Route::get('routes', 'Common\RouteController@index')->name('routes.index');
 	});
 });
+
+// TODO: TESTING ONLY - remove later
+Route::get('orders/test-create', 'Common\OrderController@testCreate')->name('orders.test-create');
+Route::resource('orders', 'Common\OrderController', [
+	'only' => ['store', 'show']
+]);
 
 // TODO: Add to controller
 Route::get('map', function () {

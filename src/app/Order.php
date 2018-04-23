@@ -61,8 +61,35 @@ class Order extends BaseModel
 	    'email' => 'required|email',
 	    'confirmed_at' => 'nullable|date',
         'route_id' => 'required|exists:routes,id',
-        'aircraft_airport_id' => 'nullable|exists:aircraft_airport_xref,id'
+        'aircraft_airport_id' => 'required|exists:aircraft_airport_xref,id'
     ];
+
+	/**
+	 * Order constructor.
+	 *
+	 * @param array $attributes
+	 */
+    public function __construct(array $attributes = []) {
+	    parent::__construct($attributes);
+	    $this->calculatePrice();
+	    $this->generateCode();
+    }
+
+	/**
+	 *
+	 */
+    private function calculatePrice() {
+    	// TODO: Actual price calculation
+	    $this->price = 1000;
+    }
+
+	/**
+	 *
+	 */
+    private function generateCode() {
+    	// TODO: Actual unique code
+    	$this->code = str_random(32);
+    }
 
 	/**
 	 * Scope a query to only include unconfirmed orders
