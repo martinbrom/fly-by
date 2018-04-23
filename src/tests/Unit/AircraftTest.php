@@ -126,4 +126,16 @@ class AircraftTest extends TestCase
         $aircraft->image()->associate($aircraftImage);
         $this->assertTrue($aircraft->image() != null);
     }
+
+	/**
+	 * Test a model function checking whether
+	 * an aircraft can fly given distance
+	 */
+    public function testCanFly() {
+        $aircraft = factory(\App\Aircraft::class)->create();
+        $this->assertFalse($aircraft->canFly(99999999));
+        $this->assertFalse($aircraft->canFly($aircraft->range + 1));
+        $this->assertTrue($aircraft->canFly(1));
+        $this->assertTrue($aircraft->canFly($aircraft->range));
+    }
 }

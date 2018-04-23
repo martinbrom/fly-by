@@ -85,4 +85,32 @@ class RouteTest extends TestCase
 		$this->assertEquals(2, $route->orders()->count());
 		$this->assertTrue($route->orders()->first()->is($order));
 	}
+
+	/**
+	 * Test query scope to include only pre-defined routes
+	 */
+	public function testPredefinedQueryScope() {
+		$predefinedStates = [true, false, true];
+
+		for ($i = 0; $i < 3; $i++) {
+			$route = factory(\App\Route::class)->make();
+			$route->is_predefined = $predefinedStates[$i];
+			$route->save();
+		}
+
+		$predefinedRoutes = Route::predefined()->get();
+		$this->assertEquals(2, count($predefinedRoutes));
+	}
+
+	/**
+	 * Test calculation of route distance
+	 */
+	public function testDistanceCalculation() {
+		$route = factory(\App\Route::class)->make(['route' => '[[0,0],[10,10]]']);
+		$this->assertTrue($route->save());
+
+		// Distance from our school to our closest airport - Plzeň Líně
+		$route = factory(\App\Route::class)->make(['route' => '[[49.726655,13.352764],[49.675291, 13.274516]]']);
+		$this->assertEquals(8, $route->distance);
+	}
 }

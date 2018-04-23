@@ -101,10 +101,10 @@ class Aircraft extends BaseModel
 	 * Checks whether this aircraft is able
 	 * to fly a given distance
 	 *
-	 * @param   mixed $distance
+	 * @param   int $distance
 	 * @return  bool
 	 */
-	public function canFly($distance) {
+	public function canFly(int $distance) {
 		return $this->range >= $distance;
 	}
 }

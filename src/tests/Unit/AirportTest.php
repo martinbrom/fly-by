@@ -135,4 +135,17 @@ class AirportTest extends TestCase
         $this->assertEquals(1, $airport->aircrafts()->count());
         $this->assertTrue($airport->aircrafts()->first()->is($aircraft));
     }
+
+	/**
+	 * Test query scope to include all but one airport
+	 */
+    public function testAllOtherQueryScope() {
+        $airport  = factory(\App\Airport::class)->create();
+        factory(\App\Airport::class)->create();
+        factory(\App\Airport::class)->create();
+        $this->assertEquals(3, count(Airport::all()));
+
+        $airports = Airport::allOther($airport->id)->get();
+        $this->assertEquals(2, count($airports));
+    }
 }

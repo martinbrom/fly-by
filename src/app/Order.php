@@ -80,6 +80,7 @@ class Order extends BaseModel
 	 */
     private function calculatePrice() {
     	// TODO: Actual price calculation
+	    // TODO: Don't forget to dd extra $$$ for moving airplane to/from the flight starting/ending point
 	    $this->price = 1000;
     }
 
@@ -122,6 +123,4 @@ class Order extends BaseModel
     public function aircraftAirport() {
         return $this->belongsTo(\App\AircraftAirport::class);
     }
-
-    // TODO: Don't forget to dd extra $$$ for moving airplane to/from the flight starting/ending point
 }

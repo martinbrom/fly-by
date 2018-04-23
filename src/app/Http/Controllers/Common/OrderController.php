@@ -42,13 +42,11 @@ class OrderController extends CommonController
 		$aircraftAirport = AircraftAirport::find($request->input('aircraft_airport_id'));
 		$aircraft = $aircraftAirport->aircraft;
 
-		if ($route->distance > $aircraft->range) {
+		if (!$aircraft->canFly($route->distance)) {
 			throw new \Exception();
 		}
 
-		$order = new Order([
-			'email' => $request->input('email')
-		]);
+		$order = new Order(['email' => $request->input('email')]);
 		$order->route()->associate($route);
 		$order->aircraftAirport()->associate($aircraftAirport);
 		$order->saveOrFail();
@@ -56,6 +54,9 @@ class OrderController extends CommonController
 		return redirect()->route('orders.test-create');
 	}
 
+	/**
+	 * @return \Illuminate\Http\Response
+	 */
 	public function testCreate() {
 		$id = 3;
 		$airport = Airport::findOrFail($id);
