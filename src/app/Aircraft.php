@@ -107,4 +107,27 @@ class Aircraft extends BaseModel
 	public function canFly(int $distance) {
 		return $this->range >= $distance;
 	}
+
+	/**
+	 * Returns a cost for flying a certain distance in CZK
+	 *
+	 * @param   int $distance
+	 * @return  int
+	 */
+	public function getCostForDistance(int $distance): int {
+		// TODO: Units of cost?
+		return $this->cost * $distance;
+	}
+
+	/**
+	 * Returns a duration for a flight of certain distance in seconds
+	 *
+	 * @param int $distance
+	 * @return int
+	 */
+	public function getDurationForDistance(int $distance): int {
+		// TODO: Duration of flight
+		// TODO: Actual duration calculation
+	    return 1;
+	}
 }

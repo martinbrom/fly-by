@@ -26,8 +26,8 @@ class OrderTest extends TestCase
      */
     public function testPriceValidation() {
         $order = $this->getValidOrder();
-        $order->price = null;
-        $this->assertFalse($order->save());
+        $order->price = null;   // price hasn't been calculated yet
+        $this->assertTrue($order->save());
 
         $order->price = 'a';
         $this->assertFalse($order->save());
@@ -106,7 +106,7 @@ class OrderTest extends TestCase
         $order->route_id = 99999999;
         $this->assertFalse($order->save());
 
-        $route = factory(\App\Route::class)->create();
+        $route = $this->getValidRoute();
         $order->route()->associate($route);
         $this->assertEquals(1, $order->route()->count());
         $this->assertTrue($order->route()->first()->is($route));

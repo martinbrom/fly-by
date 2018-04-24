@@ -15,16 +15,14 @@ class RouteJson implements Rule
 	 * Determine if the validation rule passes.
 	 *
 	 * @param  string $attribute
-	 * @param  mixed $value
+	 * @param  mixed $route
 	 * @return bool
 	 */
-	public function passes($attribute, $value) {
-		if (!is_string($value))
-			return false;
+	public function passes($attribute, $route) {
+		if (is_string($route))
+			$route = json_decode($route);
 
-		$route = json_decode($value);
-
-		if (!$route)
+		if (!$route || count($route) < 2)
 			return false;
 
 		foreach ($route as $point) {

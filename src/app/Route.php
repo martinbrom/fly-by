@@ -6,13 +6,19 @@ namespace App;
  * App\Route
  *
  * @property int $id
+ * @property int $airport_from_id
+ * @property int $airport_to_id
  * @property int $distance
- * @property string $route
+ * @property array $route
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property bool $is_predefined
+ * @property-read \App\Airport $airportFrom
+ * @property-read \App\Airport $airportTo
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Order[] $orders
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route predefined()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereAirportFromId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereAirportToId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereDistance($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereId($value)
@@ -38,7 +44,9 @@ class Route extends BaseModel
 	 * @var array
 	 */
 	protected $rules = [
-		'distance' => 'required|integer|min:0',
+		'airport_from_id' => 'required|exists:airports,id',
+		'airport_to_id' => 'required|exists:airports,id',
+		'distance' => 'nullable|integer|min:0',
 		'route' => 'required|route_json',
 		'is_predefined' => 'required|boolean',
 	];
@@ -50,6 +58,7 @@ class Route extends BaseModel
 	 */
 	protected $casts = [
 		'is_predefined' => 'boolean',
+		'route' => 'array'
 	];
 
 	/**
@@ -63,28 +72,43 @@ class Route extends BaseModel
 		if (!isset($this->is_predefined)) {
 			$this->is_predefined = 0;
 		}
-
-		$this->calculateDistance();
 	}
 
 	/**
-	 * Calculates the total route distance using
-	 * the haversine great circle distance formula
+	 * Boots model and registers a 'saving' event listener
+	 * to recalculate route distance on model saving
 	 */
-	private function calculateDistance() {
-		$distance        = 0;
-		$coordinates     = json_decode($this->route, TRUE);
-		$coordinateCount = count($coordinates);
+	public static function boot() {
+		parent::boot();
 
-		for ($i = 0; $i < $coordinateCount - 1; $i++) {
-			$latFrom = $coordinates[$i][0];
-			$lonFrom = $coordinates[$i][1];
-			$latTo   = $coordinates[$i + 1][0];
-			$lonTo   = $coordinates[$i + 1][1];
-			$distance += $this->haversineDistance($latFrom, $lonFrom, $latTo, $lonTo);
+		static::saving(function (Route $route) {
+			$route->recalculateTotalDistance();
+		});
+	}
+
+	/**
+	 * Recalculates total distance needed for the
+	 * aircraft to cover and sets it as the route distance
+	 */
+	public function recalculateTotalDistance() {
+		$distance = 0;
+		$airportFrom = $this->airportFrom;
+		$airportTo   = $this->airportTo;
+		$points = $this->route;
+
+		if (is_string($points)) {
+			$points = json_decode($points);
 		}
 
-		$this->setAttribute('distance', (int) ($distance / 1000));
+		array_unshift($points, [$airportFrom->lat, $airportFrom->lon]);
+		$points []= [$airportTo->lat, $airportTo->lon];
+
+		$pointsCount = count($points);
+		for ($i = 0; $i < $pointsCount - 1; $i++) {
+			$distance += haversineDistance($points[$i][0], $points[$i][1], $points[$i+1][0], $points[$i+1][1]);
+		}
+
+		$this->distance = (int) ($distance / 1000); // to kilometers
 	}
 
 	/**
@@ -105,25 +129,16 @@ class Route extends BaseModel
 	}
 
 	/**
-	 * @param $latitudeFrom
-	 * @param $longitudeFrom
-	 * @param $latitudeTo
-	 * @param $longitudeTo
-	 * @return int
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	 */
-	private function haversineDistance($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo) {
-		$earthRadius = 6371000; // in meters
+	public function airportFrom() {
+	    return $this->belongsTo(\App\Airport::class);
+	}
 
-		$latFrom = deg2rad($latitudeFrom);
-		$lonFrom = deg2rad($longitudeFrom);
-		$latTo   = deg2rad($latitudeTo);
-		$lonTo   = deg2rad($longitudeTo);
-
-		$latDelta = $latTo - $latFrom;
-		$lonDelta = $lonTo - $lonFrom;
-
-		$angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
-
-		return $angle * $earthRadius;
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function airportTo() {
+		return $this->belongsTo(\App\Airport::class);
 	}
 }

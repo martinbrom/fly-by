@@ -26,7 +26,9 @@ class OrderStoreRequest extends FormRequest
 		return [
 			'email' => 'required|email',
 			'route' => 'required|route_json',
-			'aircraft_airport_id' => 'required|exists:aircraft_airport_xref,id'
+			'aircraft_airport_id' => 'required|exists:aircraft_airport_xref,id',
+			'airport_from_id' => 'required|exists:airports,id',
+			'airport_to_id' => 'required|exists:airports,id'
 		];
 	}
 }

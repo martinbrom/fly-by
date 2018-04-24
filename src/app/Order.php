@@ -56,7 +56,7 @@ class Order extends BaseModel
      * @var array
      */
     protected $rules = [
-        'price' => 'required|integer|min:0',
+        'price' => 'nullable|integer|min:0',
         'code' => 'required|max:32',
 	    'email' => 'required|email',
 	    'confirmed_at' => 'nullable|date',
@@ -71,18 +71,40 @@ class Order extends BaseModel
 	 */
     public function __construct(array $attributes = []) {
 	    parent::__construct($attributes);
-	    $this->calculatePrice();
 	    $this->generateCode();
     }
 
 	/**
-	 *
+	 * Boots model and registers a 'saving' event listener
+	 * to recalculate flight & transport costs on model saving
 	 */
-    private function calculatePrice() {
-    	// TODO: Actual price calculation
-	    // TODO: Don't forget to dd extra $$$ for moving airplane to/from the flight starting/ending point
-	    $this->price = 1000;
-    }
+	public static function boot() {
+		parent::boot();
+
+		static::saving(function (Order $order) {
+			$order->recalculateFlightPrice();
+			$order->recalculateTransportPrice();
+		});
+	}
+
+	/**
+	 * Recalculates total price of flying with selected
+	 * aircraft from starting airport to ending airport
+	 */
+	public function recalculateFlightPrice() {
+	    $this->price += $this->aircraftAirport->getCostForDistance($this->route->distance);
+	}
+
+	/**
+	 * Recalculates total price of moving selected
+	 * aircraft from its current airport to the starting airport
+	 * and back from the ending airport
+	 */
+	public function recalculateTransportPrice() {
+		$distance = $this->aircraftAirport->getAirportDistance($this->route->airportFrom)
+			+ $this->aircraftAirport->getAirportDistance($this->route->airportTo);
+	    $this->price += $this->aircraftAirport->getCostForDistance($distance);
+	}
 
 	/**
 	 *

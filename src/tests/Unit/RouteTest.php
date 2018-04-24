@@ -17,7 +17,7 @@ class RouteTest extends TestCase
 		$route = new Route();
 		$this->assertFalse($route->save());
 
-		$route = factory(\App\Route::class)->create();
+		$route = $this->getValidRoute();
 		$this->assertTrue($route->save());
 	}
 
@@ -25,9 +25,9 @@ class RouteTest extends TestCase
 	 * Test validation of distance attribute
 	 */
 	public function testDistanceValidation() {
-		$route = factory(\App\Route::class)->create();
-		$route->distance = null;
-		$this->assertFalse($route->save());
+		$route = $this->getValidRoute();
+		$route->distance = null;    // distance hasn't been calculated yet
+		$this->assertTrue($route->save());
 
 		$route->distance = 'a';
 		$this->assertFalse($route->save());
@@ -46,26 +46,26 @@ class RouteTest extends TestCase
 	 * Test validation of route attribute
 	 */
 	public function testRouteValidation() {
-		$route = factory(\App\Route::class)->create();
+		$route = $this->getValidRoute();
 		$route->route = null;
 		$this->assertFalse($route->save());
 
 		$route->route = 'a';
 		$this->assertFalse($route->save());
 
+		$route->route = [];
+		$this->assertFalse($route->save());
+
+		$route->route = [[1,1],[1]];
+		$this->assertFalse($route->save());
+
 		$route->route = [[1,2],[1,2]];
-		$this->assertFalse($route->save());
-
-		$route->route = "[]";
-		$this->assertFalse($route->save());
-
-		$route->route = "[[1,1],[1]]";
-		$this->assertFalse($route->save());
-
-		$route->route = "[[1,2],[1,2]]";
 		$this->assertTrue($route->save());
 
-		$route->route = "[[1.2,2.3],[89.9,179.9]]";
+		$route->route = [[1.2,2.3],[89.9,179.9]];
+		$this->assertTrue($route->save());
+
+		$route->route = '[[1.2,2.3],[89.9,179.9]]';
 		$this->assertTrue($route->save());
 	}
 
@@ -73,7 +73,7 @@ class RouteTest extends TestCase
 	 * Test relation between route and order models
 	 */
 	public function testRouteOrderRelation() {
-		$route = factory(\App\Route::class)->create();
+		$route = $this->getValidRoute();
 		$order  = $this->getValidOrder();
 		$order2 = $this->getValidOrder();
 		$this->assertEquals(0, $route->orders()->count());
@@ -93,8 +93,7 @@ class RouteTest extends TestCase
 		$predefinedStates = [true, false, true];
 
 		for ($i = 0; $i < 3; $i++) {
-			$route = factory(\App\Route::class)->make();
-			$route->is_predefined = $predefinedStates[$i];
+			$route = $this->getValidRoute(['is_predefined' => $predefinedStates[$i]]);
 			$route->save();
 		}
 
@@ -106,11 +105,27 @@ class RouteTest extends TestCase
 	 * Test calculation of route distance
 	 */
 	public function testDistanceCalculation() {
-		$route = factory(\App\Route::class)->make(['route' => '[[0,0],[10,10]]']);
+		$route = $this->getValidRoute(['route' => [[0,0],[10,10]]]);
 		$this->assertTrue($route->save());
 
 		// Distance from our school to our closest airport - Plzeň Líně
-		$route = factory(\App\Route::class)->make(['route' => '[[49.726655,13.352764],[49.675291, 13.274516]]']);
+		$route = factory(\App\Route::class)->make([
+			'route' => [[49.726655,13.352764],[49.675291, 13.274516]]
+		]);
+
+		$airportFrom = factory(\App\Airport::class)->create([
+			'lat' => 49.726655,
+			'lon' => 13.352764
+		]);
+		$airportTo = factory(\App\Airport::class)->create([
+			'lat' => 49.675291,
+			'lon' => 13.274516
+		]);
+
+		$route->airportFrom()->associate($airportFrom);
+		$route->airportTo()->associate($airportTo);
+		$route->save();
+
 		$this->assertEquals(8, $route->distance);
 	}
 }

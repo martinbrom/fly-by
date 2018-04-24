@@ -90,6 +90,17 @@ class Airport extends BaseModel
     ];
 
 	/**
+	 * Returns a distance between this airport
+	 * and given airport in kilometers
+	 *
+	 * @param Airport $airport
+	 * @return int
+	 */
+    public function getDistance(Airport $airport) {
+        return (int) (haversineDistance($airport->lat, $airport->lon, $this->lat, $this->lon) / 1000);
+    }
+
+	/**
 	 * Scope a query to include all airports but one
 	 *
 	 * @param   \Illuminate\Database\Eloquent\Builder $query

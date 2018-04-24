@@ -36,14 +36,25 @@ class OrderController extends CommonController
 	 * @throws \Exception
 	 */
 	public function store(OrderStoreRequest $request) {
-		$route = new Route(['route' => $request->input('route')]);
+		// can assign foreign keys directly because their
+		// existence is validated on the incoming request
+		$route = new Route([
+			'route' => $request->input('route'),
+//			'airport_from_id' => $request->input('airport_from_id'),
+//			'airport_to_id' => $request->input('airport_to_id'),
+		]);
+		$airportFrom = Airport::find($request->input('airport_from_id'));
+		$airportTo = Airport::find($request->input('airport_to_id'));
+		$route->airportFrom()->associate($airportFrom);
+		$route->airportTo()->associate($airportTo);
 		$route->saveOrFail();
 
 		$aircraftAirport = AircraftAirport::find($request->input('aircraft_airport_id'));
 		$aircraft = $aircraftAirport->aircraft;
 
 		if (!$aircraft->canFly($route->distance)) {
-			throw new \Exception();
+			// TODO: Aircraft cannot fly the distance
+			throw new \Exception($route->distance);
 		}
 
 		$order = new Order(['email' => $request->input('email')]);

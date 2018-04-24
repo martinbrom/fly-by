@@ -44,10 +44,7 @@ $factory->define(App\Route::class, function (Faker $faker) {
     return [
     	'is_predefined' => false,
         'distance' => $faker->numberBetween(10, 999),
-        'route' => json_encode([
-        	[12.2, 13.2], [12.3, 13.3], [12.2, 13.4], [12.5, 13.2], [12.3, 13.4]
-        ])
-        // TODO: Add actual generation of a (JSON ???) route
+        'route' => [[12.2, 13.2], [12.3, 13.3], [12.2, 13.4], [12.5, 13.2], [12.3, 13.4]]
     ];
 });
 

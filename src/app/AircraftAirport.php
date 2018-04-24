@@ -65,6 +65,27 @@ class AircraftAirport extends BaseModel
         'airport_id' => 'required|exists:airports,id'
     ];
 
+	/**
+	 * Returns a cost for flying a certain distance
+	 *
+	 * @param   int $distance
+	 * @return  int
+	 */
+	public function getCostForDistance(int $distance): int {
+		return $this->aircraft->getCostForDistance($distance);
+	}
+
+	/**
+	 * Returns a distance between aircraft's home
+	 * airport and given airport in kilometers
+	 *
+	 * @param Airport $airport
+	 * @return int
+	 */
+	public function getAirportDistance(Airport $airport) {
+	    return $this->airport->getDistance($airport);
+	}
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

@@ -46,7 +46,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function getValidOrder() {
         $aircraftAirport = $this->getValidAircraftAirport();
-        $route = factory(\App\Route::class)->create();
+        $route = $this->getValidRoute();
         $order = factory(\App\Order::class)->make();
 
         $order->aircraftAirport()->associate($aircraftAirport);
@@ -54,6 +54,24 @@ abstract class TestCase extends BaseTestCase
         $order->save();
 
         return $order;
+    }
+
+	/**
+	 * Creates a valid route model
+	 *
+	 * @param array $arguments
+	 * @return \App\Route
+	 */
+    public function getValidRoute(array $arguments = []) {
+        $airport1 = factory(\App\Airport::class)->create();
+        $airport2 = factory(\App\Airport::class)->create();
+	    $route = factory(\App\Route::class)->make($arguments);
+
+        $route->airportFrom()->associate($airport1);
+        $route->airportTo()->associate($airport2);
+        $route->save();
+
+        return $route;
     }
 
 	/**

@@ -26,7 +26,7 @@ class AddIsPredefinedToRoutes extends Migration
     public function down()
     {
 	    Schema::table('routes', function (Blueprint $table) {
-		    $table->dropColumn('confirmed_at');
+		    $table->dropColumn('is_predefined');
 	    });
     }
 }
