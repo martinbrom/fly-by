@@ -86,6 +86,10 @@ class RouteTest extends TestCase
 		$this->assertTrue($route->orders()->first()->is($order));
 	}
 
+	// TODO: Testing
+	public function testRouteAirportFromRelation() {}
+	public function testRouteAirportToRelation() {}
+
 	/**
 	 * Test query scope to include only pre-defined routes
 	 */

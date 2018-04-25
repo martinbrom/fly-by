@@ -43,6 +43,7 @@ class Route extends BaseModel
 	 *
 	 * @var array
 	 */
+	// TODO: Too short routes validation
 	protected $rules = [
 		'airport_from_id' => 'required|exists:airports,id',
 		'airport_to_id' => 'required|exists:airports,id',

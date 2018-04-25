@@ -76,6 +76,16 @@ class AircraftAirport extends BaseModel
 	}
 
 	/**
+	 * Returns a duration for a flight of certain distance in minutes
+	 *
+	 * @param int $distance
+	 * @return int
+	 */
+	public function getDurationForDistance(int $distance): int {
+		return $this->aircraft->getDurationForDistance($distance);
+	}
+
+	/**
 	 * Returns a distance between aircraft's home
 	 * airport and given airport in kilometers
 	 *

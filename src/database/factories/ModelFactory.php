@@ -36,7 +36,7 @@ $factory->define(App\Aircraft::class, function (Faker $faker) {
         'name' => 'Aircraft ' . $faker->name,
         'range' => $faker->numberBetween(100, 9999),
         'speed' => $faker->numberBetween(250, 999),
-        'cost' => $faker->numberBetween(100, 9999)
+        'cost' => $faker->numberBetween(5, 30)
     ];
 });
 

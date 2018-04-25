@@ -138,4 +138,8 @@ class AircraftTest extends TestCase
         $this->assertTrue($aircraft->canFly(1));
         $this->assertTrue($aircraft->canFly($aircraft->range));
     }
+
+    // TODO: Testing
+    public function testGetCostForDistance() {}
+    public function testGetDurationForDistance() {}
 }

@@ -84,20 +84,6 @@ class Aircraft extends BaseModel
 	];
 
 	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-	 */
-	public function airports() {
-		return $this->belongsToMany(\App\Airport::class, 'aircraft_airport_xref');
-	}
-
-	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-	 */
-	public function image() {
-		return $this->belongsTo(\App\AircraftImage::class);
-	}
-
-	/**
 	 * Checks whether this aircraft is able
 	 * to fly a given distance
 	 *
@@ -115,19 +101,31 @@ class Aircraft extends BaseModel
 	 * @return  int
 	 */
 	public function getCostForDistance(int $distance): int {
-		// TODO: Units of cost?
 		return $this->cost * $distance;
 	}
 
 	/**
-	 * Returns a duration for a flight of certain distance in seconds
+	 * Returns a duration for a flight of certain distance in minutes
 	 *
 	 * @param int $distance
 	 * @return int
 	 */
 	public function getDurationForDistance(int $distance): int {
-		// TODO: Duration of flight
-		// TODO: Actual duration calculation
-	    return 1;
+		// TODO: Discuss units of time with mirek
+		return (int) (60 * $distance / $this->speed);
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
+	public function airports() {
+		return $this->belongsToMany(\App\Airport::class, 'aircraft_airport_xref');
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function image() {
+		return $this->belongsTo(\App\AircraftImage::class);
 	}
 }

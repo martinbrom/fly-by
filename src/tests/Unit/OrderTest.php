@@ -139,4 +139,10 @@ class OrderTest extends TestCase
     	$order->confirm();
     	$this->assertTrue($order->confirmed_at <= \Carbon\Carbon::now());
     }
+
+    // TODO: Testing
+    public function testRecalculateDuration() {}
+    public function testRecalculateTransportPrice() {}
+    public function testRecalculateFlightPrice() {}
+    public function testGenerateCode() {}
 }

@@ -57,6 +57,7 @@ class Order extends BaseModel
      */
     protected $rules = [
         'price' => 'nullable|integer|min:0',
+	    'duration' => 'nullable|integer|min:0',
         'code' => 'required|max:32',
 	    'email' => 'required|email',
 	    'confirmed_at' => 'nullable|date',
@@ -84,6 +85,7 @@ class Order extends BaseModel
 		static::saving(function (Order $order) {
 			$order->recalculateFlightPrice();
 			$order->recalculateTransportPrice();
+			$order->recalculateDuration();
 		});
 	}
 
@@ -104,6 +106,13 @@ class Order extends BaseModel
 		$distance = $this->aircraftAirport->getAirportDistance($this->route->airportFrom)
 			+ $this->aircraftAirport->getAirportDistance($this->route->airportTo);
 	    $this->price += $this->aircraftAirport->getCostForDistance($distance);
+	}
+
+	/**
+	 * Recalculates duration of flight and sets it
+	 */
+	public function recalculateDuration() {
+	    $this->duration = $this->aircraftAirport->getDurationForDistance($this->route->distance);
 	}
 
 	/**
