@@ -25,6 +25,7 @@ class OrderStoreRequest extends FormRequest
 	{
 		return [
 			'email' => 'required|email',
+			'user_note' => 'nullable|max:255',
 			'route' => 'required|route_json',
 			'aircraft_airport_id' => 'required|exists:aircraft_airport_xref,id',
 			'airport_from_id' => 'required|exists:airports,id',

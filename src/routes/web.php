@@ -38,7 +38,7 @@ Route::prefix('admin')->group(function () {
 		Route::post('orders/{id}/confirm', 'Admin\OrderController@confirmOne')->name('orders.confirm-one');
 		Route::post('orders/confirm-all', 'Admin\OrderController@confirmAll')->name('orders.confirm-all');
 		Route::resource('orders', 'Admin\OrderController', [
-			'only' => ['index', 'show', 'destroy']
+			'except' => ['store', 'create']
 		]);
 	});
 });
@@ -61,4 +61,14 @@ Route::resource('orders', 'Common\OrderController', [
 // TODO: Add to controller
 Route::get('map', function () {
     return view('map.index');
+});
+
+Route::prefix('mail')->group(function () {
+	Route::name('mail.')->group(function () {
+		Route::get('order-created', function () {
+			return view('mail.order-created');
+		});
+
+		// TODO: Order confirmed / removed
+	});
 });

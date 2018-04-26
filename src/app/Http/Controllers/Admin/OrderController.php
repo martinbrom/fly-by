@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\OrderUpdateRequest;
 use App\Order;
 
 class OrderController extends AdminController
@@ -12,7 +13,6 @@ class OrderController extends AdminController
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index() {
-		// TODO: Pagination
 		$orders = Order::unconfirmed()->get();
 		return view('admin.orders.index', compact('orders'));
 	}
@@ -24,8 +24,34 @@ class OrderController extends AdminController
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show($id) {
-		$order = Order::unconfirmed()->findOrFail($id);
+		$order = Order::findOrFail($id);
 		return view('admin.orders.show', compact('order'));
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  int $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit($id) {
+		$order = Order::findOrFail($id);
+		return view('admin.orders.edit', compact('order'));
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  OrderUpdateRequest $request
+	 * @param  int $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(OrderUpdateRequest $request, $id) {
+		$order = Order::findOrFail($id);
+		$order->admin_note = $request->input('admin_note');
+		$order->save();
+
+		return redirect()->route('admin.orders.index');
 	}
 
 	/**
@@ -37,6 +63,7 @@ class OrderController extends AdminController
 	public function destroy($id) {
 		$order = Order::findOrFail($id);
 		$order->delete();
+		// TODO: Send email
 		return redirect()->route('admin.orders.index');
 	}
 
@@ -47,8 +74,15 @@ class OrderController extends AdminController
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function confirmOne($id) {
-		$orders = [Order::unconfirmed()->findOrFail($id)];
-		return $this->confirm($orders);
+		$order = Order::findOrFail($id);
+
+		if (!$order->isUnconfirmed()) {
+			return redirect()
+				->back(400)
+				->withErrors('Order is already confirmed!');
+		}
+
+		return $this->confirm([$order]);
 	}
 
 	/**

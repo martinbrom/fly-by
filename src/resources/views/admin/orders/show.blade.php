@@ -12,6 +12,8 @@
     <!-- TODO: Display aircraft-airport -->
     <!-- TODO: Display whether the aircraft has to be moved, and how much would it cost -->
 
+    <a href="{{ route('admin.orders.edit', $order->id) }}">Edit order</a><br>
+    <!-- TODO: Delete order -->
     <!-- TODO: Form with POST -->
     <a href="#order-confirm-one-form"
        onclick="event.preventDefault(); document.getElementById('order-confirm-one-form').submit();">

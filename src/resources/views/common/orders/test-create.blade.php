@@ -21,6 +21,11 @@
             </select>
         </div>
 
+        <div class="form-group">
+            <label class="control-label" for="user_note">Note</label>
+            <textarea class="form-control" rows="6" name="user_note" id="user_note"></textarea>
+        </div>
+
         <input type="submit" value="Submit" class="btn btn-primary">
     </form>
 

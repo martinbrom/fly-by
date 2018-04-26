@@ -73,6 +73,36 @@ class OrderTest extends TestCase
     }
 
 	/**
+	 * Test validation of user_note attribute
+	 */
+    public function testUserNoteValidation() {
+        $order = $this->getValidOrder();
+        $order->user_note = '';
+        $this->assertTrue($order->save());
+
+        $order->user_note = str_random(256);
+        $this->assertFalse($order->save());
+
+        $order->user_note = str_random(255);
+        $this->assertTrue($order->save());
+    }
+
+	/**
+	 * Test validation of admin_note attribute
+	 */
+    public function testAdminNoteValidation() {
+        $order = $this->getValidOrder();
+        $order->admin_note = '';
+        $this->assertTrue($order->save());
+
+        $order->admin_note = str_random(256);
+        $this->assertFalse($order->save());
+
+        $order->admin_note = str_random(255);
+        $this->assertTrue($order->save());
+    }
+
+	/**
 	 * Test validation of confirmed_at attribute
 	 */
     public function testConfirmedAtValidation() {

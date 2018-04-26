@@ -22,7 +22,7 @@ class RouteJson implements Rule
 		if (is_string($route))
 			$route = json_decode($route);
 
-		if (!$route || count($route) < 2)
+		if (!$route || count($route) < 1)
 			return false;
 
 		foreach ($route as $point) {

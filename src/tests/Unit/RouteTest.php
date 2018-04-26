@@ -59,6 +59,9 @@ class RouteTest extends TestCase
 		$route->route = [[1,1],[1]];
 		$this->assertFalse($route->save());
 
+		$route->route = [[1,2]];
+		$this->assertTrue($route->save());
+
 		$route->route = [[1,2],[1,2]];
 		$this->assertTrue($route->save());
 

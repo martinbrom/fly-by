@@ -2,13 +2,18 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 /**
  * App\Order
  *
  * @property int $id
  * @property int $price
+ * @property int $duration
  * @property string $code
  * @property string $email
+ * @property string|null $user_note
+ * @property string|null $admin_note
  * @property int $route_id
  * @property int|null $aircraft_airport_id
  * @property \Carbon\Carbon|null $confirmed_at
@@ -16,20 +21,30 @@ namespace App;
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \App\AircraftAirport|null $aircraftAirport
  * @property-read \App\Route $route
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\App\Order onlyTrashed()
+ * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order unconfirmed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereAdminNote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereAircraftAirportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereConfirmedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereDuration($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereRouteId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereUserNote($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Order withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Order withoutTrashed()
  * @mixin \Eloquent
  */
 class Order extends BaseModel
 {
+	use SoftDeletes;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -60,6 +75,8 @@ class Order extends BaseModel
 	    'duration' => 'nullable|integer|min:0',
         'code' => 'required|max:32',
 	    'email' => 'required|email',
+	    'user_note' => 'nullable|max:255',
+	    'admin_note' => 'nullable|max:255',
 	    'confirmed_at' => 'nullable|date',
         'route_id' => 'required|exists:routes,id',
         'aircraft_airport_id' => 'required|exists:aircraft_airport_xref,id'
@@ -136,6 +153,15 @@ class Order extends BaseModel
 	 */
 	public function scopeUnconfirmed($query) {
 		return $query->where('confirmed_at', '=', null);
+	}
+
+	/**
+	 * Returns whether an order has not been confirmed yet
+	 *
+	 * @return bool
+	 */
+	public function isUnconfirmed() {
+	    return $this->confirmed_at == null;
 	}
 
 	/**
