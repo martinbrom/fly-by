@@ -123,6 +123,22 @@ class AirportTest extends TestCase
         $this->assertTrue($airport->save());
     }
 
+	/**
+	 * Test calculation of distance between two airports
+	 */
+    public function testGetDistance() {
+	    $airport  = factory(\App\Airport::class)->create([
+	    	'lat' => 1,
+		    'lon' => 1
+	    ]);
+	    $airport2 = factory(\App\Airport::class)->create([
+	    	'lat' => 1,
+		    'lon' => 1.1
+	    ]);
+	    $this->assertEquals(11, $airport->getDistance($airport2));
+	    $this->assertEquals(0,  $airport->getDistance($airport));
+    }
+
     /**
      * Test relation between airport and aircraft models
      */

@@ -71,7 +71,6 @@ class OrderController extends AdminController
 	private function confirm($orders) {
 		foreach ($orders as $order) {
 			$order->confirm();
-			// TODO: Send email to user
 		}
 
 		return redirect()->route('admin.orders.index');

@@ -7,6 +7,7 @@ use App\Airport;
 use App\Http\Requests\OrderStoreRequest;
 use App\Order;
 use App\Route;
+use DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class OrderController extends CommonController
@@ -36,12 +37,9 @@ class OrderController extends CommonController
 	 * @throws \Exception
 	 */
 	public function store(OrderStoreRequest $request) {
-		// can assign foreign keys directly because their
-		// existence is validated on the incoming request
+		DB::beginTransaction();
 		$route = new Route([
 			'route' => $request->input('route'),
-//			'airport_from_id' => $request->input('airport_from_id'),
-//			'airport_to_id' => $request->input('airport_to_id'),
 		]);
 		$airportFrom = Airport::find($request->input('airport_from_id'));
 		$airportTo = Airport::find($request->input('airport_to_id'));
@@ -54,6 +52,7 @@ class OrderController extends CommonController
 
 		if (!$aircraft->canFly($route->distance)) {
 			// TODO: Aircraft cannot fly the distance
+			DB::rollBack();
 			throw new \Exception($route->distance);
 		}
 
@@ -61,6 +60,7 @@ class OrderController extends CommonController
 		$order->route()->associate($route);
 		$order->aircraftAirport()->associate($aircraftAirport);
 		$order->saveOrFail();
+		DB::commit();
 
 		return redirect()->route('orders.test-create');
 	}

@@ -83,29 +83,35 @@ class Order extends BaseModel
 		parent::boot();
 
 		static::saving(function (Order $order) {
-			$order->recalculateFlightPrice();
-			$order->recalculateTransportPrice();
+			$order->recalculatePrice();
 			$order->recalculateDuration();
 		});
 	}
 
 	/**
-	 * Recalculates total price of flying with selected
-	 * aircraft from starting airport to ending airport
+	 * Recalculates both flight prices
 	 */
-	public function recalculateFlightPrice() {
-	    $this->price += $this->aircraftAirport->getCostForDistance($this->route->distance);
+	public function recalculatePrice() {
+	    $this->price = $this->getFlightPrice() + $this->getTransportPrice();
 	}
 
 	/**
-	 * Recalculates total price of moving selected
+	 * Returns total price of flying with selected
+	 * aircraft from starting airport to ending airport
+	 */
+	public function getFlightPrice() {
+	    return $this->aircraftAirport->getCostForDistance($this->route->distance);
+	}
+
+	/**
+	 * Returns total price of moving selected
 	 * aircraft from its current airport to the starting airport
 	 * and back from the ending airport
 	 */
-	public function recalculateTransportPrice() {
+	public function getTransportPrice() {
 		$distance = $this->aircraftAirport->getAirportDistance($this->route->airportFrom)
 			+ $this->aircraftAirport->getAirportDistance($this->route->airportTo);
-	    $this->price += $this->aircraftAirport->getCostForDistance($distance);
+	    return $this->aircraftAirport->getCostForDistance($distance);
 	}
 
 	/**
@@ -116,10 +122,9 @@ class Order extends BaseModel
 	}
 
 	/**
-	 *
+	 * Generates 32 long unique alphanumeric order code
 	 */
-    private function generateCode() {
-    	// TODO: Actual unique code
+    public function generateCode() {
     	$this->code = str_random(32);
     }
 
@@ -134,9 +139,10 @@ class Order extends BaseModel
 	}
 
 	/**
-	 *
+	 * Confirms given order
 	 */
     public function confirm() {
+    	// TODO: Send email
     	$this->setAttribute('confirmed_at', \Carbon\Carbon::now());
     	$this->save();
     }

@@ -140,9 +140,77 @@ class OrderTest extends TestCase
     	$this->assertTrue($order->confirmed_at <= \Carbon\Carbon::now());
     }
 
-    // TODO: Testing
-    public function testRecalculateDuration() {}
-    public function testRecalculateTransportPrice() {}
-    public function testRecalculateFlightPrice() {}
-    public function testGenerateCode() {}
+	/**
+	 * Test recalculation of flight duration
+	 */
+    public function testRecalculateDuration() {
+    	$order = $this->getValidOrder();
+    	$order->duration = 0;
+    	$order->recalculateDuration();
+    	$this->assertNotEquals(0, $order->duration);
+    }
+
+	/**
+	 * Test calculation of plane transport price
+	 */
+    public function testGetTransportPrice() {
+	    $order = $this->getValidOrder();
+	    $this->assertNotEquals(0, $order->getTransportPrice());
+
+	    $airport = factory(\App\Airport::class)->create();
+	    $aircraft = factory(\App\Aircraft::class)->create();
+	    $aircraftAirport = factory(\App\AircraftAirport::class)->make();
+	    $aircraftAirport->aircraft()->associate($aircraft);
+	    $aircraftAirport->airport()->associate($airport);
+	    $aircraftAirport->save();
+
+	    $order->aircraftAirport()->associate($aircraftAirport);
+	    $order->route->airportFrom()->associate($airport);
+	    $order->route->airportTo()->associate($airport);
+	    $this->assertEquals(0, $order->getTransportPrice());
+    }
+
+	/**
+	 * Test calculation of flight price
+	 */
+    public function testGetFlightPrice() {
+    	$order = $this->getValidOrder();
+	    $route = $this->getValidRoute([
+            'route' => [[1,1.1]]
+        ]);
+	    $airport = factory(\App\Airport::class)->create([
+	    	'lat' => 1,
+		    'lon' => 1
+	    ]);
+	    $route->airportFrom()->associate($airport);
+	    $route->airportTo()->associate($airport);
+	    $route->recalculateTotalDistance();
+
+    	$order->route()->associate($route);
+    	$order->aircraftAirport->aircraft->cost = 100;
+    	$this->assertEquals(2200, $order->getFlightPrice());
+    }
+
+	/**
+	 * Test recalculation of both prices
+	 */
+    public function testRecalculatePrice() {
+	    $order = $this->getValidOrder();
+	    $order->price = 0;
+	    $order->recalculatePrice();
+	    $this->assertNotEquals(0, $order->price);
+    }
+
+	/**
+	 * Test generation of unique order code
+	 */
+    public function testGenerateCode() {
+    	$order = factory(\App\Order::class)->make();
+    	$order->generateCode();
+    	$code = $order->code;
+    	$this->assertEquals(32, strlen($order->code));
+
+    	$order->generateCode();
+    	$this->assertNotEquals($code, $order->code);
+    }
 }

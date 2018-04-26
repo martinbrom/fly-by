@@ -86,9 +86,41 @@ class RouteTest extends TestCase
 		$this->assertTrue($route->orders()->first()->is($order));
 	}
 
-	// TODO: Testing
-	public function testRouteAirportFromRelation() {}
-	public function testRouteAirportToRelation() {}
+	/**
+	 * Test relation between between route and airport-from models
+	 */
+	public function testRouteAirportFromRelation() {
+		$route = $this->getValidRoute();
+		$route->airportFrom()->dissociate();
+		$this->assertEquals(0, $route->airportFrom()->count());
+		$this->assertFalse($route->save());
+
+		$route->airport_from_id = 99999999;
+		$this->assertFalse($route->save());
+
+		$airportFrom = factory(\App\Airport::class)->create();
+		$route->airportFrom()->associate($airportFrom);
+		$this->assertEquals(1, $route->airportFrom()->count());
+		$this->assertTrue($route->airportFrom()->first()->is($airportFrom));
+	}
+
+	/**
+	 * Test relation between between route and airport-to models
+	 */
+	public function testRouteAirportToRelation() {
+		$route = $this->getValidRoute();
+		$route->airportTo()->dissociate();
+		$this->assertEquals(0, $route->airportTo()->count());
+		$this->assertFalse($route->save());
+
+		$route->airport_to_id = 99999999;
+		$this->assertFalse($route->save());
+
+		$airportTo = factory(\App\Airport::class)->create();
+		$route->airportTo()->associate($airportTo);
+		$this->assertEquals(1, $route->airportTo()->count());
+		$this->assertTrue($route->airportTo()->first()->is($airportTo));
+	}
 
 	/**
 	 * Test query scope to include only pre-defined routes

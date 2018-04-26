@@ -139,7 +139,31 @@ class AircraftTest extends TestCase
         $this->assertTrue($aircraft->canFly($aircraft->range));
     }
 
-    // TODO: Testing
-    public function testGetCostForDistance() {}
-    public function testGetDurationForDistance() {}
+	/**
+	 * Test calculation of price for a certain distance
+	 */
+    public function testGetCostForDistance() {
+    	$cost     = 20;
+    	$distance = 100;
+    	$aircraft = factory(\App\Aircraft::class)->create([
+    		'range' => $distance,
+		    'cost' => $cost
+	    ]);
+
+    	$this->assertEquals(2000, $aircraft->getCostForDistance($distance));
+    }
+
+	/**
+	 * Test calculation of duration for a certain distance
+	 */
+    public function testGetDurationForDistance() {
+	    $speed    = 200;
+	    $distance = 100;
+	    $aircraft = factory(\App\Aircraft::class)->create([
+		    'range' => $distance,
+		    'speed' => $speed
+	    ]);
+
+	    $this->assertEquals(30, $aircraft->getDurationForDistance($distance));
+    }
 }
