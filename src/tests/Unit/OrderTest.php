@@ -166,6 +166,16 @@ class OrderTest extends TestCase
 	    $order->confirmed_at = 'abcd';
     }
 
+	/**
+	 * Test for thrown exception when trying to fill
+	 * confirmed_at with invalid date
+	 */
+    public function testCompletedAtInvalidArgumentException() {
+		$this->expectException(\InvalidArgumentException::class);
+	    $order = $this->getValidOrder();
+	    $order->completed_at = 'abcd';
+    }
+
     /**
      * Test relation between order and route models
      */

@@ -11,7 +11,7 @@ class AirportController extends CommonController
 	 * @return  \Illuminate\Http\JsonResponse
 	 */
 	public function index() {
-		$airports = Airport::all();
+		$airports = Airport::getAllWithAircrafts();
 		return response()->json($airports);
 	}
 

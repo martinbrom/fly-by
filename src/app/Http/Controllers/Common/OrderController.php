@@ -33,27 +33,25 @@ class OrderController extends CommonController
 	 * Store a newly created resource in storage.
 	 *
 	 * @param OrderStoreRequest $request
-	 * @return \Illuminate\Http\Response
+	 * @return \Illuminate\Http\RedirectResponse
 	 * @throws \Exception
 	 */
 	public function store(OrderStoreRequest $request) {
 		DB::beginTransaction();
 		$route = new Route([
 			'route' => $request->input('route'),
+			'airport_from_id' => $request->input('airport_from_id'),
+			'airport_to_id' => $request->input('airport_to_id')
 		]);
-		$airportFrom = Airport::find($request->input('airport_from_id'));
-		$airportTo = Airport::find($request->input('airport_to_id'));
-		$route->airportFrom()->associate($airportFrom);
-		$route->airportTo()->associate($airportTo);
 		$route->saveOrFail();
 
 		$aircraftAirport = AircraftAirport::find($request->input('aircraft_airport_id'));
-		$aircraft = $aircraftAirport->aircraft;
 
-		if (!$aircraft->canFly($route->distance)) {
-			// TODO: Aircraft cannot fly the distance
+		if (!$aircraftAirport->canFly($route->distance)) {
 			DB::rollBack();
-			throw new \Exception($route->distance);
+			return redirect()
+				->back(400)
+				->withErrors('The route is longer than the aircraft range!');
 		}
 
 		$order = new Order(['email' => $request->input('email')]);

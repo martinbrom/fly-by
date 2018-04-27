@@ -35,6 +35,9 @@ Route::prefix('admin')->group(function () {
 			'only' => ['store', 'update', 'destroy']
 		]);
 
+		Route::get('orders/completed', 'Admin\OrderController@completed')->name('orders.completed');
+		Route::get('orders/uncompleted', 'Admin\OrderController@uncompleted')->name('orders.uncompleted');
+		Route::post('orders/{id}/complete', 'Admin\OrderController@complete')->name('orders.complete');
 		Route::post('orders/{id}/confirm', 'Admin\OrderController@confirmOne')->name('orders.confirm-one');
 		Route::post('orders/confirm-all', 'Admin\OrderController@confirmAll')->name('orders.confirm-all');
 		Route::resource('orders', 'Admin\OrderController', [

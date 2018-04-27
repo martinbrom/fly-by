@@ -6,7 +6,8 @@
 
     <p class="order-code">{{ $order->code }}</p>
     <p class="order-email">{{ $order->email }}</p>
-    <p class="order-confirmed-state">{{ $order->confirmed_at ?: 'not confirmed yet' }}</p>
+    <p class="order-confirmed-state">Confirmed at: {{ $order->confirmed_at ?: 'not confirmed yet' }}</p>
+    <p class="order-completed-state">Completed at: {{ $order->completed_at ?: 'not completed yet' }}</p>
 
     <!-- TODO: Display route -->
     <!-- TODO: Display aircraft-airport -->
@@ -15,13 +16,25 @@
     <a href="{{ route('admin.orders.edit', $order->id) }}">Edit order</a><br>
     <!-- TODO: Delete order -->
     <!-- TODO: Form with POST -->
-    <a href="#order-confirm-one-form"
-       onclick="event.preventDefault(); document.getElementById('order-confirm-one-form').submit();">
-        Confirm order</a>
-    <form id="order-confirm-one-form"
-          action="{{ route('admin.orders.confirm-one', $order->id) }}" method="POST"
-          style="display: none;">
-        {{ csrf_field() }}
-    </form>
+
+    @if($order->confirmed_at == NULL)
+        <a href="#order-confirm-one-form"
+           onclick="event.preventDefault(); document.getElementById('order-confirm-one-form').submit();">
+            Confirm order</a>
+        <form id="order-confirm-one-form"
+              action="{{ route('admin.orders.confirm-one', $order->id) }}" method="POST"
+              style="display: none;">
+            {{ csrf_field() }}
+        </form>
+    @elseif($order->completed_at == NULL)
+        <a href="#order-complete-form"
+           onclick="event.preventDefault(); document.getElementById('order-complete-form').submit();">
+            Mark order as completed</a>
+        <form id="order-complete-form"
+              action="{{ route('admin.orders.complete', $order->id) }}" method="POST"
+              style="display: none;">
+            {{ csrf_field() }}
+        </form>
+    @endif
 
 @endsection

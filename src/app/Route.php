@@ -35,7 +35,7 @@ class Route extends BaseModel
 	 * @var array
 	 */
 	protected $fillable = [
-		'route',
+		'route', 'airport_from_id', 'airport_to_id'
 	];
 
 	/**
