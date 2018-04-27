@@ -9,7 +9,9 @@
         <ul class="navbar-nav mr-auto">
             <li class="nav-item"><a class="nav-link" href="{{ route('admin.aircrafts.index') }}">Aircrafts</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('admin.airports.index') }}">Airports</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('admin.orders.index') }}">Orders</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('admin.orders.index') }}">Unconfirmed orders</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('admin.orders.uncompleted') }}">Uncompleted orders</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('admin.orders.completed') }}">Completed orders</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('index') }}">Back to website</a></li>
         </ul>
     </div>

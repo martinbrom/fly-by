@@ -14,7 +14,26 @@ class OrderController extends AdminController
 	 */
 	public function index() {
 		$orders = Order::unconfirmed()->get();
-		return view('admin.orders.index', compact('orders'));
+		$state = 'unconfirmed';
+		return view('admin.orders.index', compact('orders', 'state'));
+	}
+
+	/**
+	 * Display all uncompleted but confirmed orders
+	 */
+	public function uncompleted() {
+		$orders = Order::confirmed()->uncompleted()->get();
+		$state = 'uncompleted';
+	    return view('admin.orders.index', compact('orders', 'state'));
+	}
+
+	/**
+	 * Display all completed orders
+	 */
+	public function completed() {
+		$orders = Order::completed()->get();
+		$state = 'completed';
+		return view('admin.orders.index', compact('orders', 'state'));
 	}
 
 	/**
@@ -68,20 +87,25 @@ class OrderController extends AdminController
 	}
 
 	/**
+	 * Marks given order as completed
+	 *
+	 * @param $id
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function complete($id) {
+		$order = Order::confirmed()->uncompleted()->findOrFail($id);
+		$order->complete();
+		return redirect()->route('admin.orders.uncompleted');
+	}
+
+	/**
 	 * Confirms a given unconfirmed order
 	 *
 	 * @param $id
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function confirmOne($id) {
-		$order = Order::findOrFail($id);
-
-		if (!$order->isUnconfirmed()) {
-			return redirect()
-				->back(400)
-				->withErrors('Order is already confirmed!');
-		}
-
+		$order = Order::unconfirmed()->findOrFail($id);
 		return $this->confirm([$order]);
 	}
 

@@ -96,6 +96,16 @@ class AircraftAirport extends BaseModel
 	    return $this->airport->getDistance($airport);
 	}
 
+	/**
+	 * Checks whether aircraft is able to fly given distance
+	 *
+	 * @param int $distance
+	 * @return bool
+	 */
+	public function canFly(int $distance) {
+	    return $this->aircraft->canFly($distance);
+	}
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

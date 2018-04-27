@@ -115,6 +115,13 @@ class Airport extends BaseModel
     	return $query->where('id', '!=', $id);
     }
 
+	/**
+	 * Returns all airports that contain an aircraft
+	 */
+    public static function getAllWithAircrafts() {
+    	return Airport::has('aircrafts')->get();
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
