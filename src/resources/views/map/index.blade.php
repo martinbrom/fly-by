@@ -14,6 +14,21 @@
         </div>
         <div id="map-control-panel" class="p-2">
             <h5 class="bg-secondary text-center text-light w-100 p-2">{{ __('Plánování vyhlídkového letu') }}</h5>
+
+            <form id="route-form">
+                <div class="form-group">
+                    <label for="airport_id" class="control-label">Aircraft</label>
+                    <select name="airport_id" id="airport_id" class="form-control">
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="aircraft_id" class="control-label">Aircraft</label>
+                    <select name="aircraft_id" id="aircraft_id" class="form-control">
+                    </select>
+                </div>
+            </form>
+
             <button id="btn-add-waypoint" class="btn btn-success">{{ __('Přidat bod na trase') }}</button>
         </div>
     </div>

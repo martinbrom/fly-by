@@ -18,6 +18,9 @@ Route::get('contacts', 'Common\StaticController@contacts')->name('contacts');
 Route::get('about', 'Common\StaticController@about')->name('about');
 // TODO: Other static pages
 
+// MAP ROUTES
+Route::get('map', 'Common\MapController@index');
+
 // ADMIN ROUTES
 Route::prefix('admin')->group(function () {
 	Route::name('admin.')->group(function () {
@@ -57,11 +60,6 @@ Route::get('orders/test-create', 'Common\OrderController@testCreate')->name('ord
 Route::resource('orders', 'Common\OrderController', [
 	'only' => ['store', 'show']
 ]);
-
-// TODO: Add to controller
-Route::get('map', function () {
-    return view('map.index');
-});
 
 Route::prefix('mail')->group(function () {
 	Route::name('mail.')->group(function () {
