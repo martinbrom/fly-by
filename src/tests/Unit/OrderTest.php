@@ -43,6 +43,48 @@ class OrderTest extends TestCase
     }
 
     /**
+     * Test validation of flight_price attribute
+     */
+    public function testFlightPriceValidation() {
+        $order = $this->getValidOrder();
+        $order->flight_price = null;   // price hasn't been calculated yet
+        $this->assertTrue($order->save());
+
+        $order->flight_price = 'a';
+        $this->assertFalse($order->save());
+
+        $order->flight_price = 0.5;
+        $this->assertFalse($order->save());
+
+        $order->flight_price = -3;
+        $this->assertFalse($order->save());
+
+        $order->flight_price = 50;
+        $this->assertTrue($order->save());
+    }
+
+    /**
+     * Test validation of transport_price attribute
+     */
+    public function testTransportPriceValidation() {
+        $order = $this->getValidOrder();
+        $order->transport_price = null;   // price hasn't been calculated yet
+        $this->assertTrue($order->save());
+
+        $order->transport_price = 'a';
+        $this->assertFalse($order->save());
+
+        $order->transport_price = 0.5;
+        $this->assertFalse($order->save());
+
+        $order->transport_price = -3;
+        $this->assertFalse($order->save());
+
+        $order->transport_price = 50;
+        $this->assertTrue($order->save());
+    }
+
+    /**
      * Test validation of code attribute
      */
     public function testCodeValidation() {
@@ -183,9 +225,9 @@ class OrderTest extends TestCase
 	/**
 	 * Test calculation of plane transport price
 	 */
-    public function testGetTransportPrice() {
+    public function testRecalculateTransportPrice() {
 	    $order = $this->getValidOrder();
-	    $this->assertNotEquals(0, $order->getTransportPrice());
+	    $this->assertNotEquals(0, $order->transport_price);
 
 	    $airport = factory(\App\Airport::class)->create();
 	    $aircraft = factory(\App\Aircraft::class)->create();
@@ -197,13 +239,14 @@ class OrderTest extends TestCase
 	    $order->aircraftAirport()->associate($aircraftAirport);
 	    $order->route->airportFrom()->associate($airport);
 	    $order->route->airportTo()->associate($airport);
-	    $this->assertEquals(0, $order->getTransportPrice());
+	    $order->recalculateTransportPrice();
+	    $this->assertEquals(0, $order->transport_price);
     }
 
 	/**
 	 * Test calculation of flight price
 	 */
-    public function testGetFlightPrice() {
+    public function testRecalculateFlightPrice() {
     	$order = $this->getValidOrder();
 	    $route = $this->getValidRoute([
             'route' => [[1,1.1]]
@@ -218,7 +261,8 @@ class OrderTest extends TestCase
 
     	$order->route()->associate($route);
     	$order->aircraftAirport->aircraft->cost = 100;
-    	$this->assertEquals(2200, $order->getFlightPrice());
+    	$order->recalculateFlightPrice();
+    	$this->assertEquals(2200, $order->flight_price);
     }
 
 	/**
@@ -229,6 +273,7 @@ class OrderTest extends TestCase
 	    $order->price = 0;
 	    $order->recalculatePrice();
 	    $this->assertNotEquals(0, $order->price);
+	    $this->assertEquals($order->price, $order->transport_price + $order->flight_price);
     }
 
 	/**

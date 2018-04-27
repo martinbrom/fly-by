@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int $id
  * @property int $price
+ * @property int $flight_price
+ * @property int|null $transport_price
  * @property int $duration
  * @property string $code
  * @property string $email
@@ -19,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon|null $confirmed_at
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property string|null $deleted_at
  * @property-read \App\AircraftAirport|null $aircraftAirport
  * @property-read \App\Route $route
  * @method static bool|null forceDelete()
@@ -30,11 +33,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereConfirmedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereDuration($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereFlightPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereRouteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereTransportPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order whereUserNote($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Order withTrashed()
@@ -72,6 +78,8 @@ class Order extends BaseModel
      */
     protected $rules = [
         'price' => 'nullable|integer|min:0',
+        'flight_price' => 'nullable|integer|min:0',
+        'transport_price' => 'nullable|integer|min:0',
 	    'duration' => 'nullable|integer|min:0',
         'code' => 'required|max:32',
 	    'email' => 'required|email',
@@ -109,15 +117,17 @@ class Order extends BaseModel
 	 * Recalculates both flight prices
 	 */
 	public function recalculatePrice() {
-	    $this->price = $this->getFlightPrice() + $this->getTransportPrice();
+		$this->recalculateFlightPrice();
+		$this->recalculateTransportPrice();
+	    $this->price = $this->flight_price + $this->transport_price;
 	}
 
 	/**
 	 * Returns total price of flying with selected
 	 * aircraft from starting airport to ending airport
 	 */
-	public function getFlightPrice() {
-	    return $this->aircraftAirport->getCostForDistance($this->route->distance);
+	public function recalculateFlightPrice() {
+	    $this->flight_price = $this->aircraftAirport->getCostForDistance($this->route->distance);
 	}
 
 	/**
@@ -125,10 +135,10 @@ class Order extends BaseModel
 	 * aircraft from its current airport to the starting airport
 	 * and back from the ending airport
 	 */
-	public function getTransportPrice() {
+	public function recalculateTransportPrice() {
 		$distance = $this->aircraftAirport->getAirportDistance($this->route->airportFrom)
 			+ $this->aircraftAirport->getAirportDistance($this->route->airportTo);
-	    return $this->aircraftAirport->getCostForDistance($distance);
+	    $this->transport_price = $this->aircraftAirport->getCostForDistance($distance);
 	}
 
 	/**

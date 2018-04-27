@@ -51,6 +51,8 @@ $factory->define(App\Route::class, function (Faker $faker) {
 $factory->define(App\Order::class, function (Faker $faker) {
     return [
         'price' => $faker->numberBetween(100, 9999),
+        'flight_price' => $faker->numberBetween(100, 9999),
+        'transport_price' => $faker->numberBetween(100, 9999),
 	    'email' => $faker->email,
 	    'user_note' => $faker->text(100),
 	    'admin_note' => $faker->text(100),
