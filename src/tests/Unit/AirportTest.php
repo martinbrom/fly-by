@@ -163,5 +163,26 @@ class AirportTest extends TestCase
 
         $airports = Airport::allOther($airport->id)->get();
         $this->assertEquals(2, count($airports));
+
+        $airports = Airport::allOther()->get();
+        $this->assertEquals(3, count($airports));
+    }
+
+	/**
+	 * Test getting airports that contain an aircraft
+	 */
+    public function testGetAllWithAircrafts() {
+    	$airport  = factory(\App\Airport::class)->create();
+    	$airport2 = factory(\App\Airport::class)->create();
+    	$aircraft = factory(\App\Aircraft::class)->create();
+    	$aircraftAirport = factory(\App\AircraftAirport::class)->make();
+
+    	$aircraftAirport->aircraft()->associate($aircraft);
+    	$aircraftAirport->airport()->associate($airport);
+    	$aircraftAirport->save();
+
+    	$result = Airport::getAllWithAircrafts();
+    	$this->assertEquals(1, $result->count());
+    	$this->assertNotEquals($airport2->id, $result->first()->id);
     }
 }

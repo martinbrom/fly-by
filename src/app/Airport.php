@@ -17,7 +17,7 @@ use Malhal\Geographical\Geographical;
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Aircraft[] $aircrafts
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport allOther($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport allOther($id = null)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport distance($latitude, $longitude)
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport geofence($latitude, $longitude, $inner_radius, $outer_radius)
@@ -107,7 +107,7 @@ class Airport extends BaseModel
 	 * @param   int $id
 	 * @return  \Illuminate\Database\Eloquent\Builder
 	 */
-    public function scopeAllOther($query, $id) {
+    public function scopeAllOther($query, $id = null) {
     	if (!isset($id)) {
     		return $query;
 	    }

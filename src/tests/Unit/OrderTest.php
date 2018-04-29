@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Events\OrderConfirmed;
+use App\Events\OrderDeleted;
 use App\Order;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -216,19 +218,24 @@ class OrderTest extends TestCase
 	 * Test confirmation of an order
 	 */
     public function testConfirm() {
-	    $this->withoutEvents();
+	    $this->expectsEvents(OrderConfirmed::class);
 
     	$order = $this->getValidOrder();
     	$this->assertEquals(null, $order->confirmed_at);
     	$order->confirm();
-    	$this->assertTrue($order->confirmed_at <= \Carbon\Carbon::now());
+    	$now = \Carbon\Carbon::now();
+    	$this->assertTrue($order->confirmed_at <= $now);
+
+    	$order->confirmed_at->subDay(1);
+    	$order->confirm();
+    	$this->assertNotEquals($now, $order->confirmed_at);
     }
 
 	/**
 	 * Test marking order as completed
 	 */
     public function testComplete() {
-	    $this->withoutEvents();
+	    $this->expectsEvents(OrderConfirmed::class);
 
         $order = $this->getValidOrder();
         $this->assertEquals(null, $order->completed_at);
@@ -328,7 +335,7 @@ class OrderTest extends TestCase
 	 * Test query scope to include all confirmed orders
 	 */
     public function testConfirmedQueryScope() {
-    	$this->withoutEvents();
+	    $this->expectsEvents(OrderConfirmed::class);
 
     	$order  = $this->getValidOrder();
     	$order2 = $this->getValidOrder();
@@ -343,7 +350,7 @@ class OrderTest extends TestCase
 	 * Test query scope to include all unconfirmed orders
 	 */
     public function testUnconfirmedQueryScope() {
-	    $this->withoutEvents();
+	    $this->expectsEvents(OrderConfirmed::class);
 
 	    $order  = $this->getValidOrder();
 	    $order2 = $this->getValidOrder();
@@ -358,8 +365,6 @@ class OrderTest extends TestCase
 	 * Test query scope to include all completed orders
 	 */
     public function testCompletedQueryScope() {
-	    $this->withoutEvents();
-
 	    $order  = $this->getValidOrder();
 	    $order2 = $this->getValidOrder();
 	    $order->confirmed_at = \Carbon\Carbon::now()->subMinutes(30);
@@ -374,8 +379,6 @@ class OrderTest extends TestCase
 	 * Test query scope to include all uncompleted orders
 	 */
     public function testUncompletedQueryScope() {
-	    $this->withoutEvents();
-
 	    $order  = $this->getValidOrder();
 	    $order2 = $this->getValidOrder();
 	    $order->confirmed_at = \Carbon\Carbon::now()->subMinutes(30);
@@ -384,5 +387,26 @@ class OrderTest extends TestCase
 	    $result = Order::uncompleted()->get();
 	    $this->assertEquals(1, $result->count());
 	    $this->assertEquals($order2->id, $result->first()->id);
+    }
+
+	/**
+	 * Test deleting of confirmed order
+	 */
+    public function testConfirmedOrderDeletion() {
+	    $this->expectsEvents([OrderConfirmed::class, OrderDeleted::class]);
+
+    	$order = $this->getValidOrder();
+    	$order->confirm();
+    	$order->delete();
+    }
+
+	/**
+	 * Test deleting of unconfirmed order
+	 */
+    public function testUnconfirmedOrderDeletion() {
+	    $this->expectsEvents(OrderDeleted::class);
+
+    	$order = $this->getValidOrder();
+    	$order->delete();
     }
 }
