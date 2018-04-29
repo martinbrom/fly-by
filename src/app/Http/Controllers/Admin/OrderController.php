@@ -80,9 +80,8 @@ class OrderController extends AdminController
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id) {
-		$order = Order::findOrFail($id);
+		$order = Order::uncompleted()->findOrFail($id);
 		$order->delete();
-		// TODO: Send email
 		return redirect()->route('admin.orders.index');
 	}
 

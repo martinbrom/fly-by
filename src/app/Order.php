@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Events\OrderConfirmed;
+use App\Events\OrderDeleted;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -118,6 +120,14 @@ class Order extends BaseModel
 			$order->recalculatePrice();
 			$order->recalculateDuration();
 		});
+
+		static::deleting(function (Order $order) {
+			if ($order->completed_at != NULL)
+				return false;
+
+			event(new OrderDeleted($order));
+			return true;
+		});
 	}
 
 	/**
@@ -209,7 +219,7 @@ class Order extends BaseModel
 	    if ($this->confirmed_at != NULL || $this->deleted_at != NULL)
 		    return;
 
-    	// TODO: Send email
+    	event(new OrderConfirmed($this));
     	$this->confirmed_at = \Carbon\Carbon::now();
     	$this->save();
     }
@@ -221,7 +231,6 @@ class Order extends BaseModel
     	if ($this->confirmed_at == NULL || $this->completed_at != NULL || $this->deleted_at != NULL)
     		return;
 
-        // TODO: Send email
 	    $this->completed_at = \Carbon\Carbon::now();
 	    $this->save();
     }
