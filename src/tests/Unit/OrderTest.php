@@ -213,13 +213,38 @@ class OrderTest extends TestCase
     }
 
 	/**
-	 * Test confirmation of a single order
+	 * Test confirmation of an order
 	 */
-    public function testConfirmOne() {
+    public function testConfirm() {
+	    $this->withoutEvents();
+
     	$order = $this->getValidOrder();
     	$this->assertEquals(null, $order->confirmed_at);
     	$order->confirm();
     	$this->assertTrue($order->confirmed_at <= \Carbon\Carbon::now());
+    }
+
+	/**
+	 * Test marking order as completed
+	 */
+    public function testComplete() {
+	    $this->withoutEvents();
+
+        $order = $this->getValidOrder();
+        $this->assertEquals(null, $order->completed_at);
+
+        $order->complete(); // not confirmed yet
+        $this->assertEquals(null, $order->completed_at);
+
+        $now = \Carbon\Carbon::now();
+        $order->confirmed_at = $now->addMinutes(42);
+        $order->complete();
+        $this->assertFalse($order->save());
+
+        $order = $this->getValidOrder();
+        $order->confirm();
+        $order->complete();
+	    $this->assertTrue($order->completed_at <= \Carbon\Carbon::now());
     }
 
 	/**
@@ -297,5 +322,67 @@ class OrderTest extends TestCase
 
     	$order->generateCode();
     	$this->assertNotEquals($code, $order->code);
+    }
+
+	/**
+	 * Test query scope to include all confirmed orders
+	 */
+    public function testConfirmedQueryScope() {
+    	$this->withoutEvents();
+
+    	$order  = $this->getValidOrder();
+    	$order2 = $this->getValidOrder();
+    	$order->confirm();
+
+    	$result = Order::confirmed()->get();
+    	$this->assertEquals(1, $result->count());
+    	$this->assertEquals($order->id, $result->first()->id);
+    }
+
+	/**
+	 * Test query scope to include all unconfirmed orders
+	 */
+    public function testUnconfirmedQueryScope() {
+	    $this->withoutEvents();
+
+	    $order  = $this->getValidOrder();
+	    $order2 = $this->getValidOrder();
+	    $order->confirm();
+
+	    $result = Order::unconfirmed()->get();
+	    $this->assertEquals(1, $result->count());
+	    $this->assertEquals($order2->id, $result->first()->id);
+    }
+
+	/**
+	 * Test query scope to include all completed orders
+	 */
+    public function testCompletedQueryScope() {
+	    $this->withoutEvents();
+
+	    $order  = $this->getValidOrder();
+	    $order2 = $this->getValidOrder();
+	    $order->confirmed_at = \Carbon\Carbon::now()->subMinutes(30);
+	    $order->complete();
+
+	    $result = Order::completed()->get();
+	    $this->assertEquals(1, $result->count());
+	    $this->assertEquals($order->id, $result->first()->id);
+    }
+
+	/**
+	 * Test query scope to include all uncompleted orders
+	 */
+    public function testUncompletedQueryScope() {
+	    $this->withoutEvents();
+
+	    $order  = $this->getValidOrder();
+	    $order2 = $this->getValidOrder();
+	    $order->confirmed_at = \Carbon\Carbon::now()->subMinutes(30);
+	    $order->complete();
+
+	    $result = Order::uncompleted()->get();
+	    $this->assertEquals(1, $result->count());
+	    $this->assertEquals($order2->id, $result->first()->id);
     }
 }
