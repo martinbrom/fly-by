@@ -13,7 +13,7 @@
             <li class="nav-item"><a class="nav-link" href="{{ route('admin.orders.uncompleted') }}">Uncompleted orders</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('admin.orders.completed') }}">Completed orders</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('admin.routes.common') }}">All routes</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('admin.orders.index') }}">Predefined routes</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('admin.routes.index') }}">Predefined routes</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('index') }}">Back to website</a></li>
         </ul>
     </div>

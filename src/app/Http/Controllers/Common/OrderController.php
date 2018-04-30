@@ -53,7 +53,10 @@ class OrderController extends CommonController
 				->withErrors('The route is longer than the aircraft range!');
 		}
 
-		$order = new Order(['email' => $request->input('email')]);
+		$order = new Order([
+			'email' => $request->input('email'),
+			'user_note' => $request->input('user_note')
+		]);
 		$order->route()->associate($route);
 		$order->aircraftAirport()->associate($aircraftAirport);
 		$order->saveOrFail();

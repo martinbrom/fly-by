@@ -141,6 +141,21 @@ class RouteTest extends TestCase
 	}
 
 	/**
+	 * Test query scope to include only common (not predefined) routes
+	 */
+	public function testCommonQueryScope() {
+		$predefinedStates = [false, false, true];
+
+		for ($i = 0; $i < 3; $i++) {
+			$route = $this->getValidRoute(['is_predefined' => $predefinedStates[$i]]);
+			$route->save();
+		}
+
+		$commonRoutes = Route::common()->get();
+		$this->assertEquals(2, count($commonRoutes));
+	}
+
+	/**
 	 * Test calculation of route distance
 	 */
 	public function testDistanceCalculation() {

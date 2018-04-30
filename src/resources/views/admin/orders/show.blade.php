@@ -43,6 +43,7 @@
                     deleted
                 @endif
             </p>
+            <p class="route-distance"><b>Distance: </b> {{ $order->route->distance }} km</p>
             <a href="{{ route('admin.routes.show-common', $order->route->id) }}">Show route</a>
         </div>
     </div>
