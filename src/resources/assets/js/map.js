@@ -1,5 +1,7 @@
-let M = null;
 
+//-------------
+// Map
+//-------------
 function Map (element) {
     if (typeof element !== 'string') {
         throw 'Element selector must be an id as a string';
@@ -26,63 +28,20 @@ function Map (element) {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this.map);
 
-    this.wayPointMarker = L.AwesomeMarkers.icon({
-        icon: 'crosshairs',
-        prefix: 'fa',
-        markerColor: 'red'
-    });
+    this.dangerZoneColor = 'red';
 
-    this.airportMarker = L.AwesomeMarkers.icon({
-        icon: 'plane',
-        prefix: 'fa',
-        markerColor: 'green'
-    });
+    this.route = new Route(null, null, []);
+    this.route.addTo(this.map);
 
-    this.wayPoints = [];
-    this.route = L.polyline([], {color: 'red'}).addTo(this.map);
-
-    this.airports = [];
+    this.airports = {};
     this.zones = [];
 }
 
-Map.prototype.addWayPoint = function () {
-    let latlng = this.map.getCenter();
+Map.prototype.addAirport = function (id, latlng) {
+    let airport = new Airport(id, latlng);
 
-    let wayPoint = L.marker(latlng, {
-        icon: this.wayPointMarker,
-        draggable: true
-    });
-
-    wayPoint.on('drag', $.proxy( function () {
-        this.route.setLatLngs(this.wayPoints.map(function (point) {
-            return point.getLatLng()
-        }));
-    }), this);
-
-    this.route.addLatLng(latlng);
-
-    this.wayPoints.push(wayPoint);
-    wayPoint.addTo(this.map);
-};
-
-Map.prototype.addAirport = function (latlng) {
-    if (!(latlng instanceof L.LatLng)) {
-        throw 'latlng can only be a LatLng instance'
-    }
-
-    let airport = L.marker(latlng, {
-        icon: this.airportMarker,
-    });
-
-    // airportPoint.on('drag', function (event) {
-    //     route.setLatLngs(wayPoints.map(function (point) {
-    //         return point.getLatLng()
-    //     }));
-    // });
-
-    console.log(latlng);
-    
-    this.airports.push(airport);
+    this.airports[id] = airport;
+    console.log(this.airports);
     airport.addTo(this.map);
 };
 
@@ -93,60 +52,165 @@ Map.prototype.clearAirports = function () {
     this.airports = [];
 };
 
-// function mapInit() {
-//     map = L.map('map').setView([51, 0], 13);
-//
-//     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-//     }).addTo(map);
-//
-//     wayPointMarker = L.AwesomeMarkers.icon({
-//         icon: 'crosshairs',
-//         prefix: 'fa',
-//         markerColor: 'red'
-//     });
-//
-//     airportMarker = L.AwesomeMarkers.icon({
-//         icon: 'airplane',
-//         prefix: 'fa',
-//         markerColor: 'green'
-//     });
-//
-//     route = L.polyline([], {color: 'red'}).addTo(map);
-// }
-
-function addZone(options) {
+Map.prototype.addZone = function (options) {
+    let zone = null;
     if (options.type === 'circle') {
-        var circle = L.circle(options.center, {
-            color: 'red',
-            fillColor: '#f03',
+        zone = L.circle(options.center, {
+            color: this.dangerZoneColor,
+            fillColor: this.dangerZoneColor,
             fillOpacity: 0.5,
             radius: options.radius
-        }).addTo(map);
-        zones.push(circle);
+        }).addTo(this.map);
     }
     else if (options.type === 'polygon') {
-        var polygon = L.polygon(options.latlngs, {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.5,
-            radius: options.radius
-        }).addTo(map);
-        zones.push(polygon);
+        zone = L.polygon(options.latlngs, {
+            color: this.dangerZoneColor,
+            fillColor: this.dangerZoneColor,
+            fillOpacity: 0.5
+        }).addTo(this.map);
     }
-}
+    else {
+        throw "Invalid zone type";
+    }
+
+    this.zones.push(zone);
+};
+
+
+//-------------
+// Route
+//-------------
+Route = function (from, to, latlngs) {
+    this.from = from;
+    this.to = to;
+
+    this.map = null;
+
+    this.line = L.polyline(latlngs, {color: '#0066a2'});
+    this.wayPoints = [];
+
+    for (let i = 0; i < latlngs.length; i++) {
+        this.addWayPoint(latlngs[i]);
+    }
+
+    this.marker = L.AwesomeMarkers.icon({
+        icon: 'crosshairs',
+        prefix: 'fa',
+        markerColor: 'darkblue'
+    });
+};
+
+Route.prototype.setFrom = function (from) {
+    this.from = from;
+    this.refresh();
+};
+
+Route.prototype.setTo = function (to) {
+    this.to = to;
+    this.refresh();
+};
+
+Route.prototype.addWayPoint = function (latlng) {
+    let wayPoint = L.marker(latlng, {
+        icon: this.marker,
+        draggable: true
+    });
+
+    let t = this;
+    wayPoint.on('drag', function () {
+        t.refresh();
+    });
+
+    this.line.addLatLng(latlng);
+
+    this.wayPoints.push(wayPoint);
+
+    if (this.map) {
+        wayPoint.addTo(this.map);
+    }
+};
+
+Route.prototype.refresh = function () {
+    let latlngs = this.wayPoints.map(function (point) {
+        return point.getLatLng();
+    });
+
+    if (this.from) {
+        latlngs = _.concat(this.from.getLatLng(), latlngs);
+    }
+
+    if (this.to) {
+        latlngs = _.concat(latlngs, this.to.getLatLng());
+    }
+
+    this.line.setLatLngs(latlngs);
+};
+
+Route.prototype.getLatLngs = function () {
+    return this.line.getLatLngs();
+};
+
+Route.prototype.addTo = function (map) {
+    for (let i = 0; i < this.wayPoints.length; i++) {
+        this.wayPoints[i].addTo(map);
+    }
+    this.line.addTo(map);
+
+    this.map = map;
+};
+
+Route.prototype.removeFrom = function (map) {
+    for (let i = 0; i < this.wayPoints.length; i++) {
+        this.wayPoints[i].removeFrom(map);
+    }
+    this.line.removeFrom(map);
+    this.map = null;
+};
+
+
+//-------------
+// Airport
+//-------------
+Airport = function (id, latlng) {
+    this.id = id;
+
+    icon = L.AwesomeMarkers.icon({
+        icon: 'plane',
+        prefix: 'fa',
+        markerColor: 'green'
+    });
+
+    this.marker = L.marker(latlng, {
+        icon: icon,
+    });
+};
+
+Airport.prototype.getLatLng = function () {
+    return this.marker.getLatLng();
+};
+
+Airport.prototype.addTo = function (map) {
+    this.marker.addTo(map);
+};
+
+Airport.prototype.removeFrom = function (map) {
+    this.marker.removeFrom(map);
+};
+
+
+
 
 function reloadAirports() {
     $.getJSON('ajax/airports', function(result){
         $('#airport_id').html('');
-        M.clearAirports();
+        window.M.clearAirports();
 
         $.each(result, function(i, airport){
             $('#airport_id').append($('<option>', {
                 value: airport.id,
                 text: airport.name
             }));
-            M.addAirport(L.latLng(airport.lat, airport.lon));
+            window.M.addAirport(airport.id, L.latLng(airport.lat, airport.lon));
         });
     }).done(function () {
         reloadAircrafts($('#airport_id').val());
@@ -154,35 +218,43 @@ function reloadAirports() {
 }
 
 function airportsInit() {
+    $('#airport_id').change(function () {
+        id = $(this).val();
+        reloadAircrafts(id);
+        window.M.route.setFrom(M.airports[id]);
+        window.M.route.setTo(M.airports[id]);
+    });
+
     reloadAirports();
 }
 
 function reloadAircrafts(airport_id) {
     $.get('ajax/aircrafts', {'airport_id': airport_id}, function(result){
         $('#aircraft_id').html('');
+        $('#aircraft_id').append($('<option>', {
+            value: '',
+            disabled: 'disabled',
+            hidden: 'hidden',
+            selected: 'selected'
+        }));
 
         $.each(result, function(i, aircraft){
             $('#aircraft_id').append($('<option>', {
                 value: aircraft.id,
-                text: aircraft.name
+                text: aircraft.name,
             }));
         });
     })
 }
 
-function aircraftsInit() {
-    $('#airport_id').change(function () {
-        reloadAircrafts($(this).val());
-    });
-}
-
 function init() {
     airportsInit();
-    aircraftsInit();
 }
 
 $(document).ready(function () {
-    let map = M = new Map('map');
+
+    map = window.M = new Map('map');
+
     init();
 
     function switchToMap() {
@@ -204,6 +276,6 @@ $(document).ready(function () {
     });
 
     $('#btn-add-waypoint').click(function (event) {
-        map.addWayPoint();
+        map.route.addWayPoint(M.map.getCenter());
     });
 });

@@ -25,6 +25,7 @@
                 <div class="form-group">
                     <label for="aircraft_id" class="control-label">Aircraft</label>
                     <select name="aircraft_id" id="aircraft_id" class="form-control">
+                        <option disabled selected hidden value=""></option>
                     </select>
                 </div>
             </form>
