@@ -21,7 +21,6 @@ class OrderController extends CommonController
 	public function show($code) {
 	    $order = Order::with(['route', 'aircraftAirport'])->where('code', '=', $code)->first();
 
-	    // TODO: Maybe request validation
 	    if (empty($order)) {
 	        throw new ModelNotFoundException();
 	    }

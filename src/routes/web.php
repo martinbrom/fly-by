@@ -46,6 +46,10 @@ Route::prefix('admin')->group(function () {
 		Route::resource('orders', 'Admin\OrderController', [
 			'except' => ['store', 'create']
 		]);
+
+		Route::get('routes/common', 'Admin\RouteController@indexCommon')->name('routes.common');
+		Route::get('routes/show-common/{id}', 'Admin\RouteController@showCommon')->name('routes.show-common');
+		Route::resource('routes', 'Admin\RouteController');
 	});
 });
 

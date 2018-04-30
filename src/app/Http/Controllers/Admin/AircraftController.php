@@ -16,7 +16,6 @@ class AircraftController extends AdminController
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        // TODO: Pagination
         $aircrafts = Aircraft::all();
         return view('admin.aircrafts.index', compact('aircrafts'));
     }
@@ -77,7 +76,6 @@ class AircraftController extends AdminController
         $aircraft->fill($request->all());
         $aircraft->save();
 
-        // TODO: Decide where to redirect after updating aircraft
         return redirect()->route('admin.aircrafts.show', $id);
     }
 

@@ -14,7 +14,7 @@
             <h3 class="aircraft-name">{{ $aircraft_airport->aircraft->name }}</h3>
 
             <a href="#aircraft-airport-delete-form-{{ $aircraft_airport->id }}" onclick="event.preventDefault(); document.getElementById('aircraft-airport-delete-form-{{ $aircraft_airport->id }}').submit();">
-                Delete
+                Remove from airport
             </a>
             <form id="aircraft-airport-delete-form-{{ $aircraft_airport->id }}" action="{{ route('admin.aircraft-airports.destroy', $aircraft_airport->id) }}" method="POST" style="display: none;">
                 {{ csrf_field() }}
@@ -34,8 +34,6 @@
                 </select>
                 <input type="submit" class="btn btn-primary" value="Submit">
             </form>
-
-            <!-- TODO: Remove aircraft from airport -->
         </div>
     @endforeach
 

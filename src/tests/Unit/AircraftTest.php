@@ -164,6 +164,6 @@ class AircraftTest extends TestCase
 		    'speed' => $speed
 	    ]);
 
-	    $this->assertEquals(30, $aircraft->getDurationForDistance($distance));
+	    $this->assertEquals(1800, $aircraft->getDurationForDistance($distance));
     }
 }

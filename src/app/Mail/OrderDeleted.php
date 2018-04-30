@@ -23,6 +23,7 @@ class OrderDeleted extends Mailable
 	 */
     public function __construct(Order $order) {
         $this->order = $order;
+        // TODO: Subject
     }
 
     /**

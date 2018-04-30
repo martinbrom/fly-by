@@ -16,7 +16,6 @@ class AirportController extends AdminController
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        // TODO: Pagination
         $airports = Airport::all();
         return response()->view('admin.airports.index', compact('airports'));
     }
@@ -78,7 +77,6 @@ class AirportController extends AdminController
         $airport->fill($request->all());
         $airport->save();
 
-        // TODO: Decide where to redirect after updating airport
         return redirect()->route('admin.airports.show', $id);
     }
 

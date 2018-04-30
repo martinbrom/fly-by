@@ -105,14 +105,13 @@ class Aircraft extends BaseModel
 	}
 
 	/**
-	 * Returns a duration for a flight of certain distance in minutes
+	 * Returns a duration for a flight of certain distance in seconds
 	 *
 	 * @param int $distance
 	 * @return int
 	 */
 	public function getDurationForDistance(int $distance): int {
-		// TODO: Discuss units of time with mirek
-		return (int) (60 * $distance / $this->speed);
+		return (int) (3600 * $distance / $this->speed);
 	}
 
 	/**
