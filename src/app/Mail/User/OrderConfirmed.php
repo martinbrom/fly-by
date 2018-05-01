@@ -12,6 +12,9 @@ class OrderConfirmed extends OrderMail
 	 * @return $this
 	 */
 	public function build() {
-		return $this->view('mail.user.order-confirmed');
+		return $this
+			->subject(config('app.name') . ' - Order #' . $this->order->id . ' is now confirmed')
+			->view('mail.user.order-confirmed')
+			->text('mail.user.order-confirmed_plain');
 	}
 }

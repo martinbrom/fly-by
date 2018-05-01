@@ -12,6 +12,9 @@ class OrderDeleted extends OrderMail
      * @return $this
      */
     public function build() {
-        return $this->view('mail.user.order-deleted');
+        return $this
+	        ->subject(config('app.name') . ' - Order #' . $this->order->id . ' has been deleted')
+	        ->view('mail.user.order-deleted')
+	        ->text('mail.user.order-deleted_plain');
     }
 }

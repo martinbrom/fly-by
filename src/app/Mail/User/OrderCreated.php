@@ -12,6 +12,9 @@ class OrderCreated extends OrderMail
 	 * @return $this
 	 */
 	public function build() {
-		return $this->view('mail.user.order-created');
+		return $this
+			->subject(config('app.name') . ' - Information about order #' . $this->order->id)
+			->view('mail.user.order-created')
+			->text('mail.user.order-created_plain');
 	}
 }

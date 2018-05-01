@@ -12,6 +12,9 @@ class OrderCreated extends OrderMail
 	 * @return $this
 	 */
 	public function build() {
-		return $this->view('mail.admin.order-created');
+		return $this
+			->subject(config('app.name') . ' - New order created')
+			->view('mail.admin.order-created')
+			->text('mail.admin.order-created_plain');
 	}
 }
