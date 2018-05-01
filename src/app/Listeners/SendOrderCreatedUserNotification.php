@@ -2,11 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\OrderDeleted;
-use App\Mail\User\OrderDeleted as OrderDeletedUserMail;
+use App\Events\OrderCreated;
+use App\Mail\User\OrderCreated as OrderCreatedUserMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendOrderDeletedUserNotification implements ShouldQueue
+class SendOrderCreatedUserNotification implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -16,12 +16,12 @@ class SendOrderDeletedUserNotification implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  OrderDeleted  $event
+     * @param  OrderCreated  $event
      * @return void
      */
-    public function handle(OrderDeleted $event) {
+    public function handle(OrderCreated $event) {
     	$order = $event->order;
     	\Mail::to($order->email)
-		    ->send(new OrderDeletedUserMail($order));
+		    ->send(new OrderCreatedUserMail($order));
     }
 }

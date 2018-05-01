@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Events\OrderConfirmed;
+use App\Events\OrderCreated;
 use App\Events\OrderDeleted;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -111,17 +112,25 @@ class Order extends BaseModel
     }
 
 	/**
-	 * Boots model and registers a 'saving' event listener
-	 * to recalculate flight & transport costs on model saving
+	 * Boots model and registers event listeners
 	 */
 	public static function boot() {
 		parent::boot();
 
+		// inform owner of a new order
+		// inform user that his order was created successfully
+		static::created(function (Order $order) {
+			event(new OrderCreated($order));
+		});
+
+		// recalculate prices and duration
 		static::saving(function (Order $order) {
 			$order->recalculatePrice();
 			$order->recalculateDuration();
 		});
 
+		// inform user that his order was cancelled
+		// doesn't work for already completed orders (duh)
 		static::deleting(function (Order $order) {
 			if ($order->completed_at != NULL)
 				return false;

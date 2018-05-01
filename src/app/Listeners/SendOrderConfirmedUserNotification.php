@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\OrderConfirmed;
-use App\Mail\OrderConfirmed as OrderConfirmedMail;
+use App\Mail\User\OrderConfirmed as OrderConfirmedUserMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendOrderConfirmedUserNotification implements ShouldQueue
@@ -22,6 +22,6 @@ class SendOrderConfirmedUserNotification implements ShouldQueue
 	public function handle(OrderConfirmed $event) {
 		$order = $event->order;
 		\Mail::to($order->email)
-		     ->send(new OrderConfirmedMail($order));
+		     ->send(new OrderConfirmedUserMail($order));
 	}
 }

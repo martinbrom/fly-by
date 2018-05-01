@@ -17,6 +17,10 @@ class EventServiceProvider extends ServiceProvider
         ],
 	    \App\Events\OrderConfirmed::class => [
 	    	\App\Listeners\SendOrderConfirmedUserNotification::class
+	    ],
+	    \App\Events\OrderCreated::class => [
+	    	\App\Listeners\SendOrderCreatedAdminNotification::class,
+	    	\App\Listeners\SendOrderCreatedUserNotification::class
 	    ]
     ];
 

@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Events\OrderConfirmed;
+use App\Events\OrderCreated;
 use App\Events\OrderDeleted;
 use App\Order;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -16,6 +17,8 @@ class OrderTest extends TestCase
      * Test saving of valid and invalid model
      */
     public function testCreate() {
+    	$this->expectsEvents(OrderCreated::class);
+
         $order = new Order();
         $this->assertFalse($order->save());
 

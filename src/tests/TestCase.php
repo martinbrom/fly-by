@@ -12,8 +12,7 @@ abstract class TestCase extends BaseTestCase
      *
      * @return \Illuminate\Foundation\Application
      */
-    public function createApplication()
-    {
+    public function createApplication() {
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();
@@ -26,8 +25,7 @@ abstract class TestCase extends BaseTestCase
      *
      * @return \App\AircraftAirport
      */
-    public function getValidAircraftAirport()
-    {
+    public function getValidAircraftAirport() {
         $aircraftAirport = factory(\App\AircraftAirport::class)->create();
         $aircraft = factory(\App\Aircraft::class)->create();
         $airport = factory(\App\Airport::class)->create();
@@ -45,6 +43,8 @@ abstract class TestCase extends BaseTestCase
      * @return \App\Order
      */
     public function getValidOrder() {
+    	$this->withoutEvents();
+
         $aircraftAirport = $this->getValidAircraftAirport();
         $route = $this->getValidRoute();
         $order = factory(\App\Order::class)->make();
