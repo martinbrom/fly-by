@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Airport[] $airports
  * @property-read \App\AircraftImage|null $image
  * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\BaseModel new()
  * @method static \Illuminate\Database\Query\Builder|\App\Aircraft onlyTrashed()
  * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Aircraft whereCost($value)

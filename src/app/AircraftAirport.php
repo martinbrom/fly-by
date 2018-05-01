@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \App\Airport $airport
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Order[] $orders
  * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\BaseModel new()
  * @method static \Illuminate\Database\Query\Builder|\App\AircraftAirport onlyTrashed()
  * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\AircraftAirport whereAircraftId($value)

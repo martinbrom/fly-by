@@ -17,6 +17,7 @@ namespace App;
  * @property-read \App\Airport $airportTo
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Order[] $orders
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route common()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\BaseModel new()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route predefined()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereAirportFromId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereAirportToId($value)

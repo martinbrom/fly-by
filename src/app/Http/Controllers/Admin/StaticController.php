@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Aircraft;
+use App\AircraftAirport;
+use App\Airport;
+use App\Order;
+
 class StaticController extends AdminController
 {
 	/**
@@ -10,6 +15,16 @@ class StaticController extends AdminController
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index() {
-		return view('admin.index');
+		$distinctAircraftCount = Aircraft::count();
+		$unconfirmedOrderCount = Order::unconfirmed()->count();
+		$completedOrderCount   = Order::completed()->count();
+		$orderCount            = Order::new()->count();
+		$airportCount          = Airport::count();
+		$aircraftCount         = AircraftAirport::count();
+
+		return view('admin.index', compact(
+			'distinctAircraftCount', 'unconfirmedOrderCount', 'completedOrderCount',
+			'orderCount', 'airportCount', 'aircraftCount'
+		));
 	}
 }
