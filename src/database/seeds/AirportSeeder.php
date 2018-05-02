@@ -8,6 +8,6 @@ class AirportSeeder extends BaseSeeder
 	 * @return void
 	 */
 	public function run() {
-		factory(\App\Airport::class, 15)->create();
+		factory(\App\Airport::class, 'czech', 15)->create();
 	}
 }

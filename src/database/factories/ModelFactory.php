@@ -31,6 +31,18 @@ $factory->define(App\Airport::class, function (Faker $faker) {
     ];
 });
 
+$factory->defineAs(App\Airport::class, 'czech', function (Faker $faker) {
+	$lon = $faker->randomFloat(3, -0.5, 0.5);
+	$lat = $lon > 0 ? $faker->randomElement([1-$lon, -(1-$lon)]) : $faker->randomElement([1+$lon, -(1+$lon)]);
+
+    return [
+        'name' => 'Letiště ' . $faker->firstName(),
+        'code' => 'ICAO: ' . $faker->regexify('[A-Z]{3,4}'),
+        'lat' => round(49.85844 + $lat, 6),
+        'lon' => round(14.63891 + $lon, 6)
+    ];
+});
+
 $factory->define(App\Aircraft::class, function (Faker $faker) {
     return [
         'name' => 'Aircraft ' . $faker->name,
