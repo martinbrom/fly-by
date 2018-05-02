@@ -17,13 +17,14 @@
 
             <form id="route-form">
                 <div class="form-group">
-                    <label for="airport_id" class="control-label">Aircraft</label>
+                    <label for="airport_id" class="control-label">{{ __('Letiště') }}</label>
                     <select name="airport_id" id="airport_id" class="form-control">
+                        <option disabled selected hidden value=""></option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="aircraft_id" class="control-label">Aircraft</label>
+                    <label for="aircraft_id" class="control-label">{{ __('Letadlo') }}</label>
                     <select name="aircraft_id" id="aircraft_id" class="form-control">
                         <option disabled selected hidden value=""></option>
                     </select>

@@ -121,9 +121,8 @@ Route.prototype.addWayPoint = function (latlng) {
         t.refresh();
     });
 
-    this.line.addLatLng(latlng);
-
     this.wayPoints.push(wayPoint);
+    this.refresh();
 
     if (this.map) {
         wayPoint.addTo(this.map);
@@ -204,6 +203,13 @@ function reloadAirports() {
     $.getJSON('ajax/airports', function(result){
         $('#airport_id').html('');
         window.M.clearAirports();
+
+        $('#airport_id').append($('<option>', {
+            value: '',
+            disabled: 'disabled',
+            hidden: 'hidden',
+            selected: 'selected'
+        }));
 
         $.each(result, function(i, airport){
             $('#airport_id').append($('<option>', {
