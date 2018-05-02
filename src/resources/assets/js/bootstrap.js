@@ -60,3 +60,4 @@ require('bootstrap');
 require('leaflet');
 require('scrollmagic');
 require('./../../../node_modules/leaflet.awesome-markers/dist/leaflet.awesome-markers.js');
+require('leaflet-contextmenu');

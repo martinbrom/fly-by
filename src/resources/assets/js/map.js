@@ -86,7 +86,10 @@ Route = function (from, to, latlngs) {
     this.map = null;
     this.wayPoints = [];
 
-    this.line = L.polyline(latlngs, {color: '#0066a2'});
+    this.line = L.polyline(latlngs, {
+        color: '#0066a2',
+        weight: 5
+    });
 
     let t = this;
     this.line.on('click', function (event) {
@@ -146,6 +149,19 @@ Route.prototype.addWayPoint = function (latlng, index) {
     });
 
     let t = this;
+    wayPoint.bindContextMenu({
+        contextmenu: true,
+        contextmenuItems: [
+            {
+                text: 'Odstranit',
+                iconCls: 'fa fa-times',
+                callback: function () {
+                    t.removeWayPoint(wayPoint);
+                }
+            }
+        ],
+    });
+
     wayPoint.on('drag', function () {
         t.refresh();
     });
@@ -165,6 +181,27 @@ Route.prototype.addWayPoint = function (latlng, index) {
     if (this.map) {
         wayPoint.addTo(this.map);
     }
+};
+
+Route.prototype.removeWayPoint = function (point) {
+    let waypoint = null;
+
+    if (typeof point === 'number') {
+        waypoint = this.wayPoints[point];
+    }
+    else {
+        waypoint = point;
+        point = this.wayPoints.indexOf(waypoint);
+    }
+
+    this.wayPoints.splice(point, 1);
+    this.refresh();
+
+    if (this.map) {
+        waypoint.removeFrom(this.map);
+    }
+
+    this.refresh();
 };
 
 Route.prototype.refresh = function () {
