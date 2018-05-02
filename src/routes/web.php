@@ -14,12 +14,9 @@
 Auth::routes();
 
 Route::get('', 'Common\StaticController@index')->name('index');
-Route::get('contacts', 'Common\StaticController@contacts')->name('contacts');
-Route::get('about', 'Common\StaticController@about')->name('about');
-// TODO: Other static pages
 
 // MAP ROUTES
-Route::get('map', 'Common\MapController@index');
+Route::get('map', 'Common\MapController@index')->name('map');
 
 // ADMIN ROUTES
 Route::prefix('admin')->group(function () {
@@ -67,13 +64,3 @@ Route::get('orders/test-create', 'Common\OrderController@testCreate')->name('ord
 Route::resource('orders', 'Common\OrderController', [
 	'only' => ['store', 'show']
 ]);
-
-Route::prefix('mail')->group(function () {
-	Route::name('mail.')->group(function () {
-		Route::get('order-created', function () {
-			return view('mail.order-created');
-		});
-
-		// TODO: Order confirmed / removed
-	});
-});
