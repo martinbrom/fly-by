@@ -41,7 +41,6 @@ Map.prototype.addAirport = function (id, latlng) {
     let airport = new Airport(id, latlng);
 
     this.airports[id] = airport;
-    console.log(this.airports);
     airport.addTo(this.map);
 };
 
@@ -85,9 +84,15 @@ Route = function (from, to, latlngs) {
     this.to = to;
 
     this.map = null;
+    this.wayPoints = [];
 
     this.line = L.polyline(latlngs, {color: '#0066a2'});
-    this.wayPoints = [];
+
+    let t = this;
+    this.line.on('click', function (event) {
+        let i = t.closestSegmentIndex(event.latlng) + 1;
+        t.addWayPoint(event.latlng, i);
+    });
 
     for (let i = 0; i < latlngs.length; i++) {
         this.addWayPoint(latlngs[i]);
@@ -98,6 +103,30 @@ Route = function (from, to, latlngs) {
         prefix: 'fa',
         markerColor: 'darkblue'
     });
+
+    this.refresh();
+};
+
+Route.prototype.closestSegmentIndex = function (latlng) {
+    let point = this.map.latLngToLayerPoint(latlng);
+    let linepoints = this.line.getLatLngs();
+
+    for (let i = 0; i < linepoints.length; i++) {
+        linepoints[i] = this.map.latLngToLayerPoint(linepoints[i]);
+    }
+
+    let min = Number.MAX_VALUE;
+    let minI = 0;
+
+    for (let i = 0; i < linepoints.length - 1; i++) {
+        let dist = L.LineUtil.pointToSegmentDistance(point, linepoints[i], linepoints[i + 1]);
+        if (dist < min) {
+            min = dist;
+            minI = i;
+        }
+    }
+
+    return minI;
 };
 
 Route.prototype.setFrom = function (from) {
@@ -110,7 +139,7 @@ Route.prototype.setTo = function (to) {
     this.refresh();
 };
 
-Route.prototype.addWayPoint = function (latlng) {
+Route.prototype.addWayPoint = function (latlng, index) {
     let wayPoint = L.marker(latlng, {
         icon: this.marker,
         draggable: true
@@ -121,7 +150,16 @@ Route.prototype.addWayPoint = function (latlng) {
         t.refresh();
     });
 
-    this.wayPoints.push(wayPoint);
+    if (typeof index === 'undefined') {
+        index = this.wayPoints.length;
+    }
+
+    if (this.from) {
+        index -= 1;
+    }
+
+    this.wayPoints.splice(index, 0, wayPoint);
+
     this.refresh();
 
     if (this.map) {
@@ -218,8 +256,6 @@ function reloadAirports() {
             }));
             window.M.addAirport(airport.id, L.latLng(airport.lat, airport.lon));
         });
-    }).done(function () {
-        reloadAircrafts($('#airport_id').val());
     });
 }
 
