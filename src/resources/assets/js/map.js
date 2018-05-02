@@ -80,6 +80,8 @@ Map.prototype.addZone = function (options) {
 // Route
 //-------------
 Route = function (from, to, latlngs) {
+    let t = this;
+
     this.from = from;
     this.to = to;
 
@@ -90,8 +92,16 @@ Route = function (from, to, latlngs) {
         color: '#0066a2',
         weight: 5
     });
+    this.line.bindPopup('Přidat bod', {
+        closeButton: false
+    });
+    this.line.on('mousemove', function (event) {
+        this.openPopup(event.latlng);
+    });
 
-    let t = this;
+    this.line.on('mouseout', function (event) {
+        this.closePopup();
+    });
     this.line.on('click', function (event) {
         let i = t.closestSegmentIndex(event.latlng) + 1;
         t.addWayPoint(event.latlng, i);
