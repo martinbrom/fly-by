@@ -7,7 +7,14 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderConfirmed extends Mailable
+/**
+ * Class OrderMail
+ * Provides a base functionality for all order related emails
+ *
+ * @package App\Mail
+ * @author Martin Brom
+ */
+abstract class OrderMail extends Mailable
 {
 	use Queueable, SerializesModels;
 
@@ -17,20 +24,12 @@ class OrderConfirmed extends Mailable
 	public $order;
 
 	/**
-	 * Create a new message instance.
+	 * OrderMail constructor.
 	 *
 	 * @param Order $order
 	 */
-	public function __construct(Order $order) {
+	function __construct(Order $order) {
 		$this->order = $order;
-	}
-
-	/**
-	 * Build the message.
-	 *
-	 * @return $this
-	 */
-	public function build() {
-		return $this->view('mail.order-confirmed');
+		// TODO: From
 	}
 }

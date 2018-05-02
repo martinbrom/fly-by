@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Events\OrderConfirmed;
+use App\Events\OrderCreated;
 use App\Events\OrderDeleted;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -21,7 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $route_id
  * @property int|null $aircraft_airport_id
  * @property \Carbon\Carbon|null $confirmed_at
- * @property string|null $completed_at
+ * @property \Carbon\Carbon|null $completed_at
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property string|null $deleted_at
@@ -30,6 +31,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order completed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order confirmed()
  * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\BaseModel new()
  * @method static \Illuminate\Database\Query\Builder|\App\Order onlyTrashed()
  * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Order uncompleted()
@@ -110,17 +112,25 @@ class Order extends BaseModel
     }
 
 	/**
-	 * Boots model and registers a 'saving' event listener
-	 * to recalculate flight & transport costs on model saving
+	 * Boots model and registers event listeners
 	 */
 	public static function boot() {
 		parent::boot();
 
+		// inform owner of a new order
+		// inform user that his order was created successfully
+		static::created(function (Order $order) {
+			event(new OrderCreated($order));
+		});
+
+		// recalculate prices and duration
 		static::saving(function (Order $order) {
 			$order->recalculatePrice();
 			$order->recalculateDuration();
 		});
 
+		// inform user that his order was cancelled
+		// doesn't work for already completed orders (duh)
 		static::deleting(function (Order $order) {
 			if ($order->completed_at != NULL)
 				return false;

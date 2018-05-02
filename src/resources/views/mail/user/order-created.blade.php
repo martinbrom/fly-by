@@ -9,6 +9,9 @@
         Now before you can embark on your dream flight, your order
         has to be confirmed by one of our trusty pilots.
     </p>
+
+    <!-- TODO: Text and remove hardcoded values -->
+
     <p>
         This shouldn't take long but if you want to review
         your order in the meantime, you can do so

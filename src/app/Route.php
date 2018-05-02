@@ -16,6 +16,8 @@ namespace App;
  * @property-read \App\Airport $airportFrom
  * @property-read \App\Airport $airportTo
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Order[] $orders
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Route common()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\BaseModel new()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route predefined()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereAirportFromId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Route whereAirportToId($value)
@@ -35,7 +37,7 @@ class Route extends BaseModel
 	 * @var array
 	 */
 	protected $fillable = [
-		'route', 'airport_from_id', 'airport_to_id'
+		'route', 'airport_from_id', 'airport_to_id', 'is_predefined'
 	];
 
 	/**
@@ -120,6 +122,16 @@ class Route extends BaseModel
 	 */
 	public function scopePredefined($query) {
 		return $query->where('is_predefined', '=', 1);
+	}
+
+	/**
+	 * Scope a query to only include common (not predefined) routes
+	 *
+	 * @param   \Illuminate\Database\Eloquent\Builder $query
+	 * @return  \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeCommon($query) {
+		return $query->where('is_predefined', '!=', 1);
 	}
 
 	/**

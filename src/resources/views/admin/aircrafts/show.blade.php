@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <h1>Display a specific aircraft</h1>
+    <h1>Aircraft #{{ $aircraft->id }}</h1>
 
     @php($path = empty($image) ? 'images/default-aircraft-image.png' : 'storage/' . $image->path)
     <img src="{{ asset($path) }}" class="img img-responsive aircraft-image">

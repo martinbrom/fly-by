@@ -21,6 +21,7 @@ use Malhal\Geographical\Geographical;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport distance($latitude, $longitude)
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport geofence($latitude, $longitude, $inner_radius, $outer_radius)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\BaseModel new()
  * @method static \Illuminate\Database\Query\Builder|\App\Airport onlyTrashed()
  * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Airport whereCode($value)
