@@ -35,12 +35,14 @@ function Map (element) {
 
     this.airports = {};
     this.zones = [];
+    this.choosedAirport = null;
 }
 
 Map.prototype.addAirport = function (id, latlng) {
     let airport = new Airport(id, latlng);
 
     this.airports[id] = airport;
+    airport.onclick(this.airportClick);
     airport.addTo(this.map);
 };
 
@@ -48,7 +50,7 @@ Map.prototype.clearAirports = function () {
     $.each(this.airports, function (airport) {
         airport.removeFrom(this.map);
     });
-    this.airports = [];
+    this.airports = {};
 };
 
 Map.prototype.addZone = function (options) {
@@ -73,6 +75,25 @@ Map.prototype.addZone = function (options) {
     }
 
     this.zones.push(zone);
+};
+
+Map.prototype.airportsOnClick = function(callback) {
+    this.airportClick = callback;
+    for (let i = 0; i < this.airports.length; i++) {
+        this.airports[i].onclick(callback);
+    }
+};
+
+Map.prototype.chooseAirport = function (airport) {
+    if (typeof airport === 'number') {
+        airport = this.airports[airport];
+    }
+
+    if (this.choosedAirport) {
+        this.choosedAirport.setActive(false);
+    }
+    this.choosedAirport = airport;
+    this.choosedAirport.setActive(true);
 };
 
 
@@ -218,15 +239,31 @@ Route.prototype.refresh = function () {
     let latlngs = this.wayPoints.map(function (point) {
         return point.getLatLng();
     });
+    let from = null;
+    let to = null;
 
     if (this.from) {
-        latlngs = _.concat(this.from.getLatLng(), latlngs);
+        from = this.from.getLatLng();
     }
-
     if (this.to) {
-        latlngs = _.concat(latlngs, this.to.getLatLng());
+        to = this.to.getLatLng();
     }
 
+
+    if (latlngs.length) {
+        if (to) {
+            latlngs = _.concat(this.from.getLatLng(), latlngs);
+        }
+
+        if (from) {
+            latlngs = _.concat(latlngs, this.to.getLatLng());
+        }
+    }
+    else if (from && to && to !== from) {
+        latlngs = _.concat(from, to);
+    }
+
+    console.log(latlngs);
     this.line.setLatLngs(latlngs);
 };
 
@@ -257,17 +294,24 @@ Route.prototype.removeFrom = function (map) {
 //-------------
 Airport = function (id, latlng) {
     this.id = id;
-
-    icon = L.AwesomeMarkers.icon({
-        icon: 'plane',
-        prefix: 'fa',
-        markerColor: 'green'
-    });
+    this.active = false;
 
     this.marker = L.marker(latlng, {
-        icon: icon,
+        icon: Airport.iconInactive,
     });
 };
+
+Airport.iconInactive = L.AwesomeMarkers.icon({
+    icon: 'plane',
+    prefix: 'fa',
+    markerColor: 'gray'
+});
+
+Airport.iconActive = L.AwesomeMarkers.icon({
+    icon: 'plane',
+    prefix: 'fa',
+    markerColor: 'green'
+});
 
 Airport.prototype.getLatLng = function () {
     return this.marker.getLatLng();
@@ -279,6 +323,20 @@ Airport.prototype.addTo = function (map) {
 
 Airport.prototype.removeFrom = function (map) {
     this.marker.removeFrom(map);
+};
+
+Airport.prototype.setActive = function (active) {
+    this.active = active;
+    if (active) {
+        this.marker.setIcon(Airport.iconActive);
+    }
+    else {
+        this.marker.setIcon(Airport.iconInactive);
+    }
+};
+
+Airport.prototype.onclick = function (callback) {
+    this.marker.on('click', L.bind(callback, this));
 };
 
 
@@ -306,12 +364,23 @@ function reloadAirports() {
     });
 }
 
+function changeAirport(airport) {
+    if (typeof airport === 'number') {
+        airport = M.airports[airport];
+    }
+
+    M.chooseAirport(airport);
+    $('#airport_id').val(airport.id);
+    reloadAircrafts(airport.id);
+
+    M.route.setFrom(airport);
+    M.route.setTo(airport);
+}
+
 function airportsInit() {
     $('#airport_id').change(function () {
-        id = $(this).val();
-        reloadAircrafts(id);
-        window.M.route.setFrom(M.airports[id]);
-        window.M.route.setTo(M.airports[id]);
+        id = parseInt($(this).val());
+        changeAirport(id);
     });
 
     reloadAirports();
@@ -336,15 +405,14 @@ function reloadAircrafts(airport_id) {
     })
 }
 
-function init() {
-    airportsInit();
-}
-
 $(document).ready(function () {
-
     map = window.M = new Map('map');
+    map.airportsOnClick(function () {
+        changeAirport(this);
+        $('#airport_id').val(this.id);
+    });
 
-    init();
+    airportsInit();
 
     function switchToMap() {
         $('#map-control-panel').hide();
