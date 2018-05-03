@@ -36,13 +36,19 @@ function Map (element) {
     this.airports = {};
     this.zones = [];
     this.choosedAirport = null;
+
+    this.airportChange = null;
 }
 
 Map.prototype.addAirport = function (id, latlng) {
     let airport = new Airport(id, latlng);
 
+    let t = this;
+    airport.onclick(function () {
+        t.chooseAirport(this);
+    });
+
     this.airports[id] = airport;
-    airport.onclick(this.airportClick);
     airport.addTo(this.map);
 };
 
@@ -77,11 +83,8 @@ Map.prototype.addZone = function (options) {
     this.zones.push(zone);
 };
 
-Map.prototype.airportsOnClick = function(callback) {
-    this.airportClick = callback;
-    for (let i = 0; i < this.airports.length; i++) {
-        this.airports[i].onclick(callback);
-    }
+Map.prototype.onAirportChange = function (callback) {
+    this.airportChange = L.bind(callback, this);
 };
 
 Map.prototype.chooseAirport = function (airport) {
@@ -89,12 +92,28 @@ Map.prototype.chooseAirport = function (airport) {
         airport = this.airports[airport];
     }
 
+    let event = {
+        old: this.choosedAirport,
+        new: airport
+    };
+
     if (this.choosedAirport) {
         this.choosedAirport.setActive(false);
     }
     this.choosedAirport = airport;
-    this.choosedAirport.setActive(true);
+
+    if (this.choosedAirport) {
+        this.choosedAirport.setActive(true);
+    }
+
+    if (this.airportChange) {
+        this.airportChange(event);
+    }
+
+    this.route.setFrom(airport);
+    this.route.setTo(airport);
 };
+
 
 
 //-------------
@@ -250,11 +269,11 @@ Route.prototype.refresh = function () {
 
 
     if (latlngs.length) {
-        if (to) {
+        if (from) {
             latlngs = _.concat(this.from.getLatLng(), latlngs);
         }
 
-        if (from) {
+        if (to) {
             latlngs = _.concat(latlngs, this.to.getLatLng());
         }
     }
@@ -362,32 +381,38 @@ function reloadAirports() {
     });
 }
 
-function changeAirport(airport) {
-    if (typeof airport === 'number') {
-        airport = M.airports[airport];
-    }
-
-    M.chooseAirport(airport);
-    $('#airport_id').val(airport.id);
-    reloadAircrafts(airport.id);
-
-    M.route.setFrom(airport);
-    M.route.setTo(airport);
-}
-
 function airportsInit() {
     $('#airport_id').change(function () {
-        id = parseInt($(this).val());
-        changeAirport(id);
+        let id = parseInt($(this).val());
+        let airport = M.airports[id.toString()];
+
+        console.log(id);
+        console.log(airport);
+
+        M.chooseAirport(airport);
+        reloadAircrafts(airport.id);
     });
 
     reloadAirports();
 }
 
 function reloadAircrafts(airport_id) {
+    let aircraft_select = $('#aircraft_id');
+
+    if (airport_id === null || airport_id === 'undefined' || airport_id === 'false' || airport_id === '') {
+        aircraft_select.html('');
+        aircraft_select.append($('<option>', {
+            value: '',
+            disabled: 'disabled',
+            hidden: 'hidden',
+            selected: 'selected'
+        }));
+        return;
+    }
+
     $.get('ajax/aircrafts', {'airport_id': airport_id}, function(result){
-        $('#aircraft_id').html('');
-        $('#aircraft_id').append($('<option>', {
+        aircraft_select.html('');
+        aircraft_select.append($('<option>', {
             value: '',
             disabled: 'disabled',
             hidden: 'hidden',
@@ -395,7 +420,7 @@ function reloadAircrafts(airport_id) {
         }));
 
         $.each(result, function(i, aircraft){
-            $('#aircraft_id').append($('<option>', {
+            aircraft_select.append($('<option>', {
                 value: aircraft.id,
                 text: aircraft.name,
             }));
@@ -405,9 +430,11 @@ function reloadAircrafts(airport_id) {
 
 $(document).ready(function () {
     map = window.M = new Map('map');
-    map.airportsOnClick(function () {
-        changeAirport(this);
-        $('#airport_id').val(this.id);
+    map.onAirportChange(function (event) {
+        let id = event.new ? event.new.id : '';
+
+        $('#airport_id').val(id);
+        reloadAircrafts(id);
     });
 
     airportsInit();
