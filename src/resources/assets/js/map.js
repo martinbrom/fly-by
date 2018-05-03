@@ -176,12 +176,9 @@ Route.prototype.setTo = function (to) {
 Route.prototype.addWayPoint = function (latlng, index) {
     let wayPoint = L.marker(latlng, {
         icon: this.marker,
-        draggable: true
-    });
-
-    let t = this;
-    wayPoint.bindContextMenu({
+        draggable: true,
         contextmenu: true,
+        contextmenuInheritItems: false,
         contextmenuItems: [
             {
                 text: 'Odstranit',
@@ -192,6 +189,8 @@ Route.prototype.addWayPoint = function (latlng, index) {
             }
         ],
     });
+
+    let t = this;
 
     wayPoint.on('drag', function () {
         t.refresh();
@@ -263,7 +262,6 @@ Route.prototype.refresh = function () {
         latlngs = _.concat(from, to);
     }
 
-    console.log(latlngs);
     this.line.setLatLngs(latlngs);
 };
 
