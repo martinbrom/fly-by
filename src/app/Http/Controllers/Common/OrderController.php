@@ -19,12 +19,7 @@ class OrderController extends CommonController
 	 * @return  \Illuminate\Http\Response
 	 */
 	public function show($code) {
-	    $order = Order::with(['route', 'aircraftAirport'])->where('code', '=', $code)->first();
-
-	    if (empty($order)) {
-	        throw new ModelNotFoundException();
-	    }
-
+	    $order = Order::with(['route', 'aircraftAirport'])->where('code', '=', $code)->firstOrFail();
 	    return response()->view('common.orders.show', compact('order'));
 	}
 
