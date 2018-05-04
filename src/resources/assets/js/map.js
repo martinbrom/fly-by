@@ -13,7 +13,9 @@ function Map (element) {
         throw 'Element ' + element + ' does not exist';
     }
 
-    this.map = L.map('map');
+    this.map = L.map('map', {
+        contextmenu: true
+    });
     this.map.setView(new L.LatLng(49.7384, 13.3736), 10);
     this.map.setMinZoom(8);
 
@@ -40,8 +42,8 @@ function Map (element) {
     this.airportChange = null;
 }
 
-Map.prototype.addAirport = function (id, latlng) {
-    let airport = new Airport(id, latlng);
+Map.prototype.addAirport = function (id, name, latlng) {
+    let airport = new Airport(id, name, latlng);
 
     let t = this;
     airport.onclick(function () {
@@ -132,9 +134,11 @@ Route = function (from, to, latlngs) {
         color: '#0066a2',
         weight: 5
     });
+
     this.line.bindPopup('Přidat bod', {
         closeButton: false
     });
+
     this.line.on('mousemove', function (event) {
         this.openPopup(event.latlng);
     });
@@ -142,8 +146,12 @@ Route = function (from, to, latlngs) {
     this.line.on('mouseout', function (event) {
         this.closePopup();
     });
+
     this.line.on('click', function (event) {
         let i = t.closestSegmentIndex(event.latlng) + 1;
+        if (t.from) {
+            i -= 1;
+        }
         t.addWayPoint(event.latlng, i);
     });
 
@@ -193,6 +201,8 @@ Route.prototype.setTo = function (to) {
 };
 
 Route.prototype.addWayPoint = function (latlng, index) {
+    let t = this;
+
     let wayPoint = L.marker(latlng, {
         icon: this.marker,
         draggable: true,
@@ -209,18 +219,16 @@ Route.prototype.addWayPoint = function (latlng, index) {
         ],
     });
 
-    let t = this;
-
     wayPoint.on('drag', function () {
         t.refresh();
     });
 
+    this.map.on('click', function () {
+        wayPoint.contextmenu.hide();
+    });
+
     if (typeof index === 'undefined') {
         index = this.wayPoints.length;
-    }
-
-    if (this.from) {
-        index -= 1;
     }
 
     this.wayPoints.splice(index, 0, wayPoint);
@@ -309,12 +317,25 @@ Route.prototype.removeFrom = function (map) {
 //-------------
 // Airport
 //-------------
-Airport = function (id, latlng) {
+Airport = function (id, name, latlng) {
     this.id = id;
+    this.name = name;
     this.active = false;
 
     this.marker = L.marker(latlng, {
         icon: Airport.iconInactive,
+    });
+
+    this.marker.bindPopup(name, {
+        closeButton: false
+    });
+
+    this.marker.on('mousemove', function () {
+        this.openPopup();
+    });
+
+    this.marker.on('mouseout', function () {
+        this.closePopup();
     });
 };
 
@@ -376,7 +397,7 @@ function reloadAirports() {
                 value: airport.id,
                 text: airport.name
             }));
-            window.M.addAirport(airport.id, L.latLng(airport.lat, airport.lon));
+            window.M.addAirport(airport.id, airport.name, L.latLng(airport.lat, airport.lon));
         });
     });
 }
@@ -385,9 +406,6 @@ function airportsInit() {
     $('#airport_id').change(function () {
         let id = parseInt($(this).val());
         let airport = M.airports[id.toString()];
-
-        console.log(id);
-        console.log(airport);
 
         M.chooseAirport(airport);
         reloadAircrafts(airport.id);
