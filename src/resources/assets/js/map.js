@@ -101,11 +101,14 @@ Map.prototype.chooseAirport = function (airport) {
 
     if (this.choosedAirport) {
         this.choosedAirport.setActive(false);
+        this.choosedAirport.bringToBack();
     }
+
     this.choosedAirport = airport;
 
     if (this.choosedAirport) {
         this.choosedAirport.setActive(true);
+        this.choosedAirport.bringToFront();
     }
 
     if (this.airportChange) {
@@ -159,13 +162,7 @@ Route = function (from, to, latlngs) {
         this.addWayPoint(latlngs[i]);
     }
 
-    this.marker = L.AwesomeMarkers.icon({
-        icon: 'crosshairs',
-        prefix: 'fa',
-        markerColor: 'darkblue'
-    });
-
-    this.refresh();
+    this.refreshLine();
 };
 
 Route.prototype.closestSegmentIndex = function (latlng) {
@@ -192,52 +189,35 @@ Route.prototype.closestSegmentIndex = function (latlng) {
 
 Route.prototype.setFrom = function (from) {
     this.from = from;
-    this.refresh();
+    this.refreshLine();
 };
 
 Route.prototype.setTo = function (to) {
     this.to = to;
-    this.refresh();
+    this.refreshLine();
 };
 
 Route.prototype.addWayPoint = function (latlng, index) {
     let t = this;
 
-    let wayPoint = L.marker(latlng, {
-        icon: this.marker,
-        draggable: true,
-        contextmenu: true,
-        contextmenuInheritItems: false,
-        contextmenuItems: [
-            {
-                text: 'Odstranit',
-                iconCls: 'fa fa-times',
-                callback: function () {
-                    t.removeWayPoint(wayPoint);
-                }
-            }
-        ],
-    });
-
-    wayPoint.on('drag', function () {
-        t.refresh();
-    });
-
-    this.map.on('click', function () {
-        wayPoint.contextmenu.hide();
-    });
-
     if (typeof index === 'undefined') {
         index = this.wayPoints.length;
     }
 
-    this.wayPoints.splice(index, 0, wayPoint);
+    let wayPoint = new Waypoint(latlng, index + 1, this);
 
-    this.refresh();
+    wayPoint.marker.on('drag', function () {
+        t.refreshLine();
+    });
+
+    this.wayPoints.splice(index, 0, wayPoint);
 
     if (this.map) {
         wayPoint.addTo(this.map);
     }
+
+    this.refreshLine();
+    this.refreshNumbers();
 };
 
 Route.prototype.removeWayPoint = function (point) {
@@ -252,18 +232,25 @@ Route.prototype.removeWayPoint = function (point) {
     }
 
     this.wayPoints.splice(point, 1);
-    this.refresh();
+    this.refreshLine();
 
     if (this.map) {
         waypoint.removeFrom(this.map);
     }
 
-    this.refresh();
+    this.refreshLine();
+    this.refreshNumbers();
 };
 
-Route.prototype.refresh = function () {
+Route.prototype.refreshNumbers = function () {
+    for (let i = 0; i < this.wayPoints.length; i++) {
+        this.wayPoints[i].setNumber(i + 1);
+    }
+};
+
+Route.prototype.refreshLine = function () {
     let latlngs = this.wayPoints.map(function (point) {
-        return point.getLatLng();
+        return point.marker.getLatLng();
     });
     let from = null;
     let to = null;
@@ -315,6 +302,65 @@ Route.prototype.removeFrom = function (map) {
 
 
 //-------------
+// Waypoint
+//-------------
+Waypoint = function (latlng, number, route) {
+    this.route = route;
+    let t = this;
+
+    this.marker = L.marker(latlng, {
+        icon: L.ExtraMarkers.icon({
+            icon: 'fa-number',
+            markerColor: 'blue',
+            shape: 'circle'
+        }),
+        draggable: true,
+        contextmenu: true,
+        contextmenuInheritItems: false,
+        contextmenuItems: [
+            {
+                text: 'Odstranit',
+                iconCls: 'fa fa-times',
+                callback: function () {
+                    route.removeWayPoint(t);
+                }
+            }
+        ],
+    });
+
+    this.bringToFront();
+
+    this.setNumber(number);
+};
+
+Waypoint.prototype.bringToFront = function () {
+    this.marker.setZIndexOffset(40000);
+};
+Waypoint.prototype.bringToBack = function () {
+    this.marker.setZIndexOffset(30000);
+};
+
+Waypoint.prototype.setNumber = function (number) {
+    let icon = L.ExtraMarkers.icon({
+        icon: 'fa-number',
+        markerColor: 'blue',
+        shape: 'circle',
+        number: number
+    });
+
+    this.marker.setIcon(icon);
+};
+
+Waypoint.prototype.addTo = function (map) {
+    this.marker.addTo(map);
+};
+
+Waypoint.prototype.removeFrom = function (map) {
+    this.marker.removeFrom(map);
+};
+
+
+//-------------
 // Airport
 //-------------
 Airport = function (id, name, latlng) {
@@ -339,16 +385,24 @@ Airport = function (id, name, latlng) {
     });
 };
 
-Airport.iconInactive = L.AwesomeMarkers.icon({
-    icon: 'plane',
+Airport.prototype.bringToFront = function () {
+    this.marker.setZIndexOffset(20000);
+};
+Airport.prototype.bringToBack = function () {
+    this.marker.setZIndexOffset(10000);
+};
+
+Airport.iconInactive = L.ExtraMarkers.icon({
+    icon: 'fa-plane',
     prefix: 'fa',
-    markerColor: 'gray'
+    iconColor: 'green',
+    markerColor: 'white'
 });
 
-Airport.iconActive = L.AwesomeMarkers.icon({
-    icon: 'plane',
+Airport.iconActive = L.ExtraMarkers.icon({
+    icon: 'fa-plane',
     prefix: 'fa',
-    markerColor: 'green'
+    markerColor: 'green-light'
 });
 
 Airport.prototype.getLatLng = function () {
