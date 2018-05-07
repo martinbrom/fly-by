@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Common;
 
 use App\Airport;
+use App\Http\Controllers\CommonController;
 use App\Http\Requests\Ajax\AircraftsAtAirportRequest;
 
 class AirportController extends CommonController

@@ -1,18 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: wilyxjam
- * Date: 4/27/18
- * Time: 10:21 AM
- */
-
 namespace App\Http\Controllers\Common;
-
 
 use App\Aircraft;
 use App\Airport;
+use App\Http\Controllers\CommonController;
 
-class MapController
+class MapController extends CommonController
 {
     /**
      * Show route planning page

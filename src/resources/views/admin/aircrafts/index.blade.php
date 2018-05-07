@@ -2,22 +2,22 @@
 
 @section('content')
 
-    <h1>List of aircrafts</h1>
+    <h1>Seznam letadel</h1>
 
-    <a href="{{ route('admin.aircrafts.create') }}">Add a new aircraft</a>
+    <a href="{{ route('admin.aircrafts.create') }}">Přidat nové letadlo</a>
 
     @if(count($aircrafts) > 0)
         <table class="table table-striped table-responsive-md w-100">
             <thead class="thead-dark w-100">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Range (km)</th>
-                    <th scope="col">Speed (km/h)</th>
-                    <th scope="col">Cost (CZK/h)</th>
-                    <th scope="col">Display</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
+                    <th scope="col">Název</th>
+                    <th scope="col">Dolet (km)</th>
+                    <th scope="col">Rychlost (km/h)</th>
+                    <th scope="col">Cena (CZK/km)</th>
+                    <th scope="col">Zobrazit</th>
+                    <th scope="col">Upravit</th>
+                    <th scope="col">Odstranit</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,13 +28,12 @@
                         <td class="aircraft-range">{{ $aircraft->range }}</td>
                         <td class="aircraft-speed">{{ $aircraft->speed }}</td>
                         <td class="aircraft-cost">{{ $aircraft->cost }}</td>
-                        <td class="aircraft-show"><a href="{{ route('admin.aircrafts.show', $aircraft->id) }}">Display</a></td>
-                        <td class="aircraft-edit"><a href="{{ route('admin.aircrafts.edit', $aircraft->id) }}">Edit</a><br></td>
+                        <td class="aircraft-show"><a href="{{ route('admin.aircrafts.show', $aircraft->id) }}">Zobrazit</a></td>
+                        <td class="aircraft-edit"><a href="{{ route('admin.aircrafts.edit', $aircraft->id) }}">Upravit</a><br></td>
 
                         <td class="aircraft-destroy">
-                            <!-- TODO: Confirm dialog -->
                             <a href="#aircraft-delete-form-{{ $aircraft->id }}" onclick="event.preventDefault(); document.getElementById('aircraft-delete-form-{{ $aircraft->id }}').submit();">
-                                Delete
+                                Odstranit
                             </a>
                             <form id="aircraft-delete-form-{{ $aircraft->id }}" action="{{ route('admin.aircrafts.destroy', $aircraft->id) }}" method="POST" style="display: none;">
                                 {{ csrf_field() }}

@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Common;
 
 use App\AircraftAirport;
 use App\Airport;
+use App\Http\Controllers\CommonController;
 use App\Http\Requests\OrderStoreRequest;
 use App\Order;
 use App\Route;
 use DB;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class OrderController extends CommonController
 {
@@ -44,8 +44,8 @@ class OrderController extends CommonController
 		if (!$aircraftAirport->canFly($route->distance)) {
 			DB::rollBack();
 			return redirect()
-				->back(400)
-				->withErrors('The route is longer than the aircraft range!');
+				->back()
+				->withErrors('Trasa je delší než dolet letadla!');
 		}
 
 		$order = new Order([

@@ -1,1 +1,2 @@
-Your order #12661 has been successfully confirmed!
+Vaše objednávka #{{ $order->id }} byla potvrzena.
+Termín vašeho letu si můžete domluvit na telefoním čísle 123456789.

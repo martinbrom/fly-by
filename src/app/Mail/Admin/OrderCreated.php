@@ -13,7 +13,7 @@ class OrderCreated extends OrderMail
 	 */
 	public function build() {
 		return $this
-			->subject(config('app.name') . ' - New order created')
+			->subject(config('app.name') . ' - Nová objednávka')
 			->view('mail.admin.order-created')
 			->text('mail.admin.order-created_plain');
 	}

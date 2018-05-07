@@ -3,9 +3,11 @@
 @section('content')
 
     <p>
-        Your order <b>#12661</b> has been successfully confirmed!
+        Vaše objednávka <b>#{{ $order->id }}</b> byla potvrzena.
     </p>
 
-    <!-- TODO: Add text -->
+    <p>
+        Termín vašeho letu si můžete domluvit na telefoním čísle 123456789.
+    </p>
 
 @endsection

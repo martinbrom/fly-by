@@ -65,7 +65,7 @@
                 <tr>
                     <td align="center" class="header">
                         <h1 class="text-center">Fly-By</h1>
-                        <p class="text-center">User-Friendly Planning Of Scenic Flights</p>
+                        <p class="text-center">Plánování vyhlídkových letů</p>
                     </td>
                 </tr>
                 <tr>

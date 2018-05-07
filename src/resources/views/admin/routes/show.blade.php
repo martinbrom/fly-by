@@ -2,8 +2,12 @@
 
 @section('content')
 
-    <h1>{{ ucfirst($state) }} route #{{ $route->id }}</h1>
-    <a href="{{ route('admin.routes.edit', $route->id) }}">Edit route</a>
+    @php($state_czech = $state == 'predefined' ? 'předdefinovaná' : 'běžná')
+    <h1>{{ ucfirst($state_czech) }} trasa #{{ $route->id }}</h1>
+
+    @if($state == 'predefined')
+        <a href="{{ route('admin.routes.edit', $route->id) }}">Upravit trasu</a>
+    @endif
 
     <hr>
     <div class="order-route-info row">
@@ -14,23 +18,22 @@
         </div>
         <div class="route-airports col-sm-6">
             <p class="route-airport-name">
-                <b>Starting airport: </b>
+                <b>Startovní letiště: </b>
                 @if(!empty($route->airportFrom))
                     <a href="{{ route('admin.airports.show', $route->airportFrom->id) }}">{{ $route->airportFrom->name }}</a>
                 @else
-                    deleted
+                    odstraněno
                 @endif
             </p>
             <p class="route-airport-name">
-                <b>Landing airport: </b>
+                <b>Přistávací letiště: </b>
                 @if(!empty($route->airportTo))
                     <a href="{{ route('admin.airports.show', $route->airportTo->id) }}">{{ $route->airportTo->name }}</a>
                 @else
-                    deleted
+                    odstraněno
                 @endif
             </p>
-            <p class="route-distance"><b>Distance: </b> {{ $route->distance }} km</p>
-            <a href="{{ route('admin.routes.show-common', $route->id) }}">Show route</a>
+            <p class="route-distance"><b>Délka: </b> {{ $route->distance }} km</p>
         </div>
     </div>
 
@@ -39,7 +42,7 @@
         <form class="mb-1" action="{{ route('admin.routes.destroy', $route->id) }}" method="POST" id="route-delete-form">
             {{ csrf_field() }}
             {{ method_field('DELETE') }}
-            <input type="submit" class="btn btn-danger" value="Remove route from predefined">
+            <input type="submit" class="btn btn-danger" value="Odebrat z předdefinovaných">
         </form>
     @endif
 

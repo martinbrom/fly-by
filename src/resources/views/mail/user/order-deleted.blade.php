@@ -3,9 +3,12 @@
 @section('content')
 
     <p>
-        Your order <b>#12661</b> has been removed!
+        Vaše objednávka <b>#{{ $order->id }}</b> byla zrušena!
     </p>
 
-    <!-- TODO: Add text -->
+    <p>
+        Pokud se domníváte, že jde o omyl, kontaktujte nás
+        prosím na telefoním čísle 123456789.
+    </p>
 
 @endsection

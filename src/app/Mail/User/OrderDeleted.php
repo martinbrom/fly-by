@@ -13,7 +13,7 @@ class OrderDeleted extends OrderMail
      */
     public function build() {
         return $this
-	        ->subject(config('app.name') . ' - Order #' . $this->order->id . ' has been deleted')
+	        ->subject(config('app.name') . ' - Objednávka #' . $this->order->id . ' byla zrušena')
 	        ->view('mail.user.order-deleted')
 	        ->text('mail.user.order-deleted_plain');
     }

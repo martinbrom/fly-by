@@ -6,23 +6,23 @@
         {{ $errors }}
     @endif
 
-    <h1>Edit an aircraft image</h1>
+    <h1>Upravit obrázek letadla</h1>
     {!! Form::open(['route' => ['admin.aircrafts.store-image', $aircraft->id], 'method' => 'post', 'files' => true]) !!}
         {!! Form::token() !!}
 
-        {!! Form::label('image', 'Image') !!}
+        {!! Form::label('image', 'Obrázek') !!}
         {!! Form::file('image') !!}
 
-        {!! Form::label('description', 'Description') !!}
+        {!! Form::label('description', 'Popis obrázku') !!}
         {!! Form::text('description') !!}
 
-        {!! Form::submit('Submit') !!}
+        {!! Form::submit('Upravit') !!}
     {!! Form::close() !!}
 
     {!! Form::open(['route' => ['admin.aircrafts.default-image', $aircraft->id], 'method' => 'post']) !!}
         {!! Form::token() !!}
 
-        {!! Form::submit('Set image to default') !!}
+        {!! Form::submit('Nastavit základní obrázek') !!}
     {!! Form::close() !!}
 
 @endsection

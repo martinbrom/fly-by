@@ -24,7 +24,7 @@ $factory->define(App\User::class, function (Faker $faker) {
 
 $factory->define(App\Airport::class, function (Faker $faker) {
     return [
-        'name' => 'Airport ' . $faker->name,
+        'name' => 'Letadlo ' . $faker->name,
         'code' => 'ICAO: ' . $faker->countryCode,
         'lon' => $faker->longitude,
         'lat' => $faker->latitude

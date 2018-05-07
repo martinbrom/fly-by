@@ -3,19 +3,18 @@
 @section('content')
 
     <p>
-        Your order <b>#12661</b> has been successfully created!
-    </p>
-    <p>
-        Now before you can embark on your dream flight, your order
-        has to be confirmed by one of our trusty pilots.
+        Vaše objednávka <b>#{{ $order->id }}</b> byla úspěšně vytvořena!
     </p>
 
-    <!-- TODO: Text and remove hardcoded values -->
+    <p>
+        Než budete moci vyrazit na svůj vysněný let, musí být vaše
+        objednávka potvrzena jedním z našich pilotů.
+    </p>
 
     <p>
-        This shouldn't take long but if you want to review
-        your order in the meantime, you can do so
-        <b><a href="http://fly-by.loc/orders/vbSgkJ0lHAhvPLvFufF3hCPIuYdfYDjX">here</a></b>.
+        To by nemělo trvat dlouho, ale pokud si chcete zkrátit
+        čas, můžete si prohlédnout detaily vaší objednávky
+        <b><a href="{{ route('orders.show', $order->code) }}">zde</a></b>.
     </p>
 
 @endsection

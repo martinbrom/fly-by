@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Common;
 
+use App\Http\Controllers\CommonController;
 use App\Route;
 
 class RouteController extends CommonController

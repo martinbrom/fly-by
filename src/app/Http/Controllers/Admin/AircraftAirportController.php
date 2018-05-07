@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\AircraftAirport;
+use App\Http\Controllers\AdminController;
 use App\Http\Requests\AircraftAirportStoreRequest;
 use App\Http\Requests\AircraftAirportUpdateRequest;
 

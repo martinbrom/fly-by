@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Common;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\CommonController;
 
 /**
  * Class StaticController
@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
  *
  * @package App\Http\Controllers
  */
-class StaticController extends Controller
+class StaticController extends CommonController
 {
 	public function index() {
 		return view('index');

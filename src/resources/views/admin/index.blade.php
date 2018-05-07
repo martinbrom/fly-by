@@ -2,11 +2,11 @@
 
 @section('content')
 
-    <h1>Administration Landing Page</h1>
+    <h1>Administrace</h1>
     @php
     $values = [$orderCount, $unconfirmedOrderCount, $completedOrderCount, $aircraftCount, $distinctAircraftCount, $airportCount];
     $icons  = ['exclamation', 'clock-o', 'money', 'plane', 'paper-plane', 'map-marker'];
-    $texts  = ['New orders', 'Unconfirmed orders', 'Completed orders', 'Total aircrafts', 'Aircraft types', 'Total airports'];
+    $texts  = ['Nové objednávky', 'Nepotvrzené objednávky', 'Dokončené objednávky', 'Všechna letadla', 'Typů letadel', 'Všechna letiště'];
     $colors = ['cyan', 'red', 'yellow', 'green', 'gray', 'darkgray'];
     @endphp
 

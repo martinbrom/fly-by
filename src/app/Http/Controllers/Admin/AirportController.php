@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Aircraft;
 use App\AircraftAirport;
 use App\Airport;
+use App\Http\Controllers\AdminController;
 use App\Http\Requests\AirportStoreRequest;
 use App\Http\Requests\AirportUpdateRequest;
 

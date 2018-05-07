@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Airport;
+use App\Http\Controllers\AdminController;
 use App\Http\Requests\RouteStoreRequest;
 use App\Http\Requests\RouteUpdateRequest;
 use App\Route;
 
-class RouteController
+class RouteController extends AdminController
 {
 	/**
 	 * Display a listing of predefined routes.

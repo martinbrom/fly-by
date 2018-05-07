@@ -3,21 +3,21 @@
 @section('body')
 
     <div class="container mb-5">
-        <h1 class="mt-4">Order #{{ $order->id }}</h1>
+        <h1 class="mt-4">Objednávka #{{ $order->id }}</h1>
         <!-- TODO: Link to print coupon -->
 
         <hr>
         <div class="order-info">
-            <p class="order-price"><b>Price:</b> {{ $order->price }} CZK</p>
-            <p class="order-flight-price"><b>Flight price:</b> {{ $order->flight_price }} CZK</p>
-            <p class="order-transport-price"><b>Transport price:</b> {{ $order->transport_price }} CZK</p>
-            <p class="order-duration"><b>Duration:</b> {{ $order->duration }} seconds ({{ round($order->duration / 3600, 1) }} hours)</p>
-            <p class="order-code"><b>Code:</b> {{ $order->code }}</p>
+            <p class="order-price"><b>Cena:</b> {{ $order->price }} CZK</p>
+            <p class="order-flight-price"><b>Cena letu:</b> {{ $order->flight_price }} CZK</p>
+            <p class="order-transport-price"><b>Cena přepravy:</b> {{ $order->transport_price }} CZK</p>
+            <p class="order-duration"><b>Doba:</b> {{ $order->duration }} sekund ({{ round($order->duration / 3600, 1) }} hodin)</p>
+            <p class="order-code"><b>Kód:</b> {{ $order->code }}</p>
             <p class="order-email"><b>Email:</b> {{ $order->email }}</p>
-            <p class="order-user-note"><b>User note:</b> {{ $order->user_note ?: 'no note supplied' }}</p>
-            <p class="order-admin-note"><b>Admin note:</b> {{ $order->admin_note ?: 'no note supplied' }}</p>
-            <p class="order-confirmed-state"><b>Confirmed at:</b> {{ $order->confirmed_at ?: 'not confirmed yet' }}</p>
-            <p class="order-completed-state"><b>Completed at:</b> {{ $order->completed_at ?: 'not completed yet' }}</p>
+            <p class="order-user-note"><b>Poznámka uživatele:</b> {{ $order->user_note ?: 'žádná poznámka' }}</p>
+            <p class="order-admin-note"><b>Poznámka majitele:</b> {{ $order->admin_note ?: 'žádná poznámka' }}</p>
+            <p class="order-confirmed-state"><b>Potvrzeno:</b> {{ $order->confirmed_at ?: 'zatím nepotvrzeno' }}</p>
+            <p class="order-completed-state"><b>Dokončeno:</b> {{ $order->completed_at ?: 'zatím nedokončeno' }}</p>
         </div>
 
         <hr>
@@ -33,7 +33,7 @@
                     @if(!empty($order->route->airportFrom))
                         {{ $order->route->airportFrom->name }}
                     @else
-                        deleted
+                        odstraněno
                     @endif
                 </p>
                 <p class="route-airport-name">
@@ -41,11 +41,10 @@
                     @if(!empty($order->route->airportTo))
                         {{ $order->route->airportTo->name }}
                     @else
-                        deleted
+                        odstraněno
                     @endif
                 </p>
-                <p class="route-distance"><b>Distance: </b> {{ $order->route->distance }} km</p>
-                <a href="{{ route('admin.routes.show-common', $order->route->id) }}">Show route</a>
+                <p class="route-distance"><b>Délka: </b> {{ $order->route->distance }} km</p>
             </div>
         </div>
 
@@ -57,14 +56,14 @@
                     <img src="{{ asset($path) }}" class="img img-responsive w-50">
                 </div>
                 <div class="col-sm-6">
-                    <p class="aircraft-name"><b>Aircraft name:</b> {{ $order->aircraftAirport->aircraft->name }}</p>
-                    <p class="aircraft-range"><b>Aircraft range:</b> {{ $order->aircraftAirport->aircraft->range }} km</p>
-                    <p class="aircraft-speed"><b>Aircraft speed:</b> {{ $order->aircraftAirport->aircraft->speed }} km/h</p>
-                    <p class="aircraft-cost"><b>Aircraft cost:</b> {{ $order->aircraftAirport->aircraft->cost }} CZK/h</p>
+                    <p class="aircraft-name"><b>Jméno letadla:</b> {{ $order->aircraftAirport->aircraft->name }}</p>
+                    <p class="aircraft-range"><b>Dolet letadla:</b> {{ $order->aircraftAirport->aircraft->range }} km</p>
+                    <p class="aircraft-speed"><b>Rychlost letadla:</b> {{ $order->aircraftAirport->aircraft->speed }} km/h</p>
+                    <p class="aircraft-cost"><b>Cena za provoz letadla:</b> {{ $order->aircraftAirport->aircraft->cost }} CZK/km</p>
                 </div>
             @else
                 <div class="col-sm-12">
-                    <b>Aircraft: </b> deleted
+                    <b>Letadlo: </b> odstraněno
                 </div>
             @endif
         </div>

@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
-
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
 
 /**
  * Class AdminController
@@ -10,7 +8,7 @@ use App\Http\Controllers\Controller;
  * Provides logged only access restriction
  * to the application resources
  *
- * @package App\Http\Controllers\Admin
+ * @package App\Http\Controllers
  */
 abstract class AdminController extends Controller
 {

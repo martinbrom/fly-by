@@ -3,14 +3,12 @@
 @section('content')
 
     <p>
-        There is a new order in your application!
+        Ve vaší aplikaci je nová objednávka
     </p>
 
-    <!-- TODO: Text and remove hardcoded values -->
-
     <p>
-        Take a look at it
-        <b><a href="http://fly-by.loc/orders/vbSgkJ0lHAhvPLvFufF3hCPIuYdfYDjX">here</a></b>.
+        Prohlédněte si jí
+        <b><a href="{{ route('orders.show', $order->id) }}">zde</a></b>.
     </p>
 
 @endsection

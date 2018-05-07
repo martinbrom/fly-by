@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Aircraft;
 use App\AircraftImage;
+use App\Http\Controllers\AdminController;
 use App\Http\Requests\AircraftImageStoreRequest;
 use App\Http\Requests\AircraftStoreRequest;
 use App\Http\Requests\AircraftUpdateRequest;
@@ -108,15 +109,16 @@ class AircraftController extends AdminController
 	 *
 	 * @param   AircraftImageStoreRequest $request
 	 * @param   int $id
-	 * @return  \Illuminate\Http\Response
+	 * @return  \Illuminate\Http\RedirectResponse
 	 */
     public function storeImage(AircraftImageStoreRequest $request, $id) {
     	$aircraft = Aircraft::findOrFail($id);
 	    $image = new AircraftImage();
 
 	    if (!$image->saveFromRequest($request)) {
-	    	// TODO: Creating failed
-		    return redirect()->back();
+		    return redirect()
+			    ->back()
+			    ->withErrors('Ukládání obrázku selhalo');
 	    }
 
 	    $aircraft->image()->associate($image);
