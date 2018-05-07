@@ -37,8 +37,6 @@ function Map (element) {
 
     this.airports = {};
     this.zones = [];
-    this.startAirport = null;
-    this.endAirport = null;
 
     this.startAirportChange = null;
     this.endAirportChange = null;
@@ -101,30 +99,14 @@ Map.prototype.chooseStartAirport = function (airport) {
     }
 
     let event = {
-        old: this.startAirport,
+        old: this.route.startAirport,
         new: airport
     };
 
-    if (this.startAirport) {
-        this.startAirport.setStart(false);
-        this.startAirport.bringToBack();
-    }
-
-    this.startAirport = airport;
-
-    if (this.startAirport) {
-        this.startAirport.setStart(true);
-        this.startAirport.bringToFront();
-    }
+    this.route.setStartAirport(airport);
 
     if (this.startAirportChange) {
         this.startAirportChange(event);
-    }
-
-    this.route.setStartAirport(airport);
-
-    if (!this.endAirport) {
-        this.route.setEndAirport(airport);
     }
 };
 
@@ -134,30 +116,14 @@ Map.prototype.chooseEndAirport = function (airport) {
     }
 
     let event = {
-        old: this.endAirport,
+        old: this.route.endAirport,
         new: airport
     };
 
-    if (this.endAirport) {
-        this.endAirport.setEnd(false);
-        this.endAirport.bringToBack();
-    }
-
-    this.endAirport = airport;
-
-    if (this.endAirport) {
-        this.endAirport.setEnd(true);
-        this.endAirport.bringToFront();
-    }
+    this.route.setEndAirport(airport);
 
     if (this.endAirportChange) {
         this.endAirportChange(event);
-    }
-
-    this.route.setEndAirport(airport);
-
-    if (!this.endAirport) {
-        this.route.setEndAirport(this.startAirport);
     }
 };
 
@@ -230,12 +196,36 @@ Route.prototype.closestSegmentIndex = function (latlng) {
 };
 
 Route.prototype.setStartAirport = function (startAirport) {
+    if (this.startAirport) {
+        this.startAirport.setStart(false);
+    }
+
     this.startAirport = startAirport;
+
+    if (this.startAirport) {
+        this.startAirport.setStart(true);
+    }
+
     this.refreshLine();
 };
 
 Route.prototype.setEndAirport = function (endAirport) {
+    if (this.endAirport) {
+        this.endAirport.setEnd(false);
+    }
+
     this.endAirport = endAirport;
+
+    if (this.endAirport) {
+        this.endAirport.setEnd(true);
+    }
+
+    if (!this.startAirport && this.endAirport) {
+        this.setStartAirport(this.endAirport);
+    }
+
+    console.log(this.endAirport);
+
     this.refreshLine();
 };
 
@@ -319,34 +309,35 @@ Route.prototype.refreshNumbers = function () {
 };
 
 Route.prototype.refreshLine = function () {
-    let latlngs = this.wayPoints.map(function (point) {
-        return point.marker.getLatLng();
-    });
-    let startAirport = null;
-    let endAirport = null;
+    let latLngs = [];
+    let startLatLng = [];
 
     if (this.startAirport) {
-        startAirport = this.startAirport.getLatLng();
+        startLatLng = this.startAirport.getLatLng();
+        latLngs = _.concat(startLatLng, latLngs);
     }
+
+    if (this.wayPoints.length) {
+        let wayPointsLatLngs = this.wayPoints.map(function (point) {
+            return point.marker.getLatLng();
+        });
+
+        latLngs = _.concat(latLngs, wayPointsLatLngs);
+    }
+
     if (this.endAirport) {
-        endAirport = this.endAirport.getLatLng();
+        latLngs = _.concat(latLngs, this.endAirport.getLatLng());
+    }
+    else {
+        latLngs = _.concat(latLngs, startLatLng);
     }
 
-
-    if (latlngs.length) {
-        if (startAirport) {
-            latlngs = _.concat(this.startAirport.getLatLng(), latlngs);
-        }
-
-        if (endAirport) {
-            latlngs = _.concat(latlngs, this.endAirport.getLatLng());
-        }
-    }
-    else if (startAirport && endAirport && endAirport !== startAirport) {
-        latlngs = _.concat(startAirport, endAirport);
+    if (latLngs.length < 2 ||
+        (latLngs.length === 2 && latLngs[0] === latLngs[1])) {
+        latLngs = [];
     }
 
-    this.line.setLatLngs(latlngs);
+    this.line.setLatLngs(latLngs);
 };
 
 Route.prototype.getLatLngs = function () {
@@ -373,15 +364,20 @@ Route.prototype.removeFrom = function (map) {
 Route.prototype.reverse = function () {
     this.wayPoints.reverse();
 
-    let temp = this.startAirport;
-    this.startAirport = this.endAirport;
-    this.endAirport = temp;
+    let startAirport = this.startAirport;
+    let endAirport = this.endAirport;
 
-    this.startAirport.setEnd(false);
-    this.startAirport.setStart(true);
+    if (startAirport) {
+        startAirport.setEnd(true);
+        startAirport.setStart(false);
+    }
+    if (endAirport) {
+        endAirport.setEnd(false);
+        endAirport.setStart(true);
+    }
 
-    this.endAirport.setEnd(true);
-    this.endAirport.setStart(false);
+    this.startAirport = endAirport;
+    this.endAirport = startAirport;
 
     this.refreshNumbers();
 };
@@ -452,7 +448,7 @@ Waypoint.prototype.removeFrom = function (map) {
 Airport = function (id, name, latlng, map) {
     this.id = id;
     this.name = name;
-    this.active = false;
+    this.start = false;
     this.end = false;
     this.map = map;
 
@@ -534,9 +530,12 @@ Airport.prototype.refresh = function () {
 
     if (this.start) {
         this.marker.setIcon(Airport.iconStart);
+
+        this.bringToFront();
     }
     else if (this.end) {
         this.marker.setIcon(Airport.iconEnd);
+
         this.marker.options.contextmenuItems.push({
             text: 'Zrušit jako cíl',
             iconCls: 'fa fa-times',
@@ -544,6 +543,8 @@ Airport.prototype.refresh = function () {
                 t.map.chooseEndAirport(null);
             }
         });
+
+        this.bringToFront();
     }
     else {
         this.marker.setIcon(Airport.iconInactive);
@@ -554,6 +555,8 @@ Airport.prototype.refresh = function () {
                 t.map.chooseEndAirport(t);
             }
         });
+
+        this.bringToBack();
     }
 };
 
@@ -566,10 +569,10 @@ Airport.prototype.onclick = function (callback) {
 
 function reloadAirports() {
     $.getJSON('ajax/airports', function(result){
-        $('#airport_id').html('');
+        $('#start_airport_id').html('');
         window.M.clearAirports();
 
-        $('#airport_id').append($('<option>', {
+        $('#start_airport_id').append($('<option>', {
             value: '',
             disabled: 'disabled',
             hidden: 'hidden',
@@ -577,7 +580,7 @@ function reloadAirports() {
         }));
 
         $.each(result, function(i, airport){
-            $('#airport_id').append($('<option>', {
+            $('#start_airport_id').append($('<option>', {
                 value: airport.id,
                 text: airport.name
             }));
@@ -587,7 +590,7 @@ function reloadAirports() {
 }
 
 function airportsInit() {
-    $('#airport_id').change(function () {
+    $('#start_airport_id').change(function () {
         let id = parseInt($(this).val());
         let airport = M.airports[id.toString()];
 
@@ -635,7 +638,7 @@ $(document).ready(function () {
     map.onStartAirportChange(function (event) {
         let id = event.new ? event.new.id : '';
 
-        $('#airport_id').val(id);
+        $('#start_airport_id').val(id);
         reloadAircrafts(id);
     });
 
@@ -661,5 +664,20 @@ $(document).ready(function () {
 
     $('#btn-add-waypoint').click(function (event) {
         map.route.addWayPoint(M.map.getCenter());
+    });
+
+    let routeForm = $('#route-form');
+    let endAirportSelectGroup = routeForm.find('#end_airport_id-form-group');
+    let differentAirportsCheckbox = routeForm.find('#different_airports');
+
+    differentAirportsCheckbox.change(function() {
+        if (this.checked) {
+            endAirportSelectGroup.slideDown();
+            endAirportSelectGroup.prop('disabled', false);
+        }
+        else {
+            endAirportSelectGroup.slideUp();
+            endAirportSelectGroup.prop('disabled', true);
+        }
     });
 });
