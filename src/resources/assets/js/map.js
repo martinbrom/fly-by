@@ -32,7 +32,7 @@ function Map (element) {
 
     this.dangerZoneColor = 'red';
 
-    this.route = new Route(null, null, []);
+    this.route = new Route(null, null, [], this.map);
     this.route.addTo(this.map);
 
     this.airports = {};
@@ -166,13 +166,13 @@ Map.prototype.chooseEndAirport = function (airport) {
 //-------------
 // Route
 //-------------
-Route = function (startAirport, endAirport, latlngs) {
+Route = function (startAirport, endAirport, latlngs, map) {
     let t = this;
 
     this.startAirport = startAirport;
     this.endAirport = endAirport;
 
-    this.map = null;
+    this.map = map;
     this.wayPoints = [];
 
     this.line = L.polyline(latlngs, {
@@ -248,7 +248,35 @@ Route.prototype.addWayPoint = function (latlng, index) {
 
     let wayPoint = new Waypoint(latlng, index + 1, this);
 
-    wayPoint.marker.on('drag', function () {
+    wayPoint.marker.on('drag', function (event) {
+
+        // disable dragging outside the map
+        let containerPoint = t.map.latLngToContainerPoint(event.target.getLatLng()),
+            clampX = null,
+            clampY = null,
+            MARKER_MARGIN = 10;
+
+        let mapContainerBounds = t.map.getContainer().getBoundingClientRect();
+
+        if (containerPoint.x - MARKER_MARGIN < 0) {
+
+            clampX = MARKER_MARGIN;
+        } else if (containerPoint.x + MARKER_MARGIN > mapContainerBounds.width) {
+            clampX = mapContainerBounds.width - MARKER_MARGIN;
+        }
+        if (containerPoint.y - MARKER_MARGIN < 0) {
+
+            clampY = MARKER_MARGIN;
+        } else if (containerPoint.y + MARKER_MARGIN > mapContainerBounds.height) {
+            clampY = mapContainerBounds.height - MARKER_MARGIN;
+        }
+        if (clampX !== null || clampY !== null) {
+
+            if (clampX !== null) { containerPoint.x = clampX; }
+            if (clampY !== null) { containerPoint.y = clampY; }
+            this.setLatLng(t.map.containerPointToLatLng(containerPoint));
+        }
+
         t.refreshLine();
     });
 
