@@ -37,17 +37,19 @@ function Map (element) {
 
     this.airports = {};
     this.zones = [];
-    this.choosedAirport = null;
+    this.startAirport = null;
+    this.endAirport = null;
 
-    this.airportChange = null;
+    this.startAirportChange = null;
+    this.endAirportChange = null;
 }
 
 Map.prototype.addAirport = function (id, name, latlng) {
-    let airport = new Airport(id, name, latlng);
+    let airport = new Airport(id, name, latlng, map);
 
     let t = this;
     airport.onclick(function () {
-        t.chooseAirport(this);
+        t.chooseStartAirport(this);
     });
 
     this.airports[id] = airport;
@@ -85,38 +87,78 @@ Map.prototype.addZone = function (options) {
     this.zones.push(zone);
 };
 
-Map.prototype.onAirportChange = function (callback) {
-    this.airportChange = L.bind(callback, this);
+Map.prototype.onStartAirportChange = function (callback) {
+    this.startAirportChange = L.bind(callback, this);
 };
 
-Map.prototype.chooseAirport = function (airport) {
+Map.prototype.onEndAirportChange = function (callback) {
+    this.endAirportChange = L.bind(callback, this);
+};
+
+Map.prototype.chooseStartAirport = function (airport) {
     if (typeof airport === 'number') {
         airport = this.airports[airport];
     }
 
     let event = {
-        old: this.choosedAirport,
+        old: this.startAirport,
         new: airport
     };
 
-    if (this.choosedAirport) {
-        this.choosedAirport.setActive(false);
-        this.choosedAirport.bringToBack();
+    if (this.startAirport) {
+        this.startAirport.setStart(false);
+        this.startAirport.bringToBack();
     }
 
-    this.choosedAirport = airport;
+    this.startAirport = airport;
 
-    if (this.choosedAirport) {
-        this.choosedAirport.setActive(true);
-        this.choosedAirport.bringToFront();
+    if (this.startAirport) {
+        this.startAirport.setStart(true);
+        this.startAirport.bringToFront();
     }
 
-    if (this.airportChange) {
-        this.airportChange(event);
+    if (this.startAirportChange) {
+        this.startAirportChange(event);
     }
 
-    this.route.setFrom(airport);
-    this.route.setTo(airport);
+    this.route.setStartAirport(airport);
+
+    if (!this.endAirport) {
+        this.route.setEndAirport(airport);
+    }
+};
+
+Map.prototype.chooseEndAirport = function (airport) {
+    if (typeof airport === 'number') {
+        airport = this.airports[airport];
+    }
+
+    let event = {
+        old: this.endAirport,
+        new: airport
+    };
+
+    if (this.endAirport) {
+        this.endAirport.setEnd(false);
+        this.endAirport.bringToBack();
+    }
+
+    this.endAirport = airport;
+
+    if (this.endAirport) {
+        this.endAirport.setEnd(true);
+        this.endAirport.bringToFront();
+    }
+
+    if (this.endAirportChange) {
+        this.endAirportChange(event);
+    }
+
+    this.route.setEndAirport(airport);
+
+    if (!this.endAirport) {
+        this.route.setEndAirport(this.startAirport);
+    }
 };
 
 
@@ -124,11 +166,11 @@ Map.prototype.chooseAirport = function (airport) {
 //-------------
 // Route
 //-------------
-Route = function (from, to, latlngs) {
+Route = function (startAirport, endAirport, latlngs) {
     let t = this;
 
-    this.from = from;
-    this.to = to;
+    this.startAirport = startAirport;
+    this.endAirport = endAirport;
 
     this.map = null;
     this.wayPoints = [];
@@ -152,7 +194,7 @@ Route = function (from, to, latlngs) {
 
     this.line.on('click', function (event) {
         let i = t.closestSegmentIndex(event.latlng) + 1;
-        if (t.from) {
+        if (t.startAirport) {
             i -= 1;
         }
         t.addWayPoint(event.latlng, i);
@@ -187,13 +229,13 @@ Route.prototype.closestSegmentIndex = function (latlng) {
     return minI;
 };
 
-Route.prototype.setFrom = function (from) {
-    this.from = from;
+Route.prototype.setStartAirport = function (startAirport) {
+    this.startAirport = startAirport;
     this.refreshLine();
 };
 
-Route.prototype.setTo = function (to) {
-    this.to = to;
+Route.prototype.setEndAirport = function (endAirport) {
+    this.endAirport = endAirport;
     this.refreshLine();
 };
 
@@ -252,28 +294,28 @@ Route.prototype.refreshLine = function () {
     let latlngs = this.wayPoints.map(function (point) {
         return point.marker.getLatLng();
     });
-    let from = null;
-    let to = null;
+    let startAirport = null;
+    let endAirport = null;
 
-    if (this.from) {
-        from = this.from.getLatLng();
+    if (this.startAirport) {
+        startAirport = this.startAirport.getLatLng();
     }
-    if (this.to) {
-        to = this.to.getLatLng();
+    if (this.endAirport) {
+        endAirport = this.endAirport.getLatLng();
     }
 
 
     if (latlngs.length) {
-        if (from) {
-            latlngs = _.concat(this.from.getLatLng(), latlngs);
+        if (startAirport) {
+            latlngs = _.concat(this.startAirport.getLatLng(), latlngs);
         }
 
-        if (to) {
-            latlngs = _.concat(latlngs, this.to.getLatLng());
+        if (endAirport) {
+            latlngs = _.concat(latlngs, this.endAirport.getLatLng());
         }
     }
-    else if (from && to && to !== from) {
-        latlngs = _.concat(from, to);
+    else if (startAirport && endAirport && endAirport !== startAirport) {
+        latlngs = _.concat(startAirport, endAirport);
     }
 
     this.line.setLatLngs(latlngs);
@@ -300,8 +342,19 @@ Route.prototype.removeFrom = function (map) {
     this.map = null;
 };
 
-Route.prototype.reverseWayPointsOrder = function () {
+Route.prototype.reverse = function () {
     this.wayPoints.reverse();
+
+    let temp = this.startAirport;
+    this.startAirport = this.endAirport;
+    this.endAirport = temp;
+
+    this.startAirport.setEnd(false);
+    this.startAirport.setStart(true);
+
+    this.endAirport.setEnd(true);
+    this.endAirport.setStart(false);
+
     this.refreshNumbers();
 };
 
@@ -368,13 +421,19 @@ Waypoint.prototype.removeFrom = function (map) {
 //-------------
 // Airport
 //-------------
-Airport = function (id, name, latlng) {
+Airport = function (id, name, latlng, map) {
     this.id = id;
     this.name = name;
     this.active = false;
+    this.end = false;
+    this.map = map;
+
+    let t = this;
 
     this.marker = L.marker(latlng, {
         icon: Airport.iconInactive,
+        contextmenu: true,
+        contextmenuInheritItems: false
     });
 
     this.marker.bindPopup(name, {
@@ -388,6 +447,8 @@ Airport = function (id, name, latlng) {
     this.marker.on('mouseout', function () {
         this.closePopup();
     });
+
+    this.refresh();
 };
 
 Airport.prototype.bringToFront = function () {
@@ -404,10 +465,16 @@ Airport.iconInactive = L.ExtraMarkers.icon({
     markerColor: 'white'
 });
 
-Airport.iconActive = L.ExtraMarkers.icon({
+Airport.iconStart = L.ExtraMarkers.icon({
     icon: 'fa-plane',
     prefix: 'fa',
     markerColor: 'green-light'
+});
+
+Airport.iconEnd = L.ExtraMarkers.icon({
+    icon: 'fa-flag-checkered',
+    prefix: 'fa',
+    markerColor: 'yellow'
 });
 
 Airport.prototype.getLatLng = function () {
@@ -422,13 +489,43 @@ Airport.prototype.removeFrom = function (map) {
     this.marker.removeFrom(map);
 };
 
-Airport.prototype.setActive = function (active) {
-    this.active = active;
-    if (active) {
-        this.marker.setIcon(Airport.iconActive);
+Airport.prototype.setStart = function (start) {
+    this.start = start;
+    this.refresh();
+};
+
+Airport.prototype.setEnd = function (end) {
+    this.end = end;
+    this.refresh();
+};
+
+Airport.prototype.refresh = function () {
+    let t = this;
+
+    this.marker.options.contextmenuItems = [];
+
+    if (this.start) {
+        this.marker.setIcon(Airport.iconStart);
+    }
+    else if (this.end) {
+        this.marker.setIcon(Airport.iconEnd);
+        this.marker.options.contextmenuItems.push({
+            text: 'Zrušit jako cíl',
+            iconCls: 'fa fa-times',
+            callback: function () {
+                t.map.chooseEndAirport(null);
+            }
+        });
     }
     else {
         this.marker.setIcon(Airport.iconInactive);
+        this.marker.options.contextmenuItems.push({
+            text: 'Nastavit jako cíl',
+            iconCls: 'fa fa-flag-checkered',
+            callback: function () {
+                t.map.chooseEndAirport(t);
+            }
+        });
     }
 };
 
@@ -466,7 +563,7 @@ function airportsInit() {
         let id = parseInt($(this).val());
         let airport = M.airports[id.toString()];
 
-        M.chooseAirport(airport);
+        M.chooseStartAirport(airport);
         reloadAircrafts(airport.id);
     });
 
@@ -507,7 +604,7 @@ function reloadAircrafts(airport_id) {
 
 $(document).ready(function () {
     map = window.M = new Map('map');
-    map.onAirportChange(function (event) {
+    map.onStartAirportChange(function (event) {
         let id = event.new ? event.new.id : '';
 
         $('#airport_id').val(id);
