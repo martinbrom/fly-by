@@ -300,6 +300,11 @@ Route.prototype.removeFrom = function (map) {
     this.map = null;
 };
 
+Route.prototype.reverseWayPointsOrder = function () {
+    this.wayPoints.reverse();
+    this.refreshNumbers();
+};
+
 
 //-------------
 // Waypoint
