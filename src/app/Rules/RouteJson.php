@@ -20,7 +20,7 @@ class RouteJson implements Rule
 	 */
 	public function passes($attribute, $route) {
 		if (is_string($route))
-			$route = json_decode($route);
+			$route = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $route), true);
 
 		if (!$route || count($route) < 1)
 			return false;

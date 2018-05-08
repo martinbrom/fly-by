@@ -100,7 +100,7 @@ class Route extends BaseModel
 		$points = $this->route;
 
 		if (is_string($points)) {
-			$points = json_decode($points);
+			$points = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $points), true);
 		}
 
 		array_unshift($points, [$airportFrom->lat, $airportFrom->lon]);
