@@ -38,7 +38,7 @@ function Map (element, interactive) {
 
     this.dangerZoneColor = 'red';
 
-    this.route = new Route(null, null, [], this.map);
+    this.route = new Route(null, null, [], this.map, this.interactive);
     this.route.addTo(this.map);
 
     this.airports = {};
@@ -149,7 +149,6 @@ Route = function (startAirport, endAirport, latlngs, map, interactive) {
         this.interactive = false;
     }
 
-
     this.startAirport = startAirport;
     this.endAirport = endAirport;
 
@@ -158,7 +157,7 @@ Route = function (startAirport, endAirport, latlngs, map, interactive) {
 
     this.line = L.polyline(latlngs, {
         color: '#0066a2',
-        interactive: interactive,
+        interactive: this.interactive,
         weight: 5
     });
 
@@ -250,7 +249,7 @@ Route.prototype.addWayPoint = function (latlng, index) {
         index = this.wayPoints.length;
     }
 
-    let wayPoint = new WayPoint(latlng, index + 1, this, this.map.interactive);
+    let wayPoint = new WayPoint(latlng, index + 1, this, this.interactive);
 
     wayPoint.marker.on('drag', function (event) {
 
