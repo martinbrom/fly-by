@@ -1,8 +1,7 @@
-
 //-------------
 // Map
 //-------------
-function Map (element) {
+function Map (element, interactive) {
     if (typeof element !== 'string') {
         throw 'Element selector must be an id as a string';
     }
@@ -13,16 +12,23 @@ function Map (element) {
         throw 'Element ' + element + ' does not exist';
     }
 
-    this.map = L.map('map', {
+
+    this.interactive = true;
+
+    if (interactive === false) {
+        this.interactive = false;
+    }
+
+    this.map = L.map(element, {
         contextmenu: true
     });
     this.map.setView(new L.LatLng(49.7384, 13.3736), 10);
-    this.map.setMinZoom(8);
+    this.map.setMinZoom(6);
 
     this.map.setMaxBounds(
         [
-            [51.080430, 12.057014],
-            [48.518948, 18.919228]
+            [52, 10],
+            [47, 20]
         ]
     );
 
@@ -38,12 +44,14 @@ function Map (element) {
     this.airports = {};
     this.zones = [];
 
+    this.disabled = false;
+
     this.startAirportChange = null;
     this.endAirportChange = null;
 }
 
 Map.prototype.addAirport = function (id, name, latlng) {
-    let airport = new Airport(id, name, latlng, map);
+    let airport = new Airport(id, name, latlng, map, this.interactive);
 
     let t = this;
     airport.onclick(function () {
@@ -132,8 +140,15 @@ Map.prototype.chooseEndAirport = function (airport) {
 //-------------
 // Route
 //-------------
-Route = function (startAirport, endAirport, latlngs, map) {
+Route = function (startAirport, endAirport, latlngs, map, interactive) {
     let t = this;
+
+    this.interactive = true;
+
+    if (interactive === false) {
+        this.interactive = false;
+    }
+
 
     this.startAirport = startAirport;
     this.endAirport = endAirport;
@@ -143,6 +158,7 @@ Route = function (startAirport, endAirport, latlngs, map) {
 
     this.line = L.polyline(latlngs, {
         color: '#0066a2',
+        interactive: interactive,
         weight: 5
     });
 
@@ -224,8 +240,6 @@ Route.prototype.setEndAirport = function (endAirport) {
         this.setStartAirport(this.endAirport);
     }
 
-    console.log(this.endAirport);
-
     this.refreshLine();
 };
 
@@ -236,7 +250,7 @@ Route.prototype.addWayPoint = function (latlng, index) {
         index = this.wayPoints.length;
     }
 
-    let wayPoint = new Waypoint(latlng, index + 1, this);
+    let wayPoint = new WayPoint(latlng, index + 1, this, this.map.interactive);
 
     wayPoint.marker.on('drag', function (event) {
 
@@ -382,13 +396,29 @@ Route.prototype.reverse = function () {
     this.refreshNumbers();
 };
 
+Route.prototype.disableManipulation = function () {
+    for (let i = 0; i < this.wayPoints.length; i++) {
+        this.wayPoints[i].disableManipulation();
+    }
+};
+
+Route.prototype.enableManipulation = function () {
+    for (let i = 0; i < this.wayPoints.length; i++) {
+        this.wayPoints[i].enableManipulation();
+    }
+};
 
 //-------------
-// Waypoint
+// WayPoint
 //-------------
-Waypoint = function (latlng, number, route) {
+WayPoint = function (latlng, number, route, interactive) {
     this.route = route;
     let t = this;
+    this.interactive = true;
+
+    if (interactive === false) {
+        this.interactive = false;
+    }
 
     this.marker = L.marker(latlng, {
         icon: L.ExtraMarkers.icon({
@@ -397,6 +427,7 @@ Waypoint = function (latlng, number, route) {
             shape: 'circle'
         }),
         draggable: true,
+        interactive: interactive,
         contextmenu: true,
         contextmenuInheritItems: false,
         contextmenuItems: [
@@ -415,14 +446,14 @@ Waypoint = function (latlng, number, route) {
     this.setNumber(number);
 };
 
-Waypoint.prototype.bringToFront = function () {
+WayPoint.prototype.bringToFront = function () {
     this.marker.setZIndexOffset(40000);
 };
-Waypoint.prototype.bringToBack = function () {
+WayPoint.prototype.bringToBack = function () {
     this.marker.setZIndexOffset(30000);
 };
 
-Waypoint.prototype.setNumber = function (number) {
+WayPoint.prototype.setNumber = function (number) {
     let icon = L.ExtraMarkers.icon({
         icon: 'fa-number',
         markerColor: 'blue',
@@ -433,11 +464,11 @@ Waypoint.prototype.setNumber = function (number) {
     this.marker.setIcon(icon);
 };
 
-Waypoint.prototype.addTo = function (map) {
+WayPoint.prototype.addTo = function (map) {
     this.marker.addTo(map);
 };
 
-Waypoint.prototype.removeFrom = function (map) {
+WayPoint.prototype.removeFrom = function (map) {
     this.marker.removeFrom(map);
 };
 
@@ -445,17 +476,23 @@ Waypoint.prototype.removeFrom = function (map) {
 //-------------
 // Airport
 //-------------
-Airport = function (id, name, latlng, map) {
+Airport = function (id, name, latlng, map, interactive) {
     this.id = id;
     this.name = name;
     this.start = false;
     this.end = false;
     this.map = map;
+    this.interactive = true;
+
+    if (interactive === false) {
+        this.interactive = false;
+    }
 
     let t = this;
 
     this.marker = L.marker(latlng, {
         icon: Airport.iconInactive,
+        interactive: this.interactive,
         contextmenu: true,
         contextmenuInheritItems: false
     });
@@ -565,119 +602,7 @@ Airport.prototype.onclick = function (callback) {
 };
 
 
-
-
-function reloadAirports() {
-    $.getJSON('ajax/airports', function(result){
-        $('#start_airport_id').html('');
-        window.M.clearAirports();
-
-        $('#start_airport_id').append($('<option>', {
-            value: '',
-            disabled: 'disabled',
-            hidden: 'hidden',
-            selected: 'selected'
-        }));
-
-        $.each(result, function(i, airport){
-            $('#start_airport_id').append($('<option>', {
-                value: airport.id,
-                text: airport.name
-            }));
-            window.M.addAirport(airport.id, airport.name, L.latLng(airport.lat, airport.lon));
-        });
-    });
-}
-
-function airportsInit() {
-    $('#start_airport_id').change(function () {
-        let id = parseInt($(this).val());
-        let airport = M.airports[id.toString()];
-
-        M.chooseStartAirport(airport);
-        reloadAircrafts(airport.id);
-    });
-
-    reloadAirports();
-}
-
-function reloadAircrafts(airport_id) {
-    let aircraft_select = $('#aircraft_id');
-
-    if (airport_id === null || airport_id === 'undefined' || airport_id === 'false' || airport_id === '') {
-        aircraft_select.html('');
-        aircraft_select.append($('<option>', {
-            value: '',
-            disabled: 'disabled',
-            hidden: 'hidden',
-            selected: 'selected'
-        }));
-        return;
-    }
-
-    $.get('ajax/aircrafts', {'airport_id': airport_id}, function(result){
-        aircraft_select.html('');
-        aircraft_select.append($('<option>', {
-            value: '',
-            disabled: 'disabled',
-            hidden: 'hidden',
-            selected: 'selected'
-        }));
-
-        $.each(result, function(i, aircraft){
-            aircraft_select.append($('<option>', {
-                value: aircraft.id,
-                text: aircraft.name,
-            }));
-        });
-    })
-}
-
-$(document).ready(function () {
-    map = window.M = new Map('map');
-    map.onStartAirportChange(function (event) {
-        let id = event.new ? event.new.id : '';
-
-        $('#start_airport_id').val(id);
-        reloadAircrafts(id);
-    });
-
-    airportsInit();
-
-    function switchToMap() {
-        $('#map-control-panel').hide();
-        map.map.invalidateSize();
-    }
-
-    function switchToPanel() {
-        $('#map-control-panel').show();
-        map.map.invalidateSize();
-    }
-
-    $('#map-bottom-buttons').find('button').click(function (event) {
-        switchToPanel();
-    });
-
-    $('#map').click(function (event) {
-        switchToMap()
-    });
-
-    $('#btn-add-waypoint').click(function (event) {
-        map.route.addWayPoint(M.map.getCenter());
-    });
-
-    let routeForm = $('#route-form');
-    let endAirportSelectGroup = routeForm.find('#end_airport_id-form-group');
-    let differentAirportsCheckbox = routeForm.find('#different_airports');
-
-    differentAirportsCheckbox.change(function() {
-        if (this.checked) {
-            endAirportSelectGroup.slideDown();
-            endAirportSelectGroup.prop('disabled', false);
-        }
-        else {
-            endAirportSelectGroup.slideUp();
-            endAirportSelectGroup.prop('disabled', true);
-        }
-    });
-});
+exports.Map = Map;
+exports.Airport = Airport;
+exports.Route = Route;
+exports.WayPoint = WayPoint;

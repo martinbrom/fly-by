@@ -13,8 +13,8 @@
     <div class="order-route-info row">
         <div class="col-sm-6 route-map-wrapper">
 
-            <!-- TODO: Add map -->
             <div id="route" class="route-map" style="height: 360px; background: darkgray;"></div>
+
         </div>
         <div class="route-airports col-sm-6">
             <p class="route-airport-name">
@@ -47,3 +47,31 @@
     @endif
 
 @endsection
+
+@push('scripts')
+    <script>
+        let route = {!! json_encode($route) !!};
+        let airports = {!! json_encode($airports) !!};
+
+        $(document).ready(function () {
+            let map = new Flb.Map('route', false);
+
+            for (let i = 0; i < airports.length; i++) {
+                map.addAirport(airports[i].id, airports[i].name, new L.LatLng(airports[i].lat, airports[i].lon));
+            }
+
+            map.chooseStartAirport(route.airport_from_id);
+            map.chooseEndAirport(route.airport_to_id);
+
+            console.log(route);
+            let points = JSON.parse(route.route);
+
+            for (let i = 0; i < points.length; i++) {
+                map.route.addWayPoint(points[i]);
+            }
+
+            map.map.fitBounds(map.route.line.getBounds());
+        });
+    </script>
+
+@endpush

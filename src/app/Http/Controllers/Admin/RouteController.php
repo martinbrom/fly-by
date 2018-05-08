@@ -41,7 +41,8 @@ class RouteController extends AdminController
 	public function show($id) {
 		$route = Route::predefined()->findOrFail($id);
 		$state = 'predefined';
-		return view('admin.routes.show', compact('route', 'state'));
+		$airports = Airport::all();
+		return view('admin.routes.show', compact('route', 'state', 'airports'));
 	}
 
 	/**

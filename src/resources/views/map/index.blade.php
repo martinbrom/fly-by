@@ -16,9 +16,22 @@
             <h5 class="bg-secondary text-center text-light w-100 p-2">{{ __('Plánování vyhlídkového letu') }}</h5>
 
             <form id="route-form">
+
                 <div class="form-group">
-                    <label for="airport_id" class="control-label">{{ __('Letiště') }}</label>
-                    <select name="airport_id" id="airport_id" class="form-control">
+                    <label for="start_airport_id" class="control-label">{{ __('Startovní letiště') }}</label>
+                    <select name="start_airport_id" id="start_airport_id" class="form-control">
+                        <option disabled selected hidden value=""></option>
+                    </select>
+                </div>
+
+                <div class="form-group form-check">
+                    <input id="different_airports" type="checkbox" class="form-check-input" autocomplete="off">
+                    <label for="different_airports" class="form-check-label">{{ __('Přistání na jiném letišti') }}</label>
+                </div>
+
+                <div class="form-group" id="end_airport_id-form-group">
+                    <label for="end_airport_id" class="control-label">{{ __('Cílové letiště') }}</label>
+                    <select name="end_airport_id" id="end_airport_id" class="form-control">
                         <option disabled selected hidden value=""></option>
                     </select>
                 </div>
@@ -29,6 +42,7 @@
                         <option disabled selected hidden value=""></option>
                     </select>
                 </div>
+
             </form>
 
             <button id="btn-add-waypoint" class="btn btn-success">{{ __('Přidat bod na trase') }}</button>
@@ -37,5 +51,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/map.js') }}"></script>
+    <script src="{{ asset('js/map_page.js') }}"></script>
 @endpush

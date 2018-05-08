@@ -21,3 +21,5 @@ require('./bootstrap');
 //     el: '#app'
 // });
 
+
+window.Flb = require('./map.js');
