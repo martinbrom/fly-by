@@ -358,7 +358,7 @@ Route.prototype.getLatLngs = function () {
 
     for (let i = 0; i < this.wayPoints.length; i++) {
         let wayPointLatLng = this.wayPoints[i].marker.getLatLng();
-        latlngs.push([wayPointLatLng['lat'], wayPointLatLng['lng']]);
+        latlngs.push([wayPointLatLng['lat'].toFixed(6), wayPointLatLng['lng'].toFixed(6)]);
     }
 
     return latlngs;

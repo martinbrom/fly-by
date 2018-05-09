@@ -6,7 +6,7 @@
     <div class="col-md-10 offset-md-1">
         <div id="route-map" class="route-map" style="height: 420px;"></div>
         <div class="pull-right">
-            <button id="save" type="button" class="btn btn-primary">{{ __('Uložit') }}</button>
+            <button id="save" type="button" class="btn btn-primary m-2">{{ __('Uložit') }}</button>
         </div>
     </div>
 
@@ -15,10 +15,10 @@
         {{ method_field('put') }}
         {{ $errors }}
 
-        @include('components.form.input', ['name' => 'route', 'value' => old('route')])
+        @include('components.form.input', ['name' => 'route', 'value' => $route->route])
         @include('components.form.input', ['name' => 'is_predefined', 'value' => '1'])
-        @include('components.form.input', ['name' => 'airport_from_id', 'value' => old('route')])
-        @include('components.form.input', ['name' => 'airport_to_id', 'value' => old('route')])
+        @include('components.form.input', ['name' => 'airport_from_id', 'value' => $route->airport_from_id])
+        @include('components.form.input', ['name' => 'airport_to_id', 'value' => $route->airport_to_id])
 
     </form>
 
