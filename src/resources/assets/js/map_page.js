@@ -96,10 +96,6 @@ $(document).ready(function () {
         switchToMap()
     });
 
-    $('#btn-add-waypoint').click(function (event) {
-        map.route.addWayPoint(map.map.getCenter());
-    });
-
     let routeForm = $('#route-form');
     let endAirportSelectGroup = routeForm.find('#end_airport_id-form-group');
     let differentAirportsCheckbox = routeForm.find('#different_airports');

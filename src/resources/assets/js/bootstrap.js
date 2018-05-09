@@ -57,7 +57,8 @@ if (token) {
 window.$ = window.jQuery = require('jquery');
 require('popper.js');
 require('bootstrap');
-require('leaflet');
 require('scrollmagic');
+require('leaflet');
 require('leaflet-extra-markers');
+require('leaflet-easybutton');
 require('leaflet-contextmenu');

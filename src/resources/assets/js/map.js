@@ -48,6 +48,16 @@ function Map (element, interactive) {
 
     this.startAirportChange = null;
     this.endAirportChange = null;
+
+    let t = this;
+
+    this.wayPointAddButton = L.easyButton(
+        'fa-plus',
+        function(btn, map){
+            t.route.addWayPoint(t.map.getCenter());
+        },
+        'Přidat bod'
+    ).addTo(this.map);
 }
 
 Map.prototype.addAirport = function (id, name, latlng) {
