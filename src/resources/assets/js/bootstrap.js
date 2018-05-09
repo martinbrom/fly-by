@@ -62,3 +62,4 @@ require('leaflet');
 require('leaflet-extra-markers');
 require('leaflet-easybutton');
 require('leaflet-contextmenu');
+require('leaflet-modal');

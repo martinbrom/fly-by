@@ -51,6 +51,30 @@ function Map (element, interactive) {
 
     let t = this;
 
+    this.helpModal = {
+        content:
+            '<ol class="h6">' +
+            '<li class="m-1">Kliknutím na značku na mapě vyberte startovní letiště</li>' +
+            '<li class="m-1">Kliknutím na tlačítko <strong>+</strong> nebo na segment trasy přidejte body trasy</li>' +
+            '<li class="m-1">Body trasy přesuňte dle potřeby</li>' +
+            '<li class="m-1">Pokud chcete přistát na jiném letišti než na startovním, kliknětě pravým tlačítkem (na dotykové obrazovce dlouze přidržet) na toto letiště a vyberte <strong>Nastavit jako cíl</strong></li>' +
+            '</ol>',
+
+        closeTitle: 'Zavřít',
+        zIndex: 10000,
+        transitionDuration: 300,
+
+        template: '{content}',
+    };
+
+    this.helpButton = L.easyButton(
+        'fa-question',
+        function(btn, map){
+            t.map.openModal(t.helpModal);
+        },
+        'Nápověda'
+    ).addTo(this.map);
+
     this.wayPointAddButton = L.easyButton(
         'fa-plus',
         function(btn, map){

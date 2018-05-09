@@ -24,6 +24,7 @@
         "leaflet-contextmenu": "^1.4.0",
         "leaflet-easybutton": "^2.3.0",
         "leaflet-extra-markers": "^1.0.6",
+        "leaflet-modal": "^0.1.5",
         "leaflet.awesome-markers": "^2.0.4",
         "popper.js": "^1.14.3",
         "scrollmagic": "^2.0.5"
