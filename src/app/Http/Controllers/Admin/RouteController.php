@@ -54,7 +54,8 @@ class RouteController extends AdminController
 	public function showCommon($id) {
 		$route = Route::common()->findOrFail($id);
 		$state = 'common';
-		return view('admin.routes.show', compact('route', 'state'));
+        $airports = Airport::all();
+		return view('admin.routes.show', compact('route', 'state', 'airports'));
 	}
 
 	/**

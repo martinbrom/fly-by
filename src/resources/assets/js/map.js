@@ -51,7 +51,7 @@ function Map (element, interactive) {
 }
 
 Map.prototype.addAirport = function (id, name, latlng) {
-    let airport = new Airport(id, name, latlng, map, this.interactive);
+    let airport = new Airport(id, name, latlng, this, this.interactive);
 
     let t = this;
     airport.onclick(function () {
@@ -354,7 +354,14 @@ Route.prototype.refreshLine = function () {
 };
 
 Route.prototype.getLatLngs = function () {
-    return this.line.getLatLngs();
+    let latlngs = [];
+
+    for (let i = 0; i < this.wayPoints.length; i++) {
+        let wayPointLatLng = this.wayPoints[i].marker.getLatLng();
+        latlngs.push([wayPointLatLng['lat'], wayPointLatLng['lng']]);
+    }
+
+    return latlngs;
 };
 
 Route.prototype.addTo = function (map) {
