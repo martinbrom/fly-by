@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Common;
 
+use App\Aircraft;
+use App\Airport;
 use App\Http\Controllers\CommonController;
 
 /**
@@ -16,5 +18,11 @@ class StaticController extends CommonController
 {
 	public function index() {
 		return view('index');
+	}
+
+	public function map() {
+		$airports = Airport::all();
+		$aircrafts = Aircraft::all();
+		return view('map.index', compact('airports', 'aircrafts'));
 	}
 }
