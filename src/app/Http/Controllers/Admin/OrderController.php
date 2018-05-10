@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Airport;
 use App\Http\Controllers\AdminController;
 use App\Http\Requests\OrderUpdateRequest;
 use App\Order;
@@ -45,7 +46,8 @@ class OrderController extends AdminController
 	 */
 	public function show($id) {
 		$order = Order::findOrFail($id);
-		return view('admin.orders.show', compact('order'));
+		$airports = Airport::all();
+		return view('admin.orders.show', compact('order', 'airports'));
 	}
 
 	/**

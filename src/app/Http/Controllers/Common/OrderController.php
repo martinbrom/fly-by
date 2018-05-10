@@ -20,7 +20,8 @@ class OrderController extends CommonController
 	 */
 	public function show($code) {
 	    $order = Order::with(['route', 'aircraftAirport'])->where('code', '=', $code)->firstOrFail();
-	    return response()->view('common.orders.show', compact('order'));
+	    $airports = Airport::all();
+	    return response()->view('common.orders.show', compact('order', 'airports'));
 	}
 
 	/**
