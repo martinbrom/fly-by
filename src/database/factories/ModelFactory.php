@@ -72,7 +72,6 @@ $factory->define(App\Order::class, function (Faker $faker) {
     ];
 });
 
-// TODO: Prepared for adding additional arguments to the model later on
 $factory->define(App\AircraftAirport::class, function (Faker $faker) {
     return [];
 });
