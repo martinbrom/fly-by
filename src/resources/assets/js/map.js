@@ -67,21 +67,23 @@ function Map (element, interactive) {
         template: '{content}',
     };
 
-    this.helpButton = L.easyButton(
-        'fa-question',
-        function(btn, map){
-            t.map.openModal(t.helpModal);
-        },
-        'Nápověda'
-    ).addTo(this.map);
+    if (this.interactive) {
+        this.helpButton = L.easyButton(
+            'fa-question',
+            function(btn, map){
+                t.map.openModal(t.helpModal);
+            },
+            'Nápověda'
+        ).addTo(this.map);
 
-    this.wayPointAddButton = L.easyButton(
-        'fa-plus',
-        function(btn, map){
-            t.route.addWayPoint(t.map.getCenter());
-        },
-        'Přidat bod'
-    ).addTo(this.map);
+        this.wayPointAddButton = L.easyButton(
+            'fa-plus',
+            function(btn, map){
+                t.route.addWayPoint(t.map.getCenter());
+            },
+            'Přidat bod'
+        ).addTo(this.map);
+    }
 }
 
 Map.prototype.addAirport = function (id, name, latlng) {
