@@ -76,6 +76,14 @@ function Map (element, interactive) {
             'Nápověda'
         ).addTo(this.map);
 
+        this.routeReverseButton = L.easyButton(
+            'fa-exchange',
+            function(btn, map){
+                t.route.reverse();
+            },
+            'Obrátit směr trasy'
+        ).addTo(this.map);
+
         this.wayPointAddButton = L.easyButton(
             'fa-plus',
             function(btn, map){
