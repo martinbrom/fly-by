@@ -4,7 +4,7 @@
 
     <div class="container mb-5">
         <h1 class="mt-4">Objednávka #{{ $order->id }}</h1>
-        <!-- TODO: Link to print coupon -->
+        <a href="{{ route('orders.download-coupon', $order->code) }}">Stáhnout kupon objednávky</a>
 
         <hr>
         <div class="order-info">

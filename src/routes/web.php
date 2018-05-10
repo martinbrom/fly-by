@@ -70,6 +70,8 @@ Route::prefix('ajax')->group(function () {
 
 // TODO: TESTING ONLY - remove later
 Route::get('orders/test-create', 'Common\OrderController@testCreate')->name('orders.test-create');
+
+Route::get('orders/{code}/pdf', 'Common\OrderController@downloadCoupon')->name('orders.download-coupon');
 Route::resource('orders', 'Common\OrderController', [
 	'only' => ['store', 'show']
 ]);

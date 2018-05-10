@@ -62,6 +62,17 @@ class OrderController extends CommonController
 	}
 
 	/**
+	 * Downloads a order PDF coupon
+	 *
+	 * @param $code
+	 * @return \Illuminate\Http\Response
+	 */
+	public function downloadCoupon($code) {
+		$order = Order::where('code', '=', $code)->firstOrFail();
+		return \PDF::loadView('pdf.coupon', compact('order'))->download('kupon.pdf');
+	}
+
+	/**
 	 * @return \Illuminate\Http\Response
 	 */
 	public function testCreate() {
