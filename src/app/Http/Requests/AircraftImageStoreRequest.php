@@ -6,26 +6,26 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class AircraftImageStoreRequest extends FormRequest
 {
-	/**
-	 * Determine if the user is authorized to make this request.
-	 *
-	 * @return bool
-	 */
-	public function authorize()
-	{
-		return auth()->user();
-	}
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return auth()->user();
+    }
 
-	/**
-	 * Get the validation rules that apply to the request.
-	 *
-	 * @return array
-	 */
-	public function rules()
-	{
-		return [
-			'image' => 'required|mimes:jpeg,png|max:5120',
-			'description' => 'max:50'
-		];
-	}
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+        'image' => 'required|mimes:jpeg,png|max:5120',
+        'description' => 'max:50'
+        ];
+    }
 }

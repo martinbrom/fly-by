@@ -9,6 +9,12 @@ use App\Http\Requests\AircraftImageStoreRequest;
 use App\Http\Requests\AircraftStoreRequest;
 use App\Http\Requests\AircraftUpdateRequest;
 
+/**
+ * Class AircraftController
+ *
+ * @package App\Http\Controllers\Admin
+ * @author  Martin Brom
+ */
 class AircraftController extends AdminController
 {
     /**
@@ -16,8 +22,10 @@ class AircraftController extends AdminController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         $aircrafts = Aircraft::all();
+
         return view('admin.aircrafts.index', compact('aircrafts'));
     }
 
@@ -26,7 +34,8 @@ class AircraftController extends AdminController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         return view('admin.aircrafts.create');
     }
 
@@ -34,45 +43,56 @@ class AircraftController extends AdminController
      * Store a newly created resource in storage.
      *
      * @param AircraftStoreRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
-    public function store(AircraftStoreRequest $request) {
+    public function store(AircraftStoreRequest $request)
+    {
         $aircraft = new Aircraft($request->all());
         $aircraft->save();
+
         return redirect()->route('admin.aircrafts.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($id)
+    {
         $aircraft = Aircraft::findOrFail($id);
-        $image = $aircraft->image()->first();
+        $image    = $aircraft->image()->first();
+
         return view('admin.aircrafts.show', compact('aircraft', 'image'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
         $aircraft = Aircraft::findOrFail($id);
+
         return view('admin.aircrafts.edit', compact('aircraft'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  AircraftUpdateRequest $request
-     * @param  int $id
+     * @param AircraftUpdateRequest $request
+     * @param int                   $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function update(AircraftUpdateRequest $request, $id) {
+    public function update(AircraftUpdateRequest $request, $id)
+    {
         $aircraft = Aircraft::findOrFail($id);
         $aircraft->fill($request->all());
         $aircraft->save();
@@ -83,59 +103,71 @@ class AircraftController extends AdminController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $aircraft = Aircraft::findOrFail($id);
         $aircraft->delete();
+
         return redirect()->route('admin.aircrafts.index');
     }
 
-	/**
-	 * Show the form for editing aircraft image
-	 *
-	 * @param   int $id
-	 * @return  \Illuminate\Http\Response
-	 */
-    public function editImage($id) {
-    	$aircraft = Aircraft::findOrFail($id);
-    	$image = $aircraft->image()->first();
-    	return view('admin.aircrafts.edit-image', compact('aircraft', 'image'));
+    /**
+     * Show the form for editing aircraft image
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editImage($id)
+    {
+        $aircraft = Aircraft::findOrFail($id);
+        $image    = $aircraft->image()->first();
+
+        return view('admin.aircrafts.edit-image', compact('aircraft', 'image'));
     }
 
-	/**
-	 * Store a new aircraft image
-	 *
-	 * @param   AircraftImageStoreRequest $request
-	 * @param   int $id
-	 * @return  \Illuminate\Http\RedirectResponse
-	 */
-    public function storeImage(AircraftImageStoreRequest $request, $id) {
-    	$aircraft = Aircraft::findOrFail($id);
-	    $image = new AircraftImage();
+    /**
+     * Store a new aircraft image
+     *
+     * @param AircraftImageStoreRequest $request
+     * @param int                       $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeImage(AircraftImageStoreRequest $request, $id)
+    {
+        $aircraft = Aircraft::findOrFail($id);
+        $image    = new AircraftImage();
 
-	    if (!$image->saveFromRequest($request)) {
-		    return redirect()
-			    ->back()
-			    ->withErrors('Ukládání obrázku selhalo');
-	    }
+        if (!$image->saveFromRequest($request)) {
+            return redirect()
+                ->back()
+                ->withErrors('Ukládání obrázku selhalo');
+        }
 
-	    $aircraft->image()->associate($image);
-	    $aircraft->save();
-    	return redirect()->route('admin.aircrafts.show', $aircraft->id);
+        $aircraft->image()->associate($image);
+        $aircraft->save();
+
+        return redirect()->route('admin.aircrafts.show', $aircraft->id);
     }
 
-	/**
-	 * Set aircraft image to the default value (NULL)
-	 *
-	 * @param   int $id
-	 * @return  \Illuminate\Http\Response
-	 */
-    public function defaultImage($id) {
-    	$aircraft = Aircraft::findOrFail($id);
-    	$aircraft->image()->dissociate();
-    	$aircraft->save();
-    	return redirect()->route('admin.aircrafts.show', $aircraft->id);
+    /**
+     * Set aircraft image to the default value (NULL)
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function defaultImage($id)
+    {
+        $aircraft = Aircraft::findOrFail($id);
+        $aircraft->image()->dissociate();
+        $aircraft->save();
+
+        return redirect()->route('admin.aircrafts.show', $aircraft->id);
     }
 }

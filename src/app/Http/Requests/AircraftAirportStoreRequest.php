@@ -13,7 +13,7 @@ class AircraftAirportStoreRequest extends FormRequest
      */
     public function authorize()
     {
-	    return auth()->user();
+        return auth()->user();
     }
 
     /**

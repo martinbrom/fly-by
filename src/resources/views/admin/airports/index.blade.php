@@ -32,10 +32,13 @@
                     <td class="airport-edit"><a href="{{ route('admin.airports.edit', $airport->id) }}">Upravit</a><br></td>
 
                     <td class="airport-destroy">
-                        <a href="#airport-delete-form-{{ $airport->id }}" onclick="event.preventDefault(); document.getElementById('airport-delete-form-{{ $airport->id }}').submit();">
+                        <a href="#airport-delete-form-{{ $airport->id }}"
+                           onclick="event.preventDefault(); document.getElementById('airport-delete-form-{{ $airport->id }}').submit();">
                             Odstranit
                         </a>
-                        <form id="airport-delete-form-{{ $airport->id }}" action="{{ route('admin.airports.destroy', $airport->id) }}" method="POST" style="display: none;">
+                        <form id="airport-delete-form-{{ $airport->id }}"
+                              action="{{ route('admin.airports.destroy', $airport->id) }}" method="POST"
+                              style="display: none;">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
                         </form>

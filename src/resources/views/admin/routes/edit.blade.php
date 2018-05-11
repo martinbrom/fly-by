@@ -25,52 +25,52 @@
 @endsection
 
 @push('scripts')
-    <script>
-        let route = {!! json_encode($route) !!};
-        let airports = {!! json_encode($airports) !!};
+<script>
+    let route = {!! json_encode($route) !!};
+    let airports = {!! json_encode($airports) !!};
 
-        $(document).ready(function () {
-            let map = window.mm = new Flb.Map('route-map');
+    $(document).ready(function () {
+        let map = window.mm = new Flb.Map('route-map');
 
-            for (let i = 0; i < airports.length; i++) {
-                map.addAirport(airports[i].id, airports[i].name, new L.LatLng(airports[i].lat, airports[i].lon));
+        for (let i = 0; i < airports.length; i++) {
+            map.addAirport(airports[i].id, airports[i].name, new L.LatLng(airports[i].lat, airports[i].lon));
+        }
+
+        map.chooseStartAirport(route.airport_from_id);
+        map.chooseEndAirport(route.airport_to_id);
+
+        console.log(route);
+        let points = JSON.parse(route.route);
+
+        for (let i = 0; i < points.length; i++) {
+            map.route.addWayPoint(points[i]);
+        }
+
+        map.map.fitBounds(map.route.line.getBounds(), {padding: [20, 20]});
+
+        $('#save').click(function (e) {
+            e.preventDefault();
+            let start = map.route.startAirport;
+            let end = map.route.endAirport;
+            let route = JSON.stringify(map.route.getLatLngs());
+
+            if (!start) {
+                alert('Nebylo vybráno startovní letište');
+                return;
+            }
+            if (!end) {
+                end = start;
             }
 
-            map.chooseStartAirport(route.airport_from_id);
-            map.chooseEndAirport(route.airport_to_id);
+            let form = $('#route-form');
 
-            console.log(route);
-            let points = JSON.parse(route.route);
+            form.find('#route').val(route);
+            form.find('#airport_from_id').val(start.id);
+            form.find('#airport_to_id').val(end.id);
 
-            for (let i = 0; i < points.length; i++) {
-                map.route.addWayPoint(points[i]);
-            }
-
-            map.map.fitBounds(map.route.line.getBounds(), {padding: [20,20]});
-
-            $('#save').click(function (e) {
-                e.preventDefault();
-                let start = map.route.startAirport;
-                let end = map.route.endAirport;
-                let route = JSON.stringify(map.route.getLatLngs());
-
-                if (!start) {
-                    alert('Nebylo vybráno startovní letište');
-                    return;
-                }
-                if (!end) {
-                    end = start;
-                }
-
-                let form = $('#route-form');
-
-                form.find('#route').val(route);
-                form.find('#airport_from_id').val(start.id);
-                form.find('#airport_to_id').val(end.id);
-
-                form.submit();
-            });
+            form.submit();
         });
-    </script>
+    });
+</script>
 
 @endpush

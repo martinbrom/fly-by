@@ -6,23 +6,34 @@ use App\Airport;
 use App\Http\Controllers\CommonController;
 use App\Http\Requests\Ajax\AircraftsAtAirportRequest;
 
+/**
+ * Class AirportController
+ *
+ * @package App\Http\Controllers\Common
+ * @author  Martin Brom
+ */
 class AirportController extends CommonController
 {
-	/**
-	 * @return  \Illuminate\Http\JsonResponse
-	 */
-	public function index() {
-		$airports = Airport::getAllWithAircrafts();
-		return response()->json($airports);
-	}
+    /**
+     * @return  \Illuminate\Http\JsonResponse
+     */
+    public function index()
+    {
+        $airports = Airport::getAllWithAircrafts();
 
-	/**
-	 * @param   AircraftsAtAirportRequest $request
-	 * @return  \Illuminate\Http\JsonResponse
-	 */
-	public function aircrafts(AircraftsAtAirportRequest $request) {
-		$airport = Airport::find($request->airport_id);
-		$aircrafts = $airport->aircrafts()->get();
-		return response()->json($aircrafts);
-	}
+        return response()->json($airports);
+    }
+
+    /**
+     * @param   AircraftsAtAirportRequest $request
+     *
+     * @return  \Illuminate\Http\JsonResponse
+     */
+    public function aircrafts(AircraftsAtAirportRequest $request)
+    {
+        $airport   = Airport::find($request->airport_id);
+        $aircrafts = $airport->aircrafts()->get();
+
+        return response()->json($aircrafts);
+    }
 }

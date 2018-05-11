@@ -5,8 +5,10 @@ namespace App;
 use App\Http\Requests\AircraftImageStoreRequest;
 
 /**
- * App\AircraftImage
+ * Class AircraftImage
  *
+ * @package App
+ * @author  Martin Brom
  * @property int $id
  * @property string $path
  * @property string|null $description
@@ -23,40 +25,44 @@ use App\Http\Requests\AircraftImageStoreRequest;
  */
 class AircraftImage extends BaseModel
 {
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = [
-		'path',
-		'description'
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'path',
+        'description',
+    ];
 
-	/**
-	 * Model validation rules
-	 *
-	 * @var array
-	 */
-	protected $rules = [
-		'path'        => 'required|unique:aircraft_images|max:255',
-		'description' => 'max:50'
-	];
+    /**
+     * Model validation rules
+     *
+     * @var array
+     */
+    protected $rules = [
+        'path' => 'required|unique:aircraft_images|max:255',
+        'description' => 'max:50',
+    ];
 
-	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
-	 */
-	public function aircrafts() {
-		return $this->hasMany(\App\Aircraft::class, 'image_id');
-	}
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function aircrafts()
+    {
+        return $this->hasMany(\App\Aircraft::class, 'image_id');
+    }
 
-	/**
-	 * @param   AircraftImageStoreRequest $request
-	 * @return  bool
-	 */
-	public function saveFromRequest(AircraftImageStoreRequest $request): bool {
-		$this->description = $request->input('description');
-		$this->path = substr($request->file('image')->store('public/aircraft-images'), 7);
-		return $this->save();
-	}
+    /**
+     * @param   AircraftImageStoreRequest $request
+     *
+     * @return  bool
+     */
+    public function saveFromRequest(AircraftImageStoreRequest $request): bool
+    {
+        $this->description = $request->input('description');
+        $this->path        = substr($request->file('image')->store('public/aircraft-images'), 7);
+
+        return $this->save();
+    }
 }

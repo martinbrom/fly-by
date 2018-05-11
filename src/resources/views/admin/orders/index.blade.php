@@ -6,7 +6,8 @@
     <h1>{{ ucfirst($state_czech) }} objednávky</h1>
 
     @if($state == 'unconfirmed')
-        <a href="#order-confirm-all-form" onclick="event.preventDefault(); document.getElementById('order-confirm-all-form').submit();">
+        <a href="#order-confirm-all-form"
+           onclick="event.preventDefault(); document.getElementById('order-confirm-all-form').submit();">
             Potvrdit všechny objednávky</a>
         <form id="order-confirm-all-form"
               action="{{ route('admin.orders.confirm-all') }}" method="POST"
@@ -23,8 +24,10 @@
                 <th scope="col">Kód</th>
                 <th scope="col">Email</th>
                 <th scope="col">Zobrazit</th>
-                @if($state == 'unconfirmed')<th scope="col">Potvrdit</th>@endif
-                @if($state == 'uncompleted')<th scope="col">Dokončit</th>@endif
+                @if($state == 'unconfirmed')
+                    <th scope="col">Potvrdit</th>@endif
+                @if($state == 'uncompleted')
+                    <th scope="col">Dokončit</th>@endif
             </tr>
             </thead>
             <tbody>
@@ -37,11 +40,11 @@
                     @if($state == 'unconfirmed')
                         <td class="order-confirm-one">
                             <a href="#order-confirm-one-form-{{ $order->id }}"
-                                    onclick="event.preventDefault(); document.getElementById('order-confirm-one-form-{{ $order->id }}').submit();">
-                                    Potvrdit</a>
+                               onclick="event.preventDefault(); document.getElementById('order-confirm-one-form-{{ $order->id }}').submit();">
+                                Potvrdit</a>
                             <form id="order-confirm-one-form-{{ $order->id }}"
-                                    action="{{ route('admin.orders.confirm-one', $order->id) }}" method="POST"
-                                    style="display: none;">
+                                  action="{{ route('admin.orders.confirm-one', $order->id) }}" method="POST"
+                                  style="display: none;">
                                 {{ csrf_field() }}
                             </form>
                         </td>

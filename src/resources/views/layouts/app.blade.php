@@ -9,7 +9,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    @yield('body')
+@yield('body')
 <script src="{{ asset('js/app.js') }}"></script>
 
 @stack('scripts')

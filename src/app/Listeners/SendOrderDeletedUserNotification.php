@@ -11,17 +11,20 @@ class SendOrderDeletedUserNotification implements ShouldQueue
     /**
      * Create the event listener.
      */
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     /**
      * Handle the event.
      *
-     * @param  OrderDeleted  $event
+     * @param  OrderDeleted $event
      * @return void
      */
-    public function handle(OrderDeleted $event) {
-    	$order = $event->order;
-    	\Mail::to($order->email)
-		    ->send(new OrderDeletedUserMail($order));
+    public function handle(OrderDeleted $event)
+    {
+        $order = $event->order;
+        \Mail::to($order->email)
+        ->send(new OrderDeletedUserMail($order));
     }
 }

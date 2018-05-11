@@ -1,7 +1,7 @@
 let map = null;
 
 function reloadAirports() {
-    $.getJSON('ajax/airports', function(result){
+    $.getJSON('ajax/airports', function (result) {
         $('#start_airport_id').html('');
         map.clearAirports();
 
@@ -12,7 +12,7 @@ function reloadAirports() {
             selected: 'selected'
         }));
 
-        $.each(result, function(i, airport){
+        $.each(result, function (i, airport) {
             $('#start_airport_id').append($('<option>', {
                 value: airport.id,
                 text: airport.name
@@ -48,7 +48,7 @@ function reloadAircrafts(airport_id) {
         return;
     }
 
-    $.get('ajax/aircrafts', {'airport_id': airport_id}, function(result){
+    $.get('ajax/aircrafts', {'airport_id': airport_id}, function (result) {
         aircraft_select.html('');
         aircraft_select.append($('<option>', {
             value: '',
@@ -57,7 +57,7 @@ function reloadAircrafts(airport_id) {
             selected: 'selected'
         }));
 
-        $.each(result, function(i, aircraft){
+        $.each(result, function (i, aircraft) {
             aircraft_select.append($('<option>', {
                 value: aircraft.id,
                 text: aircraft.name,
@@ -100,7 +100,7 @@ $(document).ready(function () {
     let endAirportSelectGroup = routeForm.find('#end_airport_id-form-group');
     let differentAirportsCheckbox = routeForm.find('#different_airports');
 
-    differentAirportsCheckbox.change(function() {
+    differentAirportsCheckbox.change(function () {
         if (this.checked) {
             endAirportSelectGroup.slideDown();
             endAirportSelectGroup.prop('disabled', false);

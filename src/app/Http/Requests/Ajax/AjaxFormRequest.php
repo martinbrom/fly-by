@@ -15,16 +15,25 @@ use Illuminate\Validation\ValidationException;
  * Adds validation errors to a failed JSON response
  *
  * @package App\Http\Requests\Ajax
- * @author Martin Brom
+ * @author  Martin Brom
  */
 abstract class AjaxFormRequest extends FormRequest
 {
-	public function authorize() {}
-	public function rules() {}
+    public function authorize()
+    {
+    }
 
-	protected function failedValidation(Validator $validator) {
-		$errors = (new ValidationException($validator))->errors();
+    public function rules()
+    {
+    }
 
-		throw new HttpResponseException(response()->json(['errors' => $errors], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
-	}
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = (new ValidationException($validator))->errors();
+
+        throw new HttpResponseException(response()->json(
+            ['errors' => $errors],
+            JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+        ));
+    }
 }

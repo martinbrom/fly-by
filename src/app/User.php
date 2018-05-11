@@ -6,8 +6,10 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
- * App\User
+ * Class User
  *
+ * @package App
+ * @author  Martin Brom
  * @property int $id
  * @property string $name
  * @property string $email
@@ -35,7 +37,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
@@ -44,6 +48,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 }

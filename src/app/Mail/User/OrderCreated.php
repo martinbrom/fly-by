@@ -6,15 +6,16 @@ use App\Mail\OrderMail;
 
 class OrderCreated extends OrderMail
 {
-	/**
-	 * Build the message.
-	 *
-	 * @return $this
-	 */
-	public function build() {
-		return $this
-			->subject(config('app.name') . ' - Informace o objednávce #' . $this->order->id)
-			->view('mail.user.order-created')
-			->text('mail.user.order-created_plain');
-	}
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        return $this
+            ->subject(config('app.name') . ' - Informace o objednávce #' . $this->order->id)
+            ->view('mail.user.order-created')
+            ->text('mail.user.order-created_plain');
+    }
 }

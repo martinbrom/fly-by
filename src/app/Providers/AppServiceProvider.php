@@ -14,9 +14,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \Validator::extend('route_json', function ($attribute, $value) {
-        	return (new RouteJson())->passes($attribute, $value);
-        });
+        \Validator::extend(
+            'route_json',
+            function ($attribute, $value) {
+                return (new RouteJson())->passes($attribute, $value);
+            }
+        );
     }
 
     /**

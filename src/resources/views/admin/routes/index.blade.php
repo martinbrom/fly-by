@@ -21,17 +21,17 @@
             </tr>
             </thead>
             <tbody>
-                @foreach($routes as $route)
-                    <tr>
-                        <td class="route-id">{{ $route->id }}</td>
-                        <td class="route-airport-from">{{ $route->airportFrom->name }}</td>
-                        <td class="route-airport-to">{{ $route->airportTo->name }}</td>
-                        <td class="route-distance">{{ $route->distance }}</td>
+            @foreach($routes as $route)
+                <tr>
+                    <td class="route-id">{{ $route->id }}</td>
+                    <td class="route-airport-from">{{ $route->airportFrom->name }}</td>
+                    <td class="route-airport-to">{{ $route->airportTo->name }}</td>
+                    <td class="route-distance">{{ $route->distance }}</td>
 
-                        @php($display_route = $state == 'predefined' ? 'admin.routes.show' : 'admin.routes.show-common')
-                        <td><a href="{{ route($display_route, $route->id) }}">Zobrazit</a></td>
-                    </tr>
-                @endforeach
+                    @php($display_route = $state == 'predefined' ? 'admin.routes.show' : 'admin.routes.show-common')
+                    <td><a href="{{ route($display_route, $route->id) }}">Zobrazit</a></td>
+                </tr>
+            @endforeach
             </tbody>
         </table>
     @endif
