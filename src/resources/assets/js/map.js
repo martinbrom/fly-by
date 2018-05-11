@@ -431,17 +431,14 @@ Route.prototype.reverse = function () {
     let startAirport = this.startAirport;
     let endAirport = this.endAirport;
 
-    if (startAirport) {
-        startAirport.setEnd(true);
-        startAirport.setStart(false);
+    if (startAirport && endAirport) {
+        this.setEndAirport(startAirport);
+        this.setStartAirport(endAirport);
     }
-    if (endAirport) {
-        endAirport.setEnd(false);
-        endAirport.setStart(true);
+    else if (endAirport) {
+        this.setStartAirport(endAirport);
+        this.setEndAirport(null);
     }
-
-    this.startAirport = endAirport;
-    this.endAirport = startAirport;
 
     this.refreshNumbers();
 };
