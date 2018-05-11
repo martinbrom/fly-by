@@ -122,8 +122,8 @@ Map.prototype.addZone = function (options) {
             radius: options.radius
         }).addTo(this.map);
     }
-    else if (options.type === 'polygon') {
-        zone = L.polygon(options.latlngs, {
+    else if (options.type === 'poly') {
+        zone = L.polygon(options.shape, {
             color: this.dangerZoneColor,
             fillColor: this.dangerZoneColor,
             fillOpacity: 0.5

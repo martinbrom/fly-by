@@ -69,6 +69,10 @@ function reloadAircrafts(airport_id) {
 $(document).ready(function () {
     window.map = map = new Flb.Map('map');
 
+    for (let i = 0; i < zones.length; i++) {
+        map.addZone(zones[i]);
+    }
+
     map.onStartAirportChange(function (event) {
         let id = event.new ? event.new.id : '';
 

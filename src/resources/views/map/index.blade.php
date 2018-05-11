@@ -55,5 +55,9 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/map_page.js') }}"></script>
+    <script>
+        let zones = {!! json_encode($zones) !!};
+    </script>
+
+    <script src="{{ asset('js/map_page.js') }}"></script>
 @endpush

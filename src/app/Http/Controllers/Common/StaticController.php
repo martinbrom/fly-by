@@ -31,7 +31,8 @@ class StaticController extends CommonController
     {
         $airports  = Airport::all();
         $aircrafts = Aircraft::all();
+        $zones = array_merge(config('zones.dangerous'), config('zones.prohibited'));
 
-        return view('map.index', compact('airports', 'aircrafts'));
+        return view('map.index', compact('airports', 'aircrafts', 'zones'));
     }
 }
