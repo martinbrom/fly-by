@@ -9,6 +9,12 @@ use App\Http\Controllers\AdminController;
 use App\Http\Requests\AirportStoreRequest;
 use App\Http\Requests\AirportUpdateRequest;
 
+/**
+ * Class AirportController
+ *
+ * @package App\Http\Controllers\Admin
+ * @author  Martin Brom
+ */
 class AirportController extends AdminController
 {
     /**
@@ -16,8 +22,10 @@ class AirportController extends AdminController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         $airports = Airport::all();
+
         return response()->view('admin.airports.index', compact('airports'));
     }
 
@@ -26,7 +34,8 @@ class AirportController extends AdminController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         return response()->view('admin.airports.create');
     }
 
@@ -34,35 +43,44 @@ class AirportController extends AdminController
      * Store a newly created resource in storage.
      *
      * @param AirportStoreRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
-    public function store(AirportStoreRequest $request) {
+    public function store(AirportStoreRequest $request)
+    {
         $airport = new Airport($request->all());
         $airport->save();
+
         return redirect()->route('admin.airports.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
-        $airport = Airport::findOrFail($id);
-        $airports = Airport::allOther($id)->get();
+    public function show($id)
+    {
+        $airport           = Airport::findOrFail($id);
+        $airports          = Airport::allOther($id)->get();
         $aircraft_airports = AircraftAirport::where('airport_id', '=', $id)->with('aircraft')->get();
+
         return response()->view('admin.airports.show', compact('airport', 'airports', 'aircraft_airports'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
         $airport = Airport::findOrFail($id);
+
         return response()->view('admin.airports.edit', compact('airport'));
     }
 
@@ -70,10 +88,12 @@ class AirportController extends AdminController
      * Update the specified resource in storage.
      *
      * @param AirportUpdateRequest $request
-     * @param  int $id
+     * @param int                  $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function update(AirportUpdateRequest $request, $id) {
+    public function update(AirportUpdateRequest $request, $id)
+    {
         $airport = Airport::findOrFail($id);
         $airport->fill($request->all());
         $airport->save();
@@ -84,24 +104,30 @@ class AirportController extends AdminController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $airport = Airport::findOrFail($id);
         $airport->delete();
+
         return redirect()->route('admin.airports.index');
     }
 
-	/**
-	 * Show the form to add an aircraft to a given airport.
-	 *
-	 * @param   int $id
-	 * @return  \Illuminate\Http\Response
-	 */
-    public function addAircraft($id) {
-    	$airport = Airport::findOrFail($id);
-    	$aircrafts = Aircraft::all();
-    	return response()->view('admin.airports.add-aircraft', compact('airport', 'aircrafts'));
+    /**
+     * Show the form to add an aircraft to a given airport.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addAircraft($id)
+    {
+        $airport   = Airport::findOrFail($id);
+        $aircrafts = Aircraft::all();
+
+        return response()->view('admin.airports.add-aircraft', compact('airport', 'aircrafts'));
     }
 }

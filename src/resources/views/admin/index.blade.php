@@ -4,10 +4,10 @@
 
     <h1>Administrace</h1>
     @php
-    $values = [$orderCount, $unconfirmedOrderCount, $completedOrderCount, $aircraftCount, $distinctAircraftCount, $airportCount];
-    $icons  = ['exclamation', 'clock-o', 'money', 'plane', 'paper-plane', 'map-marker'];
-    $texts  = ['Nové objednávky', 'Nepotvrzené objednávky', 'Dokončené objednávky', 'Všechna letadla', 'Typů letadel', 'Všechna letiště'];
-    $colors = ['cyan', 'red', 'yellow', 'green', 'gray', 'darkgray'];
+        $values = [$orderCount, $unconfirmedOrderCount, $completedOrderCount, $aircraftCount, $distinctAircraftCount, $airportCount];
+        $icons  = ['exclamation', 'clock-o', 'money', 'plane', 'paper-plane', 'map-marker'];
+        $texts  = ['Nové objednávky', 'Nepotvrzené objednávky', 'Dokončené objednávky', 'Všechna letadla', 'Typů letadel', 'Všechna letiště'];
+        $colors = ['cyan', 'red', 'yellow', 'green', 'gray', 'darkgray'];
     @endphp
 
     <div class="overview-panel-row row">

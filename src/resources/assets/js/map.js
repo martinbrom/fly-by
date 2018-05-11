@@ -1,14 +1,14 @@
 //-------------
 // Map
 //-------------
-function Map (element, interactive) {
+function Map(element, interactive) {
     if (typeof element !== 'string') {
         throw 'Element selector must be an id as a string';
     }
 
     map = $('#' + element);
 
-    if (!map.length){
+    if (!map.length) {
         throw 'Element ' + element + ' does not exist';
     }
 
@@ -52,13 +52,12 @@ function Map (element, interactive) {
     let t = this;
 
     this.helpModal = {
-        content:
-            '<ol class="h6">' +
-            '<li class="m-1">Kliknutím na značku na mapě vyberte startovní letiště</li>' +
-            '<li class="m-1">Kliknutím na tlačítko <strong>+</strong> nebo na segment trasy přidejte body trasy</li>' +
-            '<li class="m-1">Body trasy přesuňte dle potřeby</li>' +
-            '<li class="m-1">Pokud chcete přistát na jiném letišti než na startovním, kliknětě pravým tlačítkem (na dotykové obrazovce dlouze přidržet) na toto letiště a vyberte <strong>Nastavit jako cíl</strong></li>' +
-            '</ol>',
+        content: '<ol class="h6">' +
+        '<li class="m-1">Kliknutím na značku na mapě vyberte startovní letiště</li>' +
+        '<li class="m-1">Kliknutím na tlačítko <strong>+</strong> nebo na segment trasy přidejte body trasy</li>' +
+        '<li class="m-1">Body trasy přesuňte dle potřeby</li>' +
+        '<li class="m-1">Pokud chcete přistát na jiném letišti než na startovním, kliknětě pravým tlačítkem (na dotykové obrazovce dlouze přidržet) na toto letiště a vyberte <strong>Nastavit jako cíl</strong></li>' +
+        '</ol>',
 
         closeTitle: 'Zavřít',
         zIndex: 10000,
@@ -70,7 +69,7 @@ function Map (element, interactive) {
     if (this.interactive) {
         this.helpButton = L.easyButton(
             'fa-question',
-            function(btn, map){
+            function (btn, map) {
                 t.map.openModal(t.helpModal);
             },
             'Nápověda'
@@ -78,7 +77,7 @@ function Map (element, interactive) {
 
         this.routeReverseButton = L.easyButton(
             'fa-exchange',
-            function(btn, map){
+            function (btn, map) {
                 t.route.reverse();
             },
             'Obrátit směr trasy'
@@ -86,7 +85,7 @@ function Map (element, interactive) {
 
         this.wayPointAddButton = L.easyButton(
             'fa-plus',
-            function(btn, map){
+            function (btn, map) {
                 t.route.addWayPoint(t.map.getCenter());
             },
             'Přidat bod'
@@ -178,7 +177,6 @@ Map.prototype.chooseEndAirport = function (airport) {
         this.endAirportChange(event);
     }
 };
-
 
 
 //-------------
@@ -319,8 +317,12 @@ Route.prototype.addWayPoint = function (latlng, index) {
         }
         if (clampX !== null || clampY !== null) {
 
-            if (clampX !== null) { containerPoint.x = clampX; }
-            if (clampY !== null) { containerPoint.y = clampY; }
+            if (clampX !== null) {
+                containerPoint.x = clampX;
+            }
+            if (clampY !== null) {
+                containerPoint.y = clampY;
+            }
             this.setLatLng(t.map.containerPointToLatLng(containerPoint));
         }
 

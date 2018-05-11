@@ -8,20 +8,23 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendOrderConfirmedUserNotification implements ShouldQueue
 {
-	/**
-	 * Create the event listener.
-	 */
-	public function __construct() {}
+    /**
+     * Create the event listener.
+     */
+    public function __construct()
+    {
+    }
 
-	/**
-	 * Handle the event.
-	 *
-	 * @param  OrderConfirmed  $event
-	 * @return void
-	 */
-	public function handle(OrderConfirmed $event) {
-		$order = $event->order;
-		\Mail::to($order->email)
-		     ->send(new OrderConfirmedUserMail($order));
-	}
+    /**
+     * Handle the event.
+     *
+     * @param  OrderConfirmed $event
+     * @return void
+     */
+    public function handle(OrderConfirmed $event)
+    {
+        $order = $event->order;
+        \Mail::to($order->email)
+          ->send(new OrderConfirmedUserMail($order));
+    }
 }

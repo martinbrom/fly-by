@@ -2,27 +2,23 @@
 
 @section('content')
 
-    @if(count($errors) > 0)
-        {{ $errors }}
-    @endif
-
     <h1>Upravit obrázek letadla</h1>
-    {!! Form::open(['route' => ['admin.aircrafts.store-image', $aircraft->id], 'method' => 'post', 'files' => true]) !!}
-        {!! Form::token() !!}
+    <div class="col-md-8 offset-md-2">
+        <form method="post" action="{{ route('admin.aircrafts.store-image', $aircraft->id) }}"
+              enctype="multipart/form-data">
+            {{ csrf_field() }}
 
-        {!! Form::label('image', 'Obrázek') !!}
-        {!! Form::file('image') !!}
+            @include('components.form.input', ['type' => 'file', 'name' => 'image', 'label' => 'Obrǎzek'] )
+            @include('components.form.input', ['name' => 'description', 'label' => 'Popis obrǎzku'] )
 
-        {!! Form::label('description', 'Popis obrázku') !!}
-        {!! Form::text('description') !!}
+            <input type="submit" value="Upravit" class="btn btn-primary">
+        </form>
 
-        {!! Form::submit('Upravit') !!}
-    {!! Form::close() !!}
+        <form method="post" action="{{ route('admin.aircrafts.default-image', $aircraft->id) }}">
+            {{ csrf_field() }}
 
-    {!! Form::open(['route' => ['admin.aircrafts.default-image', $aircraft->id], 'method' => 'post']) !!}
-        {!! Form::token() !!}
-
-        {!! Form::submit('Nastavit základní obrázek') !!}
-    {!! Form::close() !!}
+            <input type="submit" value="Nastavit základní obrázek" class="btn btn-primary">
+        </form>
+    </div>
 
 @endsection

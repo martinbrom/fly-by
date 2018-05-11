@@ -16,13 +16,22 @@ use App\Http\Controllers\CommonController;
  */
 class StaticController extends CommonController
 {
-	public function index() {
-		return view('index');
-	}
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
+        return view('index');
+    }
 
-	public function map() {
-		$airports = Airport::all();
-		$aircrafts = Aircraft::all();
-		return view('map.index', compact('airports', 'aircrafts'));
-	}
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function map()
+    {
+        $airports  = Airport::all();
+        $aircrafts = Aircraft::all();
+
+        return view('map.index', compact('airports', 'aircrafts'));
+    }
 }

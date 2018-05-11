@@ -8,8 +8,10 @@ use App\Events\OrderDeleted;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * App\Order
+ * Class Order
  *
+ * @package App
+ * @author  Martin Brom
  * @property int $id
  * @property int $price
  * @property int $flight_price
@@ -58,7 +60,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Order extends BaseModel
 {
-	use SoftDeletes;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -66,19 +68,20 @@ class Order extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'email', 'user_note'
+        'email',
+        'user_note',
     ];
 
-	/**
-	 * Carbon instances to be converted to dates
-	 *
-	 * @var array
-	 */
+    /**
+     * Carbon instances to be converted to dates
+     *
+     * @var array
+     */
     protected $dates = [
-    	'created_at',
-	    'updated_at',
-    	'confirmed_at',
-	    'completed_at'
+        'created_at',
+        'updated_at',
+        'confirmed_at',
+        'completed_at',
     ];
 
     /**
@@ -90,172 +93,200 @@ class Order extends BaseModel
         'price' => 'nullable|integer|min:0',
         'flight_price' => 'nullable|integer|min:0',
         'transport_price' => 'nullable|integer|min:0',
-	    'duration' => 'nullable|integer|min:0',
+        'duration' => 'nullable|integer|min:0',
         'code' => 'required|max:32',
-	    'email' => 'required|email',
-	    'user_note' => 'nullable|max:255',
-	    'admin_note' => 'nullable|max:255',
-	    'confirmed_at' => 'nullable|date',
-	    'completed_at' => 'nullable|date|after:confirmed_at',
+        'email' => 'required|email',
+        'user_note' => 'nullable|max:255',
+        'admin_note' => 'nullable|max:255',
+        'confirmed_at' => 'nullable|date',
+        'completed_at' => 'nullable|date|after:confirmed_at',
         'route_id' => 'required|exists:routes,id',
-        'aircraft_airport_id' => 'required|exists:aircraft_airport_xref,id'
+        'aircraft_airport_id' => 'required|exists:aircraft_airport_xref,id',
     ];
 
-	/**
-	 * Order constructor.
-	 *
-	 * @param array $attributes
-	 */
-    public function __construct(array $attributes = []) {
-	    parent::__construct($attributes);
-	    $this->generateCode();
+    /**
+     * Order constructor.
+     *
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->generateCode();
     }
 
-	/**
-	 * Boots model and registers event listeners
-	 */
-	public static function boot() {
-		parent::boot();
+    /**
+     * Boots model and registers event listeners
+     */
+    public static function boot()
+    {
+        parent::boot();
 
-		// inform owner of a new order
-		// inform user that his order was created successfully
-		static::created(function (Order $order) {
-			event(new OrderCreated($order));
-		});
+        // inform owner of a new order
+        // inform user that his order was created successfully
+        static::created(
+            function (Order $order) {
+                event(new OrderCreated($order));
+            }
+        );
 
-		// recalculate prices and duration
-		static::saving(function (Order $order) {
-			$order->recalculatePrice();
-			$order->recalculateDuration();
-		});
+        // recalculate prices and duration
+        static::saving(
+            function (Order $order) {
+                $order->recalculatePrice();
+                $order->recalculateDuration();
+            }
+        );
 
-		// inform user that his order was cancelled
-		// doesn't work for already completed orders (duh)
-		static::deleting(function (Order $order) {
-			if ($order->completed_at != NULL)
-				return false;
+        // inform user that his order was cancelled
+        // doesn't work for already completed orders (duh)
+        static::deleting(
+            function (Order $order) {
+                if ($order->completed_at != null) {
+                    return false;
+                }
+                event(new OrderDeleted($order));
 
-			event(new OrderDeleted($order));
-			return true;
-		});
-	}
-
-	/**
-	 * Recalculates both flight prices
-	 */
-	public function recalculatePrice() {
-		$this->recalculateFlightPrice();
-		$this->recalculateTransportPrice();
-	    $this->price = $this->flight_price + $this->transport_price;
-	}
-
-	/**
-	 * Returns total price of flying with selected
-	 * aircraft from starting airport to ending airport
-	 */
-	public function recalculateFlightPrice() {
-	    $this->flight_price = $this->aircraftAirport->getCostForDistance($this->route->distance);
-	}
-
-	/**
-	 * Returns total price of moving selected
-	 * aircraft from its current airport to the starting airport
-	 * and back from the ending airport
-	 */
-	public function recalculateTransportPrice() {
-		$distance = $this->aircraftAirport->getAirportDistance($this->route->airportFrom)
-			+ $this->aircraftAirport->getAirportDistance($this->route->airportTo);
-	    $this->transport_price = $this->aircraftAirport->getCostForDistance($distance);
-	}
-
-	/**
-	 * Recalculates duration of flight and sets it
-	 */
-	public function recalculateDuration() {
-	    $this->duration = $this->aircraftAirport->getDurationForDistance($this->route->distance);
-	}
-
-	/**
-	 * Generates 32 long unique alphanumeric order code
-	 */
-    public function generateCode() {
-    	$this->code = str_random(32);
+                return true;
+            }
+        );
     }
 
-	/**
-	 * Scope a query to only include confirmed orders
-	 *
-	 * @param \Illuminate\Database\Eloquent\Builder $query
-	 * @return \Illuminate\Database\Eloquent\Builder
-	 */
-	public function scopeConfirmed($query) {
-		return $query->where('confirmed_at', '!=', NULL);
-	}
-
-	/**
-	 * Scope a query to only include unconfirmed orders
-	 *
-	 * @param \Illuminate\Database\Eloquent\Builder $query
-	 * @return \Illuminate\Database\Eloquent\Builder
-	 */
-	public function scopeUnconfirmed($query) {
-		return $query->where('confirmed_at', '=', NULL);
-	}
-
-	/**
-	 * Scope a query to only include completed orders
-	 *
-	 * @param \Illuminate\Database\Eloquent\Builder $query
-	 * @return \Illuminate\Database\Eloquent\Builder
-	 */
-	public function scopeCompleted($query) {
-		return $query->where('completed_at', '!=', NULL);
-	}
-
-	/**
-	 * Scope a query to only include uncompleted orders
-	 *
-	 * @param \Illuminate\Database\Eloquent\Builder $query
-	 * @return \Illuminate\Database\Eloquent\Builder
-	 */
-	public function scopeUncompleted($query) {
-		return $query->where('completed_at', '=', NULL);
-	}
-
-	/**
-	 * Confirms given order
-	 */
-    public function confirm() {
-	    if ($this->confirmed_at != NULL || $this->deleted_at != NULL)
-		    return;
-
-    	event(new OrderConfirmed($this));
-    	$this->confirmed_at = \Carbon\Carbon::now();
-    	$this->save();
+    /**
+     * Recalculates both flight prices
+     */
+    public function recalculatePrice()
+    {
+        $this->recalculateFlightPrice();
+        $this->recalculateTransportPrice();
+        $this->price = $this->flight_price + $this->transport_price;
     }
 
-	/**
-	 * Completes given order
-	 */
-    public function complete() {
-    	if ($this->confirmed_at == NULL || $this->completed_at != NULL || $this->deleted_at != NULL)
-    		return;
+    /**
+     * Returns total price of flying with selected
+     * aircraft from starting airport to ending airport
+     */
+    public function recalculateFlightPrice()
+    {
+        $this->flight_price = $this->aircraftAirport->getCostForDistance($this->route->distance);
+    }
 
-	    $this->completed_at = \Carbon\Carbon::now();
-	    $this->save();
+    /**
+     * Returns total price of moving selected
+     * aircraft from its current airport to the starting airport
+     * and back from the ending airport
+     */
+    public function recalculateTransportPrice()
+    {
+        $distance              = $this->aircraftAirport->getAirportDistance($this->route->airportFrom)
+                                 + $this->aircraftAirport->getAirportDistance($this->route->airportTo);
+        $this->transport_price = $this->aircraftAirport->getCostForDistance($distance);
+    }
+
+    /**
+     * Recalculates duration of flight and sets it
+     */
+    public function recalculateDuration()
+    {
+        $this->duration = $this->aircraftAirport->getDurationForDistance($this->route->distance);
+    }
+
+    /**
+     * Generates 32 long unique alphanumeric order code
+     */
+    public function generateCode()
+    {
+        $this->code = str_random(32);
+    }
+
+    /**
+     * Scope a query to only include confirmed orders
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeConfirmed($query)
+    {
+        return $query->where('confirmed_at', '!=', null);
+    }
+
+    /**
+     * Scope a query to only include unconfirmed orders
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUnconfirmed($query)
+    {
+        return $query->where('confirmed_at', '=', null);
+    }
+
+    /**
+     * Scope a query to only include completed orders
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->where('completed_at', '!=', null);
+    }
+
+    /**
+     * Scope a query to only include uncompleted orders
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUncompleted($query)
+    {
+        return $query->where('completed_at', '=', null);
+    }
+
+    /**
+     * Confirms given order
+     */
+    public function confirm()
+    {
+        if ($this->confirmed_at != null || $this->deleted_at != null) {
+            return;
+        }
+
+        event(new OrderConfirmed($this));
+        $this->confirmed_at = \Carbon\Carbon::now();
+        $this->save();
+    }
+
+    /**
+     * Completes given order
+     */
+    public function complete()
+    {
+        if ($this->confirmed_at == null || $this->completed_at != null || $this->deleted_at != null) {
+            return;
+        }
+
+        $this->completed_at = \Carbon\Carbon::now();
+        $this->save();
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function route() {
+    public function route()
+    {
         return $this->belongsTo(\App\Route::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function aircraftAirport() {
+    public function aircraftAirport()
+    {
         return $this->belongsTo(\App\AircraftAirport::class);
     }
 }

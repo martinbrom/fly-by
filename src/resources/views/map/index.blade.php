@@ -6,9 +6,12 @@
             <div id="map" class="w-100 h-100"></div>
             <div id="map-bottom-buttons" class="w-100 d-md-none">
                 <div class="btn-group btn-group-lg d-flex flex-row m-2">
-                    <button type="button" class="btn btn-primary"><i class="fa fa-road icon"></i> {{ __('Letiště') }}</button>
-                    <button type="button" class="btn btn-primary"><i class="fa fa-plane"></i> {{ __('Letadlo') }}</button>
-                    <button type="button" class="btn btn-primary"><i class="fa fa-map-marker"></i> {{ __('Trasa') }}</button>
+                    <button type="button" class="btn btn-primary"><i class="fa fa-road icon"></i> {{ __('Letiště') }}
+                    </button>
+                    <button type="button" class="btn btn-primary"><i class="fa fa-plane"></i> {{ __('Letadlo') }}
+                    </button>
+                    <button type="button" class="btn btn-primary"><i class="fa fa-map-marker"></i> {{ __('Trasa') }}
+                    </button>
                 </div>
             </div>
         </div>
@@ -26,7 +29,8 @@
 
                 <div class="form-group form-check">
                     <input id="different_airports" type="checkbox" class="form-check-input" autocomplete="off">
-                    <label for="different_airports" class="form-check-label">{{ __('Přistání na jiném letišti') }}</label>
+                    <label for="different_airports"
+                           class="form-check-label">{{ __('Přistání na jiném letišti') }}</label>
                 </div>
 
                 <div class="form-group" id="end_airport_id-form-group">
@@ -51,5 +55,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/map_page.js') }}"></script>
+<script src="{{ asset('js/map_page.js') }}"></script>
 @endpush

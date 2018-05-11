@@ -82,5 +82,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/landing.js') }}"></script>
+<script src="{{ asset('js/landing.js') }}"></script>
 @endpush

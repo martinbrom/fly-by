@@ -15,10 +15,13 @@
         <div class="aircraft-airport">
             <h3 class="aircraft-name">{{ $aircraft_airport->aircraft->name }}</h3>
 
-            <a href="#aircraft-airport-delete-form-{{ $aircraft_airport->id }}" onclick="event.preventDefault(); document.getElementById('aircraft-airport-delete-form-{{ $aircraft_airport->id }}').submit();">
+            <a href="#aircraft-airport-delete-form-{{ $aircraft_airport->id }}"
+               onclick="event.preventDefault(); document.getElementById('aircraft-airport-delete-form-{{ $aircraft_airport->id }}').submit();">
                 Odebrat z letiště
             </a>
-            <form id="aircraft-airport-delete-form-{{ $aircraft_airport->id }}" action="{{ route('admin.aircraft-airports.destroy', $aircraft_airport->id) }}" method="POST" style="display: none;">
+            <form id="aircraft-airport-delete-form-{{ $aircraft_airport->id }}"
+                  action="{{ route('admin.aircraft-airports.destroy', $aircraft_airport->id) }}" method="POST"
+                  style="display: none;">
                 {{ csrf_field() }}
                 {{ method_field('DELETE') }}
             </form>

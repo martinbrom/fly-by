@@ -14,6 +14,7 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.4.0",
         "malhal/laravel-geographical": "^1.0",
+        "squizlabs/php_codesniffer": "*",
         "watson/validating": "^3.1"
     },
     "require-dev": {

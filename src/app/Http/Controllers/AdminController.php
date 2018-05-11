@@ -12,7 +12,11 @@ namespace App\Http\Controllers;
  */
 abstract class AdminController extends Controller
 {
-	function __construct() {
-		$this->middleware('auth');
-	}
+    /**
+     * AdminController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 }

@@ -1,5 +1,5 @@
 function scrollToPageID(page_id) {
-    $('body,html').animate({ scrollTop: window.innerHeight * page_id}, 750);
+    $('body,html').animate({scrollTop: window.innerHeight * page_id}, 750);
 }
 
 $(document).ready(function () {
@@ -22,7 +22,7 @@ $(document).ready(function () {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    $.getJSON('ajax/airports', function(result){
+    $.getJSON('ajax/airports', function (result) {
         result.forEach(function (airport) {
             // TODO: Add marker for each of airports
         });

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>FlyBy email</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <style>
-        * { font-family: Raleway, sans-serif; }
+        * {
+            font-family: Raleway, sans-serif;
+        }
 
         .header h1 {
             margin-bottom: 0;
@@ -46,7 +48,7 @@
         }
 
         .footer a {
-            color:white;
+            color: white;
             text-decoration: none;
         }
 

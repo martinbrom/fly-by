@@ -10,5 +10,10 @@ namespace App\Http\Controllers;
  */
 abstract class CommonController extends Controller
 {
-	function __construct() {}
+    /**
+     * CommonController constructor.
+     */
+    public function __construct()
+    {
+    }
 }

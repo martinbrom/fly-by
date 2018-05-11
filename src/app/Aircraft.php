@@ -5,8 +5,10 @@ namespace App;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * App\Aircraft
+ * Class Aircraft
  *
+ * @package App
+ * @author  Martin Brom
  * @property int $id
  * @property int|null $image_id
  * @property string $name
@@ -37,95 +39,105 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Aircraft extends BaseModel
 {
-	use SoftDeletes;
+    use SoftDeletes;
 
-	/**
-	 * The attributes that should be hidden for arrays.
-	 *
-	 * @var array
-	 */
-	protected $hidden = [
-		'created_at', 'updated_at', 'deleted_at'
-	];
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = [
-		'cost',
-		'name',
-		'range',
-		'speed'
-	];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'cost',
+        'name',
+        'range',
+        'speed',
+    ];
 
-	/**
-	 * Carbon instances to be converted to dates
-	 *
-	 * @var array
-	 */
-	protected $dates = [
-		'created_at',
-		'updated_at',
-		'deleted_at'
-	];
+    /**
+     * Carbon instances to be converted to dates
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 
-	/**
-	 * Model validation rules
-	 *
-	 * @var array
-	 */
-	protected $rules = [
-		'image_id' => 'nullable|exists:aircraft_images,id',
-		'name'     => 'required|max:200',
-		'range'    => 'required|integer|min:0',
-		'speed'    => 'required|integer|min:0',
-		'cost'     => 'required|integer|min:0'
-	];
+    /**
+     * Model validation rules
+     *
+     * @var array
+     */
+    protected $rules = [
+        'image_id' => 'nullable|exists:aircraft_images,id',
+        'name' => 'required|max:200',
+        'range' => 'required|integer|min:0',
+        'speed' => 'required|integer|min:0',
+        'cost' => 'required|integer|min:0',
+    ];
 
-	/**
-	 * Checks whether this aircraft is able
-	 * to fly a given distance
-	 *
-	 * @param   int $distance
-	 * @return  bool
-	 */
-	public function canFly(int $distance) {
-		return $this->range >= $distance;
-	}
+    /**
+     * Checks whether this aircraft is able
+     * to fly a given distance
+     *
+     * @param  int $distance
+     *
+     * @return bool
+     */
+    public function canFly(int $distance)
+    {
+        return $this->range >= $distance;
+    }
 
-	/**
-	 * Returns a cost for flying a certain distance in CZK
-	 *
-	 * @param   int $distance
-	 * @return  int
-	 */
-	public function getCostForDistance(int $distance): int {
-		return $this->cost * $distance;
-	}
+    /**
+     * Returns a cost for flying a certain distance in CZK
+     *
+     * @param  int $distance
+     *
+     * @return int
+     */
+    public function getCostForDistance(int $distance): int
+    {
+        return $this->cost * $distance;
+    }
 
-	/**
-	 * Returns a duration for a flight of certain distance in seconds
-	 *
-	 * @param int $distance
-	 * @return int
-	 */
-	public function getDurationForDistance(int $distance): int {
-		return (int) (3600 * $distance / $this->speed);
-	}
+    /**
+     * Returns a duration for a flight of certain distance in seconds
+     *
+     * @param  int $distance
+     *
+     * @return int
+     */
+    public function getDurationForDistance(int $distance): int
+    {
+        return (int) (3600 * $distance / $this->speed);
+    }
 
-	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-	 */
-	public function airports() {
-		return $this->belongsToMany(\App\Airport::class, 'aircraft_airport_xref');
-	}
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function airports()
+    {
+        return $this->belongsToMany(\App\Airport::class, 'aircraft_airport_xref');
+    }
 
-	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-	 */
-	public function image() {
-		return $this->belongsTo(\App\AircraftImage::class);
-	}
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function image()
+    {
+        return $this->belongsTo(\App\AircraftImage::class);
+    }
 }
