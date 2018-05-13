@@ -19,12 +19,13 @@ class SendOrderConfirmedUserNotification implements ShouldQueue
      * Handle the event.
      *
      * @param  OrderConfirmed $event
+     *
      * @return void
      */
     public function handle(OrderConfirmed $event)
     {
         $order = $event->order;
         \Mail::to($order->email)
-          ->send(new OrderConfirmedUserMail($order));
+             ->queue(new OrderConfirmedUserMail($order));
     }
 }

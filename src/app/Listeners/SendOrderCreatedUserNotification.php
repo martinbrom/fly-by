@@ -19,12 +19,13 @@ class SendOrderCreatedUserNotification implements ShouldQueue
      * Handle the event.
      *
      * @param  OrderCreated $event
+     *
      * @return void
      */
     public function handle(OrderCreated $event)
     {
         $order = $event->order;
         \Mail::to($order->email)
-        ->send(new OrderCreatedUserMail($order));
+             ->queue(new OrderCreatedUserMail($order));
     }
 }

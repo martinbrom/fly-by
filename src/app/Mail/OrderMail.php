@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Order;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -14,9 +15,14 @@ use Illuminate\Queue\SerializesModels;
  * @package App\Mail
  * @author  Martin Brom
  */
-abstract class OrderMail extends Mailable
+abstract class OrderMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
+
+    /**
+     * @var int
+     */
+    public $tries = 3;
 
     /**
      * @var Order
@@ -28,7 +34,7 @@ abstract class OrderMail extends Mailable
      *
      * @param Order $order
      */
-    function __construct(Order $order)
+    public function __construct(Order $order)
     {
         $this->order = $order;
         // TODO: From

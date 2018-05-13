@@ -19,6 +19,7 @@ class SendOrderCreatedAdminNotification implements ShouldQueue
      * Handle the event.
      *
      * @param  OrderCreated $event
+     *
      * @return void
      */
     public function handle(OrderCreated $event)
@@ -30,7 +31,7 @@ class SendOrderCreatedAdminNotification implements ShouldQueue
         $users = \App\User::all();
         foreach ($users as $user) {
             \Mail::to($user->email)
-              ->send(new OrderCreatedAdminMail($order));
+                 ->queue(new OrderCreatedAdminMail($order));
         }
     }
 }
