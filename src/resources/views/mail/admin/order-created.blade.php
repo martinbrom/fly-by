@@ -8,7 +8,7 @@
 
     <p>
         Prohlédněte si jí
-        <b><a href="{{ route('orders.show', $order->id) }}">zde</a></b>.
+        <b><a href="{{ route('admin.orders.show', $order->id) }}">zde</a></b>.
     </p>
 
 @endsection

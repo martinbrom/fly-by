@@ -33,7 +33,7 @@ class AirportController extends CommonController
     public function aircrafts(AircraftsAtAirportRequest $request)
     {
         $aircraftAirports = AircraftAirport::where('airport_id', '=', $request->airport_id)
-            ->with('aircraft')
+            ->with('aircraft', 'aircraft.image')
             ->get();
 
         return response()->json($aircraftAirports);
@@ -47,7 +47,7 @@ class AirportController extends CommonController
     public function otherAircrafts(AircraftsAtAirportRequest $request)
     {
         $aircraftAirports = AircraftAirport::where('airport_id', '!=', $request->airport_id)
-            ->with('aircraft', 'airport')
+            ->with('aircraft', 'airport', 'aircraft.image')
             ->get();
 
         return response()->json($aircraftAirports);

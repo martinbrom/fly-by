@@ -62,6 +62,7 @@ function reloadAircrafts(airport_id) {
             $(item_template).attr('data-aircraft-airport-id', aa.id);
             $(item_template).find('.aircraft-name').html(aa.aircraft.name);
             $(item_template).find('.airport-name').html('vybrané letiště');
+            $(item_template).find('.img').attr('src', 'storage/' + aa.aircraft.image.path).attr('alt', aa.aircraft.image.description);
             airport_aircrafts.append(item_template);
         });
 
@@ -90,6 +91,7 @@ function reloadOtherAircrafts() {
             $(item_template).attr('data-aircraft-airport-id', aa.id);
             $(item_template).find('.aircraft-name').html(aa.aircraft.name);
             $(item_template).find('.airport-name').html(aa.airport.name);
+            $(item_template).find('.img').attr('src', 'storage/' + aa.aircraft.image.path).attr('alt', aa.aircraft.image.description);
             other_aircrafts.append(item_template);
         });
 
