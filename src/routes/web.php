@@ -85,8 +85,12 @@ Route::prefix('ajax')->group(function () {
             ->name('airports.index');
         Route::get('aircrafts', 'Common\AirportController@aircrafts')
             ->name('airports.aircrafts');
+        Route::get('other-aircrafts', 'Common\AirportController@otherAircrafts')
+            ->name('airports.other-aircrafts');
         Route::get('routes', 'Common\RouteController@index')
             ->name('routes.index');
+        Route::get('aircraft-airports/{id}', 'Common\AircraftAirportController@show')
+            ->name('aircraft-airports.show');
     });
 });
 

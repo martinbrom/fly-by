@@ -52,7 +52,7 @@
             e.preventDefault();
             let start = map.route.startAirport;
             let end = map.route.endAirport;
-            let route = JSON.stringify(map.route.getLatLngs());
+            let route = JSON.stringify(map.route.getLatLngsFloat());
 
             if (!start) {
                 alert('Nebylo vybráno startovní letište');

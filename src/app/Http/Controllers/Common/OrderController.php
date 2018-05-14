@@ -58,9 +58,7 @@ class OrderController extends CommonController
         if (!$aircraftAirport->canFly($route->distance)) {
             DB::rollBack();
 
-            return redirect()
-                ->back()
-                ->withErrors('Trasa je delší než dolet letadla!');
+            return response()->json(['message' => 'Route is too long']);
         }
 
         $order = new Order(
@@ -74,7 +72,7 @@ class OrderController extends CommonController
         $order->saveOrFail();
         DB::commit();
 
-        return redirect()->route('orders.test-create');
+        return response()->json(route('orders.show', $order->code));
     }
 
     /**

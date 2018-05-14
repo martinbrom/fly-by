@@ -1,8 +1,10 @@
+$aircraft-panel-item-height: 60px;
+
 #map-page-wrapper {
 }
 
 #map-control-panel {
-  box-shadow: 0px 0px 5px rgba(0,0,0,0.7);
+  box-shadow: 0 0 5px rgba(0,0,0,0.7);
   z-index: 1000;
 
   @include media-breakpoint-down(sm) {
@@ -46,4 +48,64 @@
 
 .fa-number {
   font-style: normal;
+}
+
+.aircraft-panel-item {
+  padding: 5px;
+  height: $aircraft-panel-item-height + 10px;
+  margin-bottom: 5px;
+
+  &.selected {
+    background: $success;
+  }
+
+  .aircraft-panel-item-head {
+    height: $aircraft-panel-item-height;
+    width: $aircraft-panel-item-height;
+    float: left;
+
+    img {
+      height: $aircraft-panel-item-height;
+      width: $aircraft-panel-item-height;
+    }
+  }
+
+  .aircraft-panel-item-body {
+    padding: 5px 5px 5px 10px;
+    height: $aircraft-panel-item-height;
+    position: relative;
+    overflow: hidden;
+
+    h4 {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      line-height: 26px;
+      height: 26px;
+      margin-bottom: 4px;
+    }
+
+    p {
+      line-height: 20px;
+      height: 20px;
+      margin-bottom: 0;
+    }
+  }
+}
+
+#other-aircrafts {
+  display: none;
+}
+
+#display-other-aircrafts-btn {
+  display: none;
+}
+
+#order-information,
+#order-form {
+  display: none;
+}
+
+#calculate-order-variables {
+  margin-bottom: 20px;
 }

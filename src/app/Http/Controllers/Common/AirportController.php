@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Common;
 
+use App\AircraftAirport;
 use App\Airport;
 use App\Http\Controllers\CommonController;
 use App\Http\Requests\Ajax\AircraftsAtAirportRequest;
@@ -31,9 +32,24 @@ class AirportController extends CommonController
      */
     public function aircrafts(AircraftsAtAirportRequest $request)
     {
-        $airport   = Airport::find($request->airport_id);
-        $aircrafts = $airport->aircrafts()->get();
+        $aircraftAirports = AircraftAirport::where('airport_id', '=', $request->airport_id)
+            ->with('aircraft')
+            ->get();
 
-        return response()->json($aircrafts);
+        return response()->json($aircraftAirports);
+    }
+
+    /**
+     * @param AircraftsAtAirportRequest $request
+     *
+     * @return  \Illuminate\Http\JsonResponse
+     */
+    public function otherAircrafts(AircraftsAtAirportRequest $request)
+    {
+        $aircraftAirports = AircraftAirport::where('airport_id', '!=', $request->airport_id)
+            ->with('aircraft', 'airport')
+            ->get();
+
+        return response()->json($aircraftAirports);
     }
 }

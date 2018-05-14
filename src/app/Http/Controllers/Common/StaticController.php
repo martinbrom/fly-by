@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Common;
 
 use App\Aircraft;
+use App\AircraftAirport;
 use App\Airport;
 use App\Http\Controllers\CommonController;
 
@@ -29,10 +30,11 @@ class StaticController extends CommonController
      */
     public function map()
     {
-        $airports  = Airport::all();
-        $aircrafts = Aircraft::all();
-        $zones = array_merge(config('zones.dangerous'), config('zones.prohibited'));
+        $airports         = Airport::all();
+        $aircrafts        = Aircraft::all();
+        $aircraftAirports = AircraftAirport::all();
+        $zones            = array_merge(config('zones.dangerous'), config('zones.prohibited'));
 
-        return view('map.index', compact('airports', 'aircrafts', 'zones'));
+        return view('map.index', compact('airports', 'aircrafts', 'zones', 'aircraftAirports'));
     }
 }

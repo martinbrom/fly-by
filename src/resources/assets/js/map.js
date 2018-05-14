@@ -1,3 +1,24 @@
+function haversineDistance(latitudeFrom, longitudeFrom, latitudeTo, longitudeTo)
+{
+    var earthRadius = 6371000; // in meters
+
+    var latFrom = deg2rad(latitudeFrom);
+    var lonFrom = deg2rad(longitudeFrom);
+    var latTo   = deg2rad(latitudeTo);
+    var lonTo   = deg2rad(longitudeTo);
+
+    var latDelta = latTo - latFrom;
+    var lonDelta = lonTo - lonFrom;
+
+    var angle = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(latDelta / 2), 2) + Math.cos(latFrom) * Math.cos(latTo) * Math.pow(Math.sin(lonDelta / 2), 2)));
+
+    return angle * earthRadius;
+}
+
+function deg2rad(degrees) {
+    return degrees * (Math.PI / 180);
+}
+
 //-------------
 // Map
 //-------------
@@ -38,7 +59,7 @@ function Map(element, interactive) {
 
     this.dangerZoneColor = 'red';
 
-    this.route = new Route(null, null, [], this.map, this.interactive);
+    this.route = new Route(null, null, [], this.map, this, this.interactive);
     this.route.addTo(this.map);
 
     this.airports = {};
@@ -79,6 +100,7 @@ function Map(element, interactive) {
             'fa-exchange',
             function (btn, map) {
                 t.route.reverse();
+                t.map.fireEvent('click');
             },
             'Obrátit směr trasy'
         ).addTo(this.map);
@@ -87,6 +109,7 @@ function Map(element, interactive) {
             'fa-plus',
             function (btn, map) {
                 t.route.addWayPoint(t.map.getCenter());
+                t.map.fireEvent('click');
             },
             'Přidat bod'
         ).addTo(this.map);
@@ -159,6 +182,8 @@ Map.prototype.chooseStartAirport = function (airport) {
     if (this.startAirportChange) {
         this.startAirportChange(event);
     }
+
+    this.map.fireEvent('click');
 };
 
 Map.prototype.chooseEndAirport = function (airport) {
@@ -176,13 +201,15 @@ Map.prototype.chooseEndAirport = function (airport) {
     if (this.endAirportChange) {
         this.endAirportChange(event);
     }
+
+    this.map.fireEvent('click');
 };
 
 
 //-------------
 // Route
 //-------------
-Route = function (startAirport, endAirport, latlngs, map, interactive) {
+Route = function (startAirport, endAirport, latlngs, map, map_wrapper, interactive) {
     let t = this;
 
     this.interactive = true;
@@ -195,6 +222,7 @@ Route = function (startAirport, endAirport, latlngs, map, interactive) {
     this.endAirport = endAirport;
 
     this.map = map;
+    this.map_wrapper = map_wrapper
     this.wayPoints = [];
 
     this.line = L.polyline(latlngs, {
@@ -250,6 +278,27 @@ Route.prototype.closestSegmentIndex = function (latlng) {
     }
 
     return minI;
+};
+
+Route.prototype.distance = function () {
+    var points = this.getLatLngs();
+
+    if (this.startAirport == null) {
+        return -1;
+    }
+
+    points = _.concat(this.startAirport.getLatLng(), points, this.endAirport == null
+        ? this.startAirport.getLatLng()
+        : this.endAirport.getLatLng());
+    var distance = 0;
+
+    var point_count = points.length;
+    for (var i = 0; i < point_count-1; i++) {
+        distance += haversineDistance(points[i].lat, points[i].lng, points[i+1].lat, points[i+1].lng);
+    }
+
+    distance = parseInt(distance / 1000);
+    return distance;
 };
 
 Route.prototype.setStartAirport = function (startAirport) {
@@ -329,6 +378,10 @@ Route.prototype.addWayPoint = function (latlng, index) {
         t.refreshLine();
     });
 
+    wayPoint.marker.on('dragend', function (event) {
+        t.map.fireEvent('click');
+    });
+
     this.wayPoints.splice(index, 0, wayPoint);
 
     if (this.map) {
@@ -337,6 +390,7 @@ Route.prototype.addWayPoint = function (latlng, index) {
 
     this.refreshLine();
     this.refreshNumbers();
+    t.map.fireEvent('click');
 };
 
 Route.prototype.removeWayPoint = function (point) {
@@ -359,6 +413,7 @@ Route.prototype.removeWayPoint = function (point) {
 
     this.refreshLine();
     this.refreshNumbers();
+    this.map.fireEvent('click');
 };
 
 Route.prototype.refreshNumbers = function () {
@@ -403,6 +458,16 @@ Route.prototype.getLatLngs = function () {
     let latlngs = [];
 
     for (let i = 0; i < this.wayPoints.length; i++) {
+        latlngs.push(this.wayPoints[i].marker.getLatLng());
+    }
+
+    return latlngs;
+};
+
+Route.prototype.getLatLngsFloat = function () {
+    let latlngs = [];
+
+    for (let i = 0; i < this.wayPoints.length; i++) {
         let wayPointLatLng = this.wayPoints[i].marker.getLatLng();
         latlngs.push([wayPointLatLng['lat'].toFixed(6), wayPointLatLng['lng'].toFixed(6)]);
     }
@@ -443,19 +508,23 @@ Route.prototype.reverse = function () {
     }
 
     this.refreshNumbers();
-};
 
-Route.prototype.disableManipulation = function () {
-    for (let i = 0; i < this.wayPoints.length; i++) {
-        this.wayPoints[i].disableManipulation();
+    if (this.map_wrapper.startAirportChange) {
+        let event = {
+            old: startAirport,
+            new: endAirport
+        };
+        this.map_wrapper.startAirportChange(event);
+    }
+    if (this.map_wrapper.endAirportChange) {
+        let event = {
+            old: endAirport,
+            new: startAirport
+        };
+        this.map_wrapper.endAirportChange(event);
     }
 };
 
-Route.prototype.enableManipulation = function () {
-    for (let i = 0; i < this.wayPoints.length; i++) {
-        this.wayPoints[i].enableManipulation();
-    }
-};
 
 //-------------
 // WayPoint
@@ -564,6 +633,7 @@ Airport = function (id, name, latlng, map, interactive) {
 Airport.prototype.bringToFront = function () {
     this.marker.setZIndexOffset(20000);
 };
+
 Airport.prototype.bringToBack = function () {
     this.marker.setZIndexOffset(10000);
 };
@@ -650,8 +720,13 @@ Airport.prototype.onclick = function (callback) {
     this.marker.on('click', L.bind(callback, this));
 };
 
+Airport.prototype.distanceTo = function (lat, lng) {
+    var latLng = this.getLatLng();
+    return haversineDistance(lat, lng, latLng.lat, latLng.lng);
+};
 
 exports.Map = Map;
 exports.Airport = Airport;
 exports.Route = Route;
 exports.WayPoint = WayPoint;
+exports.haversineDistance = haversineDistance;
