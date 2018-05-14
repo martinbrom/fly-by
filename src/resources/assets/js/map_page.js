@@ -84,16 +84,23 @@ $(document).ready(function () {
 
     function switchToMap() {
         $('#map-control-panel').hide();
+        $('#bottom-button').html('<i class="fa fa-arrow-up"></i>');
         map.map.invalidateSize();
     }
 
     function switchToPanel() {
         $('#map-control-panel').show();
+        $('#bottom-button').html('<i class="fa fa-arrow-down"></i>');
         map.map.invalidateSize();
     }
 
-    $('#map-bottom-buttons').find('button').click(function (event) {
-        switchToPanel();
+    $('#bottom-button').click(function (event) {
+        if ($("#map-control-panel").is(':hidden')) {
+            switchToPanel();
+        }
+        else {
+            switchToMap();
+        }
     });
 
     $('#map').click(function (event) {
