@@ -1,6 +1,18 @@
 let map = null;
 let selected_aircraft_airport = null;
 
+function displayAlert(type, message) {
+    var alert_container = $('#alert-container');
+    var alert_template = $('#alert-template').html();
+
+    var alert = $(alert_template).clone();
+    $(alert).attr('class', 'alert alert-dismissible fade show alert-' + type);
+    $(alert).find('.message').html(message);
+    alert.delay(5000).hide(500);
+
+    alert_container.append($(alert));
+}
+
 function reloadAirports() {
     $.getJSON('ajax/airports', function (result) {
         $('#start_airport_id').html('');
@@ -96,13 +108,18 @@ function selectAircraftAirport(aircraft_airport_id) {
 }
 
 function recalculateFlightVariables() {
-    if (selected_aircraft_airport == null || map.route.startAirport == null || map.route.endAirport == null) {
-        // TODO: Alerts
+    if (selected_aircraft_airport == null) {
+        displayAlert('danger', 'Nebylo vybráno letadlo');
+        return;
+    }
+
+    if (map.route.startAirport == null) {
+        displayAlert('danger', 'Nebylo vybráno startovní letiště');
         return;
     }
 
     if (map.route.wayPoints.length == 0) {
-        // TODO: Alerts
+        displayAlert('danger', 'Nebyl vybrán žádný bod trasy');
         return;
     }
 
@@ -114,7 +131,7 @@ function recalculateFlightVariables() {
     var flight_price = parseInt(distance * aircraft.cost);
 
     if (distance > aircraft.range) {
-        // TODO: Alerts
+        displayAlert('danger', 'Trasa je delší než dolet letadla');
         return;
     }
 
@@ -123,12 +140,16 @@ function recalculateFlightVariables() {
     $('.order-flight-price .value').html(flight_price);
 
     var selected_airport_id = selected_aircraft_airport.airport_id;
-    if (selected_airport_id == map.route.startAirport.id && selected_airport_id == map.route.endAirport.id) {
+    var start_airport_id = map.route.startAirport.id;
+    var end_airport_id   = map.route.endAirport == null ? map.route.startAirport.id : map.route.endAirport.id;
+    if (selected_airport_id == start_airport_id && selected_airport_id == end_airport_id) {
         $('.order-transport-price').hide();
         $('.order-total-price').hide();
     } else {
         var startAirport = map.route.startAirport.getLatLng();
-        var endAirport   = map.route.endAirport.getLatLng();
+        var endAirport   = map.route.endAirport == null
+            ? map.route.startAirport.getLatLng()
+            : map.route.endAirport.getLatLng();
         var airportCoordinates = airport;
 
         var distance_to_start = Flb.haversineDistance(
@@ -152,7 +173,7 @@ function recalculateFlightVariables() {
 
     $('.order-aircraft .value').html(aircraft.name);
     $('.order-starting-airport .value').html(map.route.startAirport.name);
-    $('.order-ending-airport .value').html(map.route.endAirport.name);
+    $('.order-ending-airport .value').html(map.route.endAirport == null ? map.route.startAirport.name : map.route.endAirport.name);
 
     $('#order-form').show();
     $('#order-information').show();
@@ -165,19 +186,31 @@ function invalidateFlightVariables() {
 
 function sendOrderForm() {
     var form = $('#order-form-form');
-    $.post('orders', {
-        '_token': csrf_token_value,
-        'user_note': form.find('#user_note').val(),
-        'email': form.find('#email').val(),
-        'route': JSON.stringify(map.route.getLatLngsFloat()),
-        'airport_from_id': map.route.startAirport.id,
-        'airport_to_id': map.route.endAirport == null ? map.route.startAirport.id : map.route.endAirport.id,
-        'aircraft_airport_id': selected_aircraft_airport.id
-    }, function (result) {
+    $.ajax({
+        url: 'orders',
+        method: 'post',
+        data: {
+            '_token': csrf_token_value,
+            'user_note': form.find('#user_note').val(),
+            'email': form.find('#email').val(),
+            'route': JSON.stringify(map.route.getLatLngsFloat()),
+            'airport_from_id': map.route.startAirport.id,
+            'airport_to_id': map.route.endAirport == null ? map.route.startAirport.id : map.route.endAirport.id,
+            'aircraft_airport_id': selected_aircraft_airport.id
+        }
+    }).done(function (result) {
         window.location.href = result;
     }).fail(function (result) {
-        console.log(result.responseText);
-        // TODO: Alerts
+        var error_groups = JSON.parse(result.responseText).errors;
+        for (var k in error_groups) {
+            if (error_groups.hasOwnProperty(k)) {
+                var errors = error_groups[k];
+                var error_count = errors.length;
+                for (var i = 0; i < error_count; i++) {
+                    displayAlert('danger', errors[i]);
+                }
+            }
+        }
     });
 }
 
@@ -242,21 +275,6 @@ $(document).ready(function () {
 
     map.map.on('click', function () {
         invalidateFlightVariables();
-    });
-
-    let routeForm = $('#route-form');
-    let endAirportSelectGroup = routeForm.find('#end_airport_id-form-group');
-    let differentAirportsCheckbox = routeForm.find('#different_airports');
-
-    differentAirportsCheckbox.change(function () {
-        if (this.checked) {
-            endAirportSelectGroup.slideDown();
-            endAirportSelectGroup.prop('disabled', false);
-        }
-        else {
-            endAirportSelectGroup.slideUp();
-            endAirportSelectGroup.prop('disabled', true);
-        }
     });
 });
 

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('body')
+    <div id="alert-container"></div>
     <div id="map-page-wrapper" class="w-100 h-100 d-flex flex-column flex-md-row">
         <div id="map-wrapper" class="bg-secondary">
             <div id="map" class="w-100 h-100"></div>
@@ -65,6 +66,14 @@
     let csrf_token_value = "{!! csrf_token() !!}";
 </script>
 
+<script id="alert-template" type="text/x-custom-template">
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="message">Default message</span>
+    </div>
+</script>
 
 <script id="aircraft-airport-template" type="text/x-custom-template">
     <div class="aircraft-panel-item">
