@@ -83,4 +83,7 @@
 
 @push('scripts')
 <script src="{{ asset('js/landing.js') }}"></script>
+<script>
+    let airports = {!! json_encode($airports) !!};
+</script>
 @endpush

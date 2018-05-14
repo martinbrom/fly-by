@@ -11,30 +11,32 @@ use App\Http\Controllers\CommonController;
  * Class StaticController
  * Contains functions to display all
  * application static pages such as
- * landing page or contacts page
+ * landing page or map page
  *
  * @package App\Http\Controllers
  */
 class StaticController extends CommonController
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return view('index');
+        $airports = Airport::getAllWithAircrafts();
+
+        return response()->view('index', compact('airports'));
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\Response
      */
     public function map()
     {
-        $airports         = Airport::all();
+        $airports         = Airport::getAllWithAircrafts();
         $aircrafts        = Aircraft::all();
         $aircraftAirports = AircraftAirport::all();
         $zones            = array_merge(config('zones.dangerous'), config('zones.prohibited'));
 
-        return view('map.index', compact('airports', 'aircrafts', 'zones', 'aircraftAirports'));
+        return response()->view('map.index', compact('airports', 'aircrafts', 'zones', 'aircraftAirports'));
     }
 }
