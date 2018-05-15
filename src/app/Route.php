@@ -55,8 +55,11 @@ class Route extends BaseModel
         'airport_from_id' => 'required|exists:airports,id',
         'airport_to_id' => 'required|exists:airports,id',
         'distance' => 'nullable|integer|min:0',
-        'route' => 'required|route_json',
         'is_predefined' => 'required|boolean',
+
+        // IT'S IMPORTANT, THAT ROUTE_ZONES VALIDATION RULE IS
+        // CALLED AS THE LAST RULE IN THE VALIDATION PROCESS
+        'route' => 'bail|required|route_json|route_zones',
     ];
 
     /**
