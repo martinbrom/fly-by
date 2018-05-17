@@ -126,7 +126,7 @@ class Order extends BaseModel
         // inform user that his order was created successfully
         static::created(
             function (Order $order) {
-                event(new OrderCreated($order));
+                // event(new OrderCreated($order));
             }
         );
 
@@ -145,7 +145,7 @@ class Order extends BaseModel
                 if ($order->completed_at != null) {
                     return false;
                 }
-                event(new OrderDeleted($order));
+                // event(new OrderDeleted($order));
 
                 return true;
             }
@@ -256,7 +256,7 @@ class Order extends BaseModel
             return;
         }
 
-        event(new OrderConfirmed($this));
+        // event(new OrderConfirmed($this));
         $this->confirmed_at = \Carbon\Carbon::now();
         $this->save();
     }
