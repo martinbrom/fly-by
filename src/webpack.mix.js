@@ -1,5 +1,7 @@
 let mix = require('laravel-mix');
 
+mix.disableNotifications();
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -10,6 +12,8 @@ let mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
-
 mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+    .js('resources/assets/js/map_page.js', 'public/js')
+    .js('resources/assets/js/landing.js', 'public/js')
+    .sass('resources/assets/sass/app.scss', 'public/css')
+    .disableNotifications();

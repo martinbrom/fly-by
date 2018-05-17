@@ -18,6 +18,7 @@ class CreateAircraftAirportXrefTable extends Migration
             $table->integer('aircraft_id')->unsigned();
             $table->integer('airport_id')->unsigned();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique('id');
             $table->foreign('aircraft_id')->references('id')->on('aircrafts');

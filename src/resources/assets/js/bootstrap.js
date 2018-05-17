@@ -1,4 +1,3 @@
-
 window._ = require('lodash');
 
 /**
@@ -7,11 +6,11 @@ window._ = require('lodash');
  * code may be modified to fit the specific needs of your application.
  */
 
-try {
-    window.$ = window.jQuery = require('jquery');
-
-    require('bootstrap-sass');
-} catch (e) {}
+// try {
+//     window.$ = window.jQuery = require('jquery');
+//
+//     require('bootstrap-sass');
+// } catch (e) {}
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -53,3 +52,13 @@ if (token) {
 //     cluster: 'mt1',
 //     encrypted: true
 // });
+
+window.$ = window.jQuery = require('jquery');
+require('popper.js');
+require('bootstrap');
+require('scrollmagic');
+require('leaflet');
+require('leaflet-extra-markers');
+require('leaflet-easybutton');
+require('leaflet-contextmenu');
+require('leaflet-modal');

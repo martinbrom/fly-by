@@ -1,0 +1,11 @@
+div.form-group {
+  &.has-error {
+    input {
+      border: 1px solid $danger;
+    }
+
+    p.error-message {
+      color: $danger;
+    }
+  }
+}

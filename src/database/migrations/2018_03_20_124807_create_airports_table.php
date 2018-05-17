@@ -16,10 +16,11 @@ class CreateAirportsTable extends Migration
         Schema::create('airports', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 50);
-            $table->float('lat', 10, 6);
-            $table->float('lon', 10, 6);
+	        $table->double('lat');
+	        $table->double('lon');
             $table->string('code', 20)->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique('id');
         });

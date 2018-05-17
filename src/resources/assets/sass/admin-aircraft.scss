@@ -1,0 +1,32 @@
+$aircraft-image-size: 150px;
+$padding: 20px;
+
+img.aircraft-image {
+  width: $aircraft-image-size;
+  height: $aircraft-image-size;
+  float: left;
+}
+
+h2.aircraft-name {
+  display: inline;
+  float: left;
+  font-family: Raleway, sans-serif;
+  font-size: $aircraft-image-size / 3;
+  margin-left: $padding;
+  line-height: $aircraft-image-size;
+}
+
+.aircraft-links {
+  float: left;
+  clear: both;
+  width: $aircraft-image-size;
+
+  a {
+    display: block;
+  }
+}
+
+.aircraft-info {
+  margin-left: $padding;
+  float: left;
+}

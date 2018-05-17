@@ -13,8 +13,7 @@ class AircraftUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        // TODO: Authorize owner only
-        return true;
+        return auth()->user();
     }
 
     /**

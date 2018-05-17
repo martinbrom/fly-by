@@ -4,7 +4,9 @@
 /public/css
 /public/js
 /public/fonts
+/public/images/vendor
 /storage/*.key
+/storage/uploads/
 /vendor
 /.idea
 /.vagrant
@@ -16,4 +18,3 @@ yarn-error.log
 .env.testing
 _ide_helper.php
 /storage/debugbar
-

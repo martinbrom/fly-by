@@ -104,6 +104,8 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
+    'route_json'    => 'The route is in an invalid format.',
+    'route_zones'   => 'The route intersects a forbidden zone.',
 
     /*
     |--------------------------------------------------------------------------
@@ -116,6 +118,9 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'lat' => 'Latitude',
+        'lon' => 'Longitude',
+    ],
 
 ];

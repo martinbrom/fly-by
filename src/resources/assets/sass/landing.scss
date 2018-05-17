@@ -1,0 +1,162 @@
+.hero-section {
+  height: 100%;
+  background: #2f6880;
+  background-size: cover;
+  position: relative;
+
+  &.white {
+    background: white;
+
+    .hero-container {
+      color: #595959;
+    }
+  }
+
+  .hero-container {
+    width: 80%;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-50%, +50%);
+    position: absolute;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    color: white;
+
+    .hero-wrapper {
+      position: relative;
+      overflow: hidden;
+
+      h1 {
+        display: inline-block;
+        font-size: 48px;
+        width: 100%;
+      }
+
+      h2 {
+        &.how-does-it-work {
+          margin-bottom: 25px;
+
+          @include media-breakpoint-up(sm) {
+            margin-bottom: 50px;
+          }
+        }
+      }
+
+      .how-does-it-work-container {
+        .wrapper {
+          padding: 0 15px;
+
+          .item {
+            .fa {
+              font-size: 3em;
+
+              @include media-breakpoint-up(md) {
+                font-size: 4em;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .scroll-down-container {
+    bottom: 0;
+    left: 50%;
+    width: 90%;
+
+    a {
+      color: white;
+
+      &:hover, &:focus {
+        color: white;
+      }
+
+      &.dark {
+        color: #595959;
+
+        &:hover, &:focus {
+          color: #595959;
+        }
+      }
+
+      display: inline-block;
+      width: 100%;
+
+      @include media-breakpoint-up(md) {
+        display: inline;
+      }
+    }
+  }
+
+  .hero-text,
+  .scroll-down-container,
+  .login-button-container {
+    position: absolute;
+    text-align: center;
+    transform: translate(-50%, -50%);
+  }
+
+  a.scroll-link {
+    cursor: pointer;
+  }
+
+  #company-name {
+    color: white;
+  }
+
+  #company-slogan {
+    font-size: 1.5rem;
+  }
+
+  #how-does-it-work-scroll-link {
+    margin-top: 40px;
+    display: inline-block;
+    color: white;
+    font-size: 1.2rem;
+
+    &:hover, &:focus {
+      color: lightgray;
+    }
+  }
+
+  #where-can-you-find-us {
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+
+  #contact-us-email-address {
+    font-size: 1.1rem;
+  }
+
+  #map-link {
+    margin-top: 15px;
+    display: inline-block;
+    color: #595959;
+    font-size: 1.2rem;
+
+    &:hover, &:focus {
+      color: #3c3c3c;
+    }
+
+    @include media-breakpoint-up(md) {
+      margin-top: 100px;
+    }
+  }
+
+  #airport-map {
+    margin: auto;
+    height: 180px;
+    width: 320px;
+
+    @include media-breakpoint-up(sm) {
+      height: 270px;
+      width: 480px;
+    }
+
+    @include media-breakpoint-up(md) {
+      height: 360px;
+      width: 640px;
+    }
+  }
+}
